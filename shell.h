@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <string.h>
+/*#include <string.h>*/
 
 /* from in.c */
 int shintmode();
@@ -53,5 +53,9 @@ int setsvar(char *name, char *val);
 
 /* from _realloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+/* from _strtok.c */
+char *strtok(char *str, char *delim);
+
 
 #endif

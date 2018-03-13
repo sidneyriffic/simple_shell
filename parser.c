@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGSVARS
+
 int parsesetsvar(char **av)
 {
 	int haseq, i = 0, ac = 0;
