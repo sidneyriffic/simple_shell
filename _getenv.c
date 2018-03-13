@@ -66,7 +66,7 @@ char *_getenv(char *name)
 			printf("In inner while %s %s\n", name + j, s + j);
 			j++;
 			if (name[j] == 0 && s[j] == '=')
-				return (environ[i]);
+				return (s + j + 1);
 		}
 		i++;
 	}

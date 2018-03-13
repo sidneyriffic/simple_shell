@@ -1,5 +1,43 @@
 #include "shell.h"
 
+int checkpath(char *av[], char **environ)
+{
+	char *path, *pathptr, *pathvar, *ptr;
+	int pathlen, cmdlen;
+
+	for (ptr = av[0], cmdlen = 0; *ptr != 0; ptr++)
+		cmdlen++;
+	pathvar = _getenv("PATH");
+	while (*pathvar != 0)
+	{
+		for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
+			pathlen++;
+		path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
+		if (path == NULL)
+			return (-1);
+		pathptr = path;
+		while (*pathvar != ':' && *pathvar != 0)
+			*pathptr++ = *pathvar++;
+		*pathptr++ = '/';
+		ptr = av[0];
+		while (*ptr != 0)
+			*pathptr++ = *ptr++;
+		*pathptr = 0;
+		if (!access(path, F_OK))
+		{
+			av[0] = path;
+			pathlen = cmdcall(av, environ);
+			free(path);
+			return (pathlen);
+		}
+		free(path);
+		while (*pathvar == ':')
+			pathvar++;
+	}
+	return (1);
+}
+
+
 int cmdcall(char *av[], char **environ)
 {
 	pid_t command;
@@ -12,7 +50,7 @@ int cmdcall(char *av[], char **environ)
 		printf("Child executing command %s\n", av[0]);
 		if (execve(av[0], av, environ) == -1)
 		{
-			perror("Could not execute command errno:");
+			perror("Could not execute command");
 			exit(-1);
 		}
 		printf("Child done\n");
@@ -40,5 +78,7 @@ int builtincall(char *av[], char **environ)
 	{
 		return (printf("%s\n", _getenv(av[1])));
 	}
+	if (av[0][0] != '/')
+		return (checkpath(av, environ));
 	return (cmdcall(av, environ));
 }
