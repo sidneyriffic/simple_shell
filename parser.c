@@ -29,6 +29,9 @@ int parseargs(char *buf)
 		printf("Got arg %s\n", av[ac]);
 		ac++;
 	}
+	printf("Calling command/builtin\n");
+	if (ac[0] == NULL)
+		return (0);
 	ac = builtincall(av);
 	return (ac);
 }

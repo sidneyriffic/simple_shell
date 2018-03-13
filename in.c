@@ -2,16 +2,10 @@
 
 int shintmode()
 {
-	char *buf;
+	char buf[1048576];
 	int lenr;
 	char *prompt = "Homemade shell>";
 
-	buf = malloc(1048576);
-	if (buf == NULL)
-	{
-		perror("Not enough memory to allocate buffer:");
-		return (-1);
-	}	
 	while(1)
 	{
 		write(1, prompt, 15);
