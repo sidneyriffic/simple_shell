@@ -1,11 +1,11 @@
 #include "shell.h"
 
-int shintmode()
+int shintmode(char **environ)
 {
 	char buf[1048576];
 	char *bufgl;
 	size_t bufgllen;
-	int lenr;
+	ssize_t lenr;
 	char *prompt = "Homemade shell>";
 
 	while(1)
@@ -17,12 +17,12 @@ int shintmode()
 		lenr--;
 		buf[lenr] = 0;
 		printf("\n---\nbuffer from read %s\nCalling command:\n", buf);
-		parseargs(bufgl);
+		parseargs(bufgl, environ);
 	}
 	return (0);
 }
 
-int scriptmode(int ac, char* av[])
+int scriptmode(int ac, char *av[], char **environ)
 {
 	char *buf = NULL;
 	size_t n = 0;
@@ -43,7 +43,7 @@ int scriptmode(int ac, char* av[])
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
 			printf("buff got:%s\n", buf);
-			parseargs(buf);
+			parseargs(buf, environ);
 		} while (*buf != 0);
 		fclose(infile);
 		i++;
@@ -54,11 +54,11 @@ int scriptmode(int ac, char* av[])
 	return (0);
 }
 
-int main(int ac, char *av[])
+int main(int ac, char *av[], char **environ)
 {
 	printf("main av[0] %s av[1] %s\n", av[0], av[1]);
 	if (ac > 1)
-		return (scriptmode(ac, av));
+		return (scriptmode(ac, av, environ));
 
-	return (shintmode());
+	return (shintmode(environ));
 }

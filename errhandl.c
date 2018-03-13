@@ -2,6 +2,6 @@
 
 int errhandl(int status)
 {
-	shintmode();
+/*	shintmode();*/
 	return (-1);
 }

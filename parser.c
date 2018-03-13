@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int parseargs(char *buf)
+int parseargs(char *buf, char **environ)
 {
 	char *av[1024], *cmd[1024], *ptr;
 	int ac, cc, ret = 0;
@@ -38,7 +38,7 @@ int parseargs(char *buf)
 		ac--;
 		av[ac] = NULL;
 		printf("Calling command/builtin\n");
-		ret = builtincall(av);
+		ret = builtincall(av, environ);
 		cc++;
 	}
 	return (ret);

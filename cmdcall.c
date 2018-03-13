@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int cmdcall(char *av[])
+int cmdcall(char *av[], char **environ)
 {
 	pid_t command;
 	int status;
@@ -10,7 +10,7 @@ int cmdcall(char *av[])
 	if (command == 0)
 	{
 		printf("Child executing command %s\n", av[0]);
-		if (execve(av[0], av, NULL) == -1)
+		if (execve(av[0], av, environ) == -1)
 		{
 			perror("Could not execute command errno:");
 			exit(-1);
@@ -27,7 +27,7 @@ int cmdcall(char *av[])
 	return (status);
 }
 
-int builtincall(char *av[])
+int builtincall(char *av[], char **environ)
 {
 	if (av[0][0] == 'e' && av[0][1] == 'x' && av[0][2] == 'i'
 	    && av[0][3] == 't' && av[0][4] == 0)
@@ -37,5 +37,5 @@ int builtincall(char *av[])
 		else
 			exit(0);
 	}
-	return (cmdcall(av));
+	return (cmdcall(av, environ));
 }

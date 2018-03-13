@@ -11,14 +11,14 @@
 #include <string.h>
 
 /* from in.c */
-int shintmode();
+int shintmode(char **environ);
 
 /* from cmdcall.c */
-int builtincall(char *av[]);
-int cmdcall(char *av[]);
+int builtincall(char *av[], char **environ);
+int cmdcall(char *av[], char **environ);
 
 /* from parser.c */
-int parseargs(char *buf);
+int parseargs(char *buf, char **environ);
 
 /* from errhandl.c */
 int errhandl(int status);
