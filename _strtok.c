@@ -1,5 +1,5 @@
 #include "shell.h"
-char *_strtok(char *str, char *delim)
+char *strtok(char *str, char *delim)
 {
 	static char *saved_string;
 	int i;

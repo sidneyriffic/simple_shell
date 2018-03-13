@@ -92,20 +92,20 @@ int builtincall(char *av[])
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
 #endif
-	if (!strcmp(av[0], "exit"))
+	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
 			exit(97);
 		else
 			exit(0);
 	}
-	if (!strcmp(av[0], "cd"))
+	if (!_strcmp(av[0], "cd"))
 		retval = _cd(av);
-	else if (!strcmp(av[0], "getenv"))
+	else if (!_strcmp(av[0], "getenv"))
 		retval = !printf("%s\n", _getenv(av[1]));
-	else if (!strcmp(av[0], "setenv"))
+	else if (!_strcmp(av[0], "setenv"))
 		retval = _setenv(av[1], av[2]);
-	else if (!strcmp(av[0], "alias"))
+	else if (!_strcmp(av[0], "alias"))
 		retval = aliascmd(av);
 	else if (av[0][0] != '/')
 		retval = checkpath(av);
