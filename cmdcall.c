@@ -29,8 +29,7 @@ int cmdcall(char *av[], char **environ)
 
 int builtincall(char *av[], char **environ)
 {
-	if (av[0][0] == 'e' && av[0][1] == 'x' && av[0][2] == 'i'
-	    && av[0][3] == 't' && av[0][4] == 0)
+	if (!strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
 			exit(31337);

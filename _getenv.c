@@ -1,4 +1,5 @@
 #include "shell.h"
+
 extern char **environ;
 /**
  * _strcat - concatenates two strings
@@ -13,7 +14,8 @@ char *malcat(char *dest, char *src)
 {
 	int len_dest;
 	int len_src;
-	int i;
+	int i, j;
+	char *s;
 
 	len_dest = 0;
 	while (dest[len_dest] != '\0')
@@ -46,10 +48,10 @@ char *malcat(char *dest, char *src)
 
 	return (s);
 }
-char *_getenv(const char *name)
+char *_getenv(char *name)
 {
+	int i, j;
 	char *s;
-	int i;
 
 	i = 0;
 	while (environ[i] != 0)
@@ -59,7 +61,7 @@ char *_getenv(const char *name)
 		while (s[j] == name[j])
 		{
 			if (name[j] == 0 && s[j] == '=')
-				return (strcat(environ[i], name));
+				return (malcat(environ[i], name));
 			j++;
 		}
 		i++;
