@@ -36,5 +36,9 @@ int builtincall(char *av[], char **environ)
 		else
 			exit(0);
 	}
+	else if (!strcmp(av[0], "getenv"))
+	{
+		return (printf("%s\n", _getenv(av[1])));
+	}
 	return (cmdcall(av, environ));
 }

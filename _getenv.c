@@ -17,6 +17,7 @@ char *malcat(char *dest, char *src)
 	int i, j;
 	char *s;
 
+	printf("In malcat\n");
 	len_dest = 0;
 	while (dest[len_dest] != '\0')
 	{
@@ -54,15 +55,18 @@ char *_getenv(char *name)
 	char *s;
 
 	i = 0;
-	while (environ[i] != 0)
+	printf("In getenv\n");
+	while (environ[i] != NULL)
 	{
+		printf("In outer while %s\n", environ[i]);
 		s = environ[i];
 		j = 0;
 		while (s[j] == name[j])
 		{
-			if (name[j] == 0 && s[j] == '=')
-				return (malcat(environ[i], name));
+			printf("In inner while %s %s\n", name + j, s + j);
 			j++;
+			if (name[j] == 0 && s[j] == '=')
+				return (environ[i]);
 		}
 		i++;
 	}

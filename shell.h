@@ -23,4 +23,8 @@ int parseargs(char *buf, char **environ);
 /* from errhandl.c */
 int errhandl(int status);
 
+/* from _getenv.c */
+char *_getenv(char *avzero);
+char *malcat(char *, char *);
+
 #endif
