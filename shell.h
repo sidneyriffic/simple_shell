@@ -37,6 +37,7 @@ char *_strdup(char *str);
 
 /* from utility.c */
 char *itos(int digits);
+char *_strchr(char *s, char c);
 
 /* from cd.c */
 int _cd(char *av[]);

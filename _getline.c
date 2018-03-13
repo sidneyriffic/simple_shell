@@ -1,4 +1,5 @@
 #include "shell.h"
+
 int _fgetc (FILE *stream)
 {
 	int c;
@@ -15,18 +16,18 @@ char *_fgets(char *s, int size, FILE *stream)
 	x = 0;
 	while (x < size)
 	{
-		if ((y = _fgetc(stream) == EOF)) //get 1 char
+		if ((y = _fgetc(stream) == EOF)) /*get 1 char*/
 		{
-			*ptr = '\0'; //if end of file make null byte @ location
+			*ptr = '\0'; /*if end of file make null byte @ location*/
 			break;
 		}
-		if (y == '\n') //if newline send back to _getline to handle
+		if (y == '\n') /*if newline send back to _getline to handle*/
 			break;
-		*ptr = y; //else *ptr set to char from fgetc
-		ptr++; //increase ptr
-		x++; //increase x
+		*ptr = y; /*else *ptr set to char from fgetc*/
+		ptr++;
+		x++;
 	}
-	*ptr = 0; //set final ptr to null if goes through entire loop
+	*ptr = 0; /*set final ptr to null if goes through entire loop*/
 	return (ptr);
 }
        
@@ -43,12 +44,12 @@ int _getline(char **lineptr, size_t *n, FILE *stream)
 
 	_fgets(line, 1024, stream);
 
-	c = _strchr(line, '\n'); //search for instance of newline
+	c = _strchr(line, '\n'); /*search for instance of newline*/
 	if (c)
-		*c = '\0'; //replace with null
+		*c = '\0';
 	len = _strlen(line);
 
-	if ((len + 1) >= 1024) //check for need to realloc
+	if ((len + 1) >= 1024) /*check for need to realloc*/
 	{
 		c = _realloc(*lineptr, 0, len + 1);
 		if (c == NULL)
@@ -56,7 +57,7 @@ int _getline(char **lineptr, size_t *n, FILE *stream)
 		*lineptr = c;
 		*n = 1024;
 	}
-	_strcpy(*lineptr,line);//copy line into lineptr
+	_strcpy(*lineptr,line);/*copy line into lineptr*/
 	return(len);
 }
 
