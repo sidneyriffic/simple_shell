@@ -9,7 +9,7 @@ int parseargs(char *buf)
 	if (buf[0] == 0)
 		return (0);
 	for (ptr = buf; *ptr != 0; ptr++)
-		if (*ptr == '#')
+		if (*ptr == '#' || *ptr == '\n')
 		{
 			*ptr = 0;
 			break;
