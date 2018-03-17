@@ -55,15 +55,12 @@ char *_getenv(char *name)
 	char *s;
 
 	i = 0;
-	printf("In getenv\n");
 	while (environ[i] != NULL)
 	{
-		printf("In outer while %s\n", environ[i]);
 		s = environ[i];
 		j = 0;
 		while (s[j] == name[j])
 		{
-			printf("In inner while %s %s\n", name + j, s + j);
 			j++;
 			if (name[j] == 0 && s[j] == '=')
 				return (s + j + 1);
