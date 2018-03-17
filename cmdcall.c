@@ -43,41 +43,27 @@ int cmdcall(char *av[], char **environ)
 	pid_t command;
 	int status;
 
-	printf("av[0] %s av[1] %s\n", av[0], av[1]);
 	command = fork();
 	if (command == 0)
 	{
-		printf("Child executing command %s\n", av[0]);
 		if (execve(av[0], av, environ) == -1)
 		{
 			perror("Could not execute command");
 			exit(-1);
 		}
-		printf("Child done\n");
 	}
 	else
 	{
-		printf("Parent waiting\n");
 		wait(&status);
-		printf("Parent done\n");
 	}
-	printf("You shouldn't see this until command is done\n");
 	return (status);
 }
 
 int builtincall(char *av[], char **environ)
 {
-	int ret;
-
 	if (!strcmp(av[0], "cd"))
 	{
-		ret = chdir(av[1]);
-		if (ret == 0)
-		{
-			_setenv("PWD", av[1], environ);
-			return (0);
-		}
-		return (ret);
+		return (_cd(av, environ));
 	}
 	else if (!strcmp(av[0], "exit"))
 	{

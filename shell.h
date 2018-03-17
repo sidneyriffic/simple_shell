@@ -32,4 +32,8 @@ size_t _strlen(char *str);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *, char *);
 
+/* from cd.c */
+int _cd(char *av[], char **environ);
+
+
 #endif
