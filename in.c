@@ -16,6 +16,8 @@ int shintmode(char **environ)
 			break;
 		parseargs(bufgl, environ);
 	}
+	if (bufgl != NULL)
+		free(bufgl);
 	return (0);
 }
 
