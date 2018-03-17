@@ -27,4 +27,7 @@ int errhandl(int status);
 char *_getenv(char *avzero);
 char *malcat(char *, char *);
 
+/* from utility.c */
+size_t strlen(char *str);
+
 #endif
