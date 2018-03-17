@@ -34,6 +34,14 @@ size_t _strlen(char *str)
 	return (len);
 }
 
+char *_strcpy(char *dest, char *src)
+{
+	while(*src)
+		*dest++ = *src++;
+
+	return (dest);
+}
+
 char *malcat(char *dest, char *src)
 {
 	int len_dest;
