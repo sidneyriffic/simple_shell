@@ -38,5 +38,6 @@ int _cd(char *av[], char **environ);
 
 /* from alias.c */
 int aliascmd(char **av);
+char *getalias(char *name);
 
 #endif

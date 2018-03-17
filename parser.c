@@ -14,14 +14,16 @@ int parseargs(char *buf, char **environ)
 			*ptr = 0;
 			break;
 		}
-
 	cc = 0;
 	cmd[cc++] = strtok(buf, cmdd);
+#ifdef DEBUGMODE
+		printf("Got cs %s\n", cmd[cc - 1]);
+#endif
 	while(cmd[cc - 1] != NULL)
 	{
 		cmd[cc++] = strtok(NULL, cmdd);
 #ifdef DEBUGMODE
-		printf("Got cs %s", cmd[cc - 1]);
+		printf("Got cs %s\n", cmd[cc - 1]);
 #endif
 	}
 	cc = 0;
@@ -31,6 +33,10 @@ int parseargs(char *buf, char **environ)
 		av[ac++] = strtok(cmd[cc], wordd);
 #ifdef DEBUGMODE
 		printf("Got arg %s\n", av[ac - 1]);
+#endif
+		av[0] = getalias(av[0]);
+#ifdef DEBUGMODE
+		printf("Alias:%s\n", av[0]);
 #endif
 		while (av[ac - 1] != NULL)
 		{

@@ -61,6 +61,9 @@ int cmdcall(char *av[], char **environ)
 
 int builtincall(char *av[], char **environ)
 {
+#ifdef DEBUGMODE
+	printf("In builtincall %p\n%s\n", av[0], av[0]);
+#endif
 	if (!strcmp(av[0], "cd"))
 		return (_cd(av, environ));
 	if (!strcmp(av[0], "exit"))
@@ -74,6 +77,8 @@ int builtincall(char *av[], char **environ)
 		return (printf("%s\n", _getenv(av[1])));
 	if (!strcmp(av[0], "setenv"))
 		return (_setenv(av[1], av[2], environ));
+	printf("%p\n", av);
+	printf("%p\n", av[1]);
 	if (!strcmp(av[0], "alias"))
 		return (aliascmd(av));
 	if (av[0][0] != '/')

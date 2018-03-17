@@ -15,7 +15,7 @@ int shintmode(char **environ)
 		if (lenr == 0 || lenr == -1)
 			break;
 #ifdef DEBUGMODE
-		printf("calling carseargs\n");
+		printf("calling parseargs %s\n", bufgl);
 #endif
 		parseargs(bufgl, environ);
 	}
