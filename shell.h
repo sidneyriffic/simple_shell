@@ -31,6 +31,7 @@ int _setenv(char *name, char *val, char **environ);
 size_t _strlen(char *str);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *, char *);
+char *_strdup(char *str);
 
 /* from cd.c */
 int _cd(char *av[], char **environ);

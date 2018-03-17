@@ -38,8 +38,22 @@ char *_strcpy(char *dest, char *src)
 {
 	while(*src)
 		*dest++ = *src++;
+	*dest = *src;
 
 	return (dest);
+}
+
+char *_strdup(char *str)
+{
+	char *new;
+
+	if (str == NULL)
+		return (NULL);
+	new = malloc(sizeof(char) * _strlen(str));
+	if (new == NULL)
+		return (NULL);
+	_strcpy(new, str);
+	return (new);
 }
 
 char *malcat(char *dest, char *src)
