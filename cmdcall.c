@@ -62,24 +62,20 @@ int cmdcall(char *av[], char **environ)
 int builtincall(char *av[], char **environ)
 {
 	if (!strcmp(av[0], "cd"))
-	{
 		return (_cd(av, environ));
-	}
-	else if (!strcmp(av[0], "exit"))
+	if (!strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
 			exit(31337);
 		else
 			exit(0);
 	}
-	else if (!strcmp(av[0], "getenv"))
-	{
+	if (!strcmp(av[0], "getenv"))
 		return (printf("%s\n", _getenv(av[1])));
-	}
-	else if (!strcmp(av[0], "setenv"))
-	{
+	if (!strcmp(av[0], "setenv"))
 		return (_setenv(av[1], av[2], environ));
-	}
+	if (!strcmp(av[0], "alias"))
+		return (aliascmd(av));
 	if (av[0][0] != '/')
 		return (checkpath(av, environ));
 	return (cmdcall(av, environ));

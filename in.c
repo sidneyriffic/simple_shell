@@ -2,8 +2,8 @@
 
 int shintmode(char **environ)
 {
-	char *bufgl;
-	size_t bufgllen;
+	char *bufgl = NULL;
+	size_t bufgllen = 0;
 	ssize_t lenr;
 	int istty = isatty(0) && isatty(1);
 
@@ -14,6 +14,9 @@ int shintmode(char **environ)
 		lenr = getline(&bufgl, &bufgllen, stdin);
 		if (lenr == 0 || lenr == -1)
 			break;
+#ifdef DEBUGMODE
+		printf("calling carseargs\n");
+#endif
 		parseargs(bufgl, environ);
 	}
 	if (bufgl != NULL)

@@ -36,5 +36,7 @@ char *_strdup(char *str);
 /* from cd.c */
 int _cd(char *av[], char **environ);
 
+/* from alias.c */
+int aliascmd(char **av);
 
 #endif
