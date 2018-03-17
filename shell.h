@@ -25,6 +25,7 @@ int errhandl(int status);
 
 /* from _getenv.c */
 char *_getenv(char *avzero);
+int _setenv(char *name, char *val, char **environ);
 
 /* from utility.c */
 size_t _strlen(char *str);
