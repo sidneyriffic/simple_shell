@@ -19,25 +19,25 @@ int parseargs(char *buf, char **environ)
 	cmd[cc++] = strtok(buf, cmdd);
 	while(cmd[cc - 1] != NULL)
 	{
-		printf("parsing command string %d\n", cc);
+/*		printf("parsing command string %d\n", cc);*/
 		cmd[cc++] = strtok(NULL, cmdd);
-		printf("Got arg %s", cmd[cc - 1]);
+/*		printf("Got arg %s", cmd[cc - 1]);*/
 	}
 	cc = 0;
 	while (cmd[cc] != NULL)
 	{
 		ac = 0;
 		av[ac++] = strtok(cmd[cc], wordd);
-		printf("Got arg %s\n", av[ac - 1]);
+/*		printf("Got arg %s\n", av[ac - 1]);*/
 		while (av[ac - 1] != NULL)
 		{
-			printf("Parsing arg %d\n", ac);
+/*			printf("Parsing arg %d\n", ac);*/
 			av[ac++] = strtok(NULL, wordd);
-			printf("Got arg %s\n", av[ac -1]);
+/*			printf("Got arg %s\n", av[ac -1]);*/
 		}
 		ac--;
 		av[ac] = NULL;
-		printf("Calling command/builtin\n");
+/*		printf("Calling command/builtin\n");*/
 		ret = builtincall(av, environ);
 		cc++;
 	}
