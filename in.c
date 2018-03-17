@@ -6,10 +6,12 @@ int shintmode(char **environ)
 	char *bufgl;
 	size_t bufgllen;
 	ssize_t lenr;
+	int istty = isatty(0) && isatty(1);
 
 	while(1)
 	{
-		printf("Homemade shell:%s$", _getenv("PWD"));
+		if (istty)
+			printf("Homemade shell:%s$", _getenv("PWD"));
 		lenr = getline(&bufgl, &bufgllen, stdin);
 		if (lenr == 0 || lenr == -1)
 			break;
