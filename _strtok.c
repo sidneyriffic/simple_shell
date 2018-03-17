@@ -1,51 +1,95 @@
 #include "shell.h"
-/**
- *
- *
- */
-char *_strtok(char *str, const char *delim)
+char *_strtok(char *str, char *delim)
 {
-	static int pos = 0;
-	int i = 0;
+	static char *saved_string;
+	int i;
+	int j;
 	char *tmp_str;
+	char *tmp_delim;
 
-	if (str == NULL)
-		return ();
-	if (pos != 0 || str[pos] == *delim) // if initial spot is delim, move
-		pos++; //increment to get off delim from previous call//
-	tmp_str = str + pos; // increment str to spot left off at//
-	while (*tmp_str)
+	if (str == 0)
+		str = saved_string;
+	if (str == 0)
+		return (0);
+
+	tmp_str = str;
+	tmp_delim = delim;
+
+	i = 0;
+	while (tmp_str[i] != 0)
 	{
-		if (*tmp_str != *delim)
+		j = 0;
+		while (delim[j] != 0)
 		{
-			buffer[i] = *tmp_str; //copy tmp string to buffer//
-			i++; //increment everythin one place//
-			tmp_str++;
-			pos++;
+			if (tmp_str[i] == tmp_delim[j])
+				break;
+			j++;
 		}
-		else //if match is found//
-		{
+		if (tmp_delim[j] == 0)
 			break;
+		i++;
+	}
+	str = str + i;
+	if (*str == 0)
+	{
+		saved_string = str;
+		return(0);
+	}
+
+	tmp_str = tmp_str + i;
+
+	i = 0;
+	while (tmp_str[i] != 0)
+	{
+		j = 0;
+		while (tmp_delim[j] != 0)
+		{
+			if (tmp_str[i] == tmp_delim[j])
+				break;
+			j++;
 		}
+		if (tmp_delim[j] != 0)
+			break;
+		i++;
+	}
+	saved_string = tmp_str;
+	if (tmp_str[i] != 0)
+	{
+		saved_string = (saved_string + i + 1);
+		tmp_str[i] = '\0';
+	}
+	else
+	{
+		saved_string = '\0';
 	}
 	return (tmp_str);
 }
 
 int main(void)
 {
-	char a[] = "; apple ; pie  ; tastes good";
-	char *delim = ";";
+	char a[] = ";apple ;; pie  - tastes good";
+	char b[] = ";apple ;; pie  - tastes good";
+	char delim[] = " ;-";
 	char *test1;
 	char *test2;
 
-	printf("testing\n");
+	printf("testing strtok\n");
+	test1 = strtok(b, delim);
+	printf("strtok: %s\n", test1);
 
-	test2 = _strtok(a, delim);
-	while (*test2)
+	while (test1 != NULL)
 	{
-	   printf("mine: %s\n",test2);
-        test2 = _strtok(a, delim);
+		test1 = strtok(NULL, delim);
+		printf("strtok: %s\n", test1);
 	}
 
+	printf("testing _strtok\n");
+	test2 = _strtok(a, delim);
+       	printf("_strtok: %s\n", test2);
+	while (test2 != NULL)
+	{
+		test2 = _strtok(NULL , delim);
+		printf("_strtok: %s\n", test2);
+	}
 	return(0);
 }
