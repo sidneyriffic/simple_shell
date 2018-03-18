@@ -18,7 +18,7 @@ int builtincall(char *av[], char **environ);
 int cmdcall(char *av[], char **environ);
 
 /* from parser.c */
-int parseargs(char *buf, char **environ);
+int parseargs(char **buf, char **environ);
 
 /* from errhandl.c */
 int errhandl(int status);

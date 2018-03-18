@@ -17,7 +17,7 @@ int shintmode(char **environ)
 #ifdef DEBUGMODE
 		printf("calling parseargs %s\n", bufgl);
 #endif
-		parseargs(bufgl, environ);
+		parseargs(&bufgl, environ);
 	}
 	if (bufgl != NULL)
 		free(bufgl);
@@ -42,7 +42,7 @@ int scriptmode(int ac, char *av[], char **environ)
 				break;
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
-			parseargs(buf, environ);
+			parseargs(&buf, environ);
 		} while (*buf != 0);
 		fclose(infile);
 		i++;
