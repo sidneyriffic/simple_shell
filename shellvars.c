@@ -1,13 +1,71 @@
 #include "shell.h"
-#include "alias.h"
+#include "shellvars.h"
 
-AliasData *alist;
+ShellVar *special;
+ShellVar *vars;
+
+int initsvars(int ac, char **av)
+{
+	ShellVar *ptr;
+	int i = 0;
+	char nums[2] = {0, 0};
+
+	/* 0-9, #, $, ?, dash, underscore */
+	special = malloc(sizeof(ShellVar) * 15);
+	if (special == NULL)
+		return (-1);
+	special -> val = _strdup("0");
+	special -> name = _strdup("?");
+	ptr = special + 1;
+	special -> next = ptr;
+	while (av[i] != NULL)
+	{
+		nums[0] = i + '0';
+		ptr -> val = _strdup(av[i]);
+		ptr -> name = _strdup(nums);
+		ptr -> next = ptr + 1;
+		ptr = ptr -> next;
+		i++;
+	}
+	while (i < 10)
+	{
+		nums[0] = i + '0';
+		ptr -> val = _strdup("0");
+		ptr -> name = _strdup(nums);
+		ptr -> next = ptr + 1;
+		ptr = ptr -> next;
+		i++;
+	}
+	ptr -> name = _strdup("$");
+	ptr -> val = _strdup("0");
+	ptr -> next = ptr + 1;
+	ptr = ptr -> next;
+	ptr -> name = _strdup("#");
+	ptr -> val = _strdup("0");
+	ptr -> next = NULL;
+	return (0);
+}
 
 /* returns original argument if not found */
-char *getalias(char *name)
+char *getsvar(char *name)
 {
-	AliasData *ptr = alist;
+	ShellVar *ptr=special;
 
+	while (ptr != NULL && _strcmp(ptr -> name, name))
+	{
+#ifdef DEBUGMODE
+		printf("Checked .%s. against .%s.\n", name, ptr -> name);
+#endif
+		ptr = ptr -> next;
+	}
+	if (ptr != NULL)
+	{
+#ifdef DEBUGMODE
+		printf("Returning special var %s\n", ptr -> val);
+#endif
+		return (ptr -> val);
+	}
+	ptr = vars;
 	while (ptr != NULL && _strcmp(ptr -> name, name))
 	{
 #ifdef DEBUGMODE
@@ -18,30 +76,45 @@ char *getalias(char *name)
 	if (ptr == NULL)
 	{
 #ifdef DEBUGMODE
-		printf("Alias not found %s\n", name);
+		printf("Var not found %s\n", name);
 #endif
 		return (name);
 	}
 #ifdef DEBUGMODE
-	printf("Returning alias %s\n", ptr -> val);
+	printf("Returning var %s\n", ptr -> val);
 #endif
 	return (ptr -> val);
 }
 
-int setalias(char *name, char *val)
-{
-	AliasData *ptr = alist, *new;
 
-	if (alist == NULL)
+int setsvar(char *name, char *val)
+{
+	ShellVar *ptr = special, *new;
+
+	printf("%p\n", special);
+	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
 	{
-		new = malloc(sizeof(AliasData));
+		ptr = ptr -> next;
+	}
+	if (!_strcmp(ptr -> name, name))
+	{
+		printf("Setting %s to %s\n", ptr -> name, val);
+		printf("ptr -> val %p\n", ptr->val);
+		free(ptr -> val);
+		ptr -> val = val;
+		free(name);
+	}
+	ptr = vars;
+	if (ptr == NULL)
+	{
+		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
 		new -> name = name;
 		new -> val = val;
-		alist = new;
+		vars = new;
 		return (0);
-	}	
+	}
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
 		ptr = ptr -> next;
 	if (!_strcmp(ptr -> name, name))
@@ -52,7 +125,7 @@ int setalias(char *name, char *val)
 	}
 	else
 	{
-		new = malloc(sizeof(AliasData));
+		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
 		new -> name = name;
@@ -62,7 +135,8 @@ int setalias(char *name, char *val)
 	return (0);
 }
 
-int unsetalias(char *name)
+/*
+int unsetsvar(char *name)
 {
 	AliasData *ptr = alist, *next;
 
@@ -86,7 +160,8 @@ int unsetalias(char *name)
 	}
 	return (0);
 }
-		
+*/
+/*
 int aliascmd(char *av[])
 {
 	AliasData *ptr = alist;
@@ -130,3 +205,4 @@ int aliascmd(char *av[])
 	}
 	return (1);
 }
+*/

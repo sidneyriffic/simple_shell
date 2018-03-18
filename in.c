@@ -54,6 +54,9 @@ int scriptmode(int ac, char *av[], char **environ)
 
 int main(int ac, char *av[], char **environ)
 {
+	initsvars(ac, av);
+	printf("?:%s\n", getsvar("?"));
+	printf("0:%s\n", getsvar("0"));
 	if (ac > 1)
 		return (scriptmode(ac, av, environ));
 

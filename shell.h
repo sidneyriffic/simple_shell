@@ -40,4 +40,9 @@ int _cd(char *av[], char **environ);
 int aliascmd(char **av);
 char *getalias(char *name);
 
+/* from shellvars.c */
+int initsvars(int ac, char **av);
+char *getsvar(char *name);
+int setsvar(char *name, char *val);
+
 #endif
