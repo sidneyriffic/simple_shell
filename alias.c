@@ -48,6 +48,7 @@ int setalias(char *name, char *val)
 	{
 		free(ptr -> val);
 		ptr -> val = val;
+		free(name);
 	}
 	else
 	{
