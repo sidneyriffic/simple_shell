@@ -57,6 +57,8 @@ int main(int ac, char *av[], char **environ)
 	initsvars(ac, av);
 	printf("?:%s\n", getsvar("?"));
 	printf("0:%s\n", getsvar("0"));
+	setsvar(_strdup("simplevar"), _strdup("98"));
+	printf("simplevar:%s\n", getsvar("simplevar"));
 	if (ac > 1)
 		return (scriptmode(ac, av, environ));
 
