@@ -7,6 +7,7 @@ char *_strtok(char *str, char *delim)
 	char *tmp_str;
 	char *tmp_delim;
 
+	//if NULL passed in str becomes where saved string left off
 	if (str == 0)
 		str = saved_string;
 	if (str == 0)
@@ -14,7 +15,7 @@ char *_strtok(char *str, char *delim)
 
 	tmp_str = str;
 	tmp_delim = delim;
-
+	//skip initial delimiters//
 	i = 0;
 	while (tmp_str[i] != 0)
 	{
@@ -35,7 +36,7 @@ char *_strtok(char *str, char *delim)
 		saved_string = str;
 		return(0);
 	}
-
+	//start new token//
 	tmp_str = tmp_str + i;
 
 	i = 0;
@@ -55,12 +56,13 @@ char *_strtok(char *str, char *delim)
 	saved_string = tmp_str;
 	if (tmp_str[i] != 0)
 	{
+		//saves string for next call
 		saved_string = (saved_string + i + 1);
 		tmp_str[i] = '\0';
 	}
 	else
 	{
-		saved_string = '\0';
+		saved_string = '\0'; //if end of input string.
 	}
 	return (tmp_str);
 }

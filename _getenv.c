@@ -52,7 +52,6 @@ int _setenv(char *name, char *val, char **environ)
 				*s = 0;
 				environ[i] = ptr;
 			}
-				
 		}
 		i++;
 	}
