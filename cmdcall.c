@@ -61,6 +61,8 @@ int cmdcall(char *av[], char **environ)
 
 int builtincall(char *av[], char **environ)
 {
+	if (av[0] == NULL)
+		return (0);
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
 #endif

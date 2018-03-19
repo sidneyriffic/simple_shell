@@ -1,4 +1,34 @@
 #include "shell.h"
+#define DEBUGMODE
+int parsesetsvar(char **av)
+{
+	int haseq, i = 0, ac = 0;
+	char *ptr, *name, *val;
+
+	do {
+		haseq = 0;
+		while (av[i] != NULL)
+		{
+			for (ptr = av[i]; *ptr; ptr++)
+				if (*ptr == '=')
+				{
+#define DEBUGSVARS
+					printf("setting %s to %s\n", strtok(av[i], "="), strtok(NULL, ""));
+#endif
+					haseq = 1;
+					setsvar(_strdup(strtok(av[ac], "=")), _strdup(strtok(NULL, "")));
+#define DEBUGSVARS
+					printf("get svar ASDF:%s\n", getsvar("ASDF"));
+#endif
+					ac++;
+					i++;
+					continue;
+				}
+			i++;
+		}
+	} while (haseq);
+	return (ac);
+}
 
 char *subsvars(char **buf)
 {
@@ -8,7 +38,9 @@ char *subsvars(char **buf)
 
 	while (*varptr != 0)
 	{
+#ifdef DEBUGSVARS
 		printf("Top of svar loop buf:%s::varptr:%s\n", *buf, varptr);
+#endif
 		while (*varptr != '$' && *varptr != 0)
 			varptr++;
 		if (*varptr == 0)
@@ -17,25 +49,33 @@ char *subsvars(char **buf)
 		for (ptr = varptr, varnlen = 0; *ptr != 0 && *ptr != ' '
 			     && *ptr != '\n' && *ptr != '$'; ptr++)
 			varnlen++;
+#ifdef DEBUGSVARS
 		printf("varnlen:%d varptr:%s\n", varnlen, varptr);
+#endif
 		name = malloc (sizeof(char) * (varnlen + 1));
 		if (name == NULL)
 			return (NULL);
 		for (i = 0; i < varnlen; i++, varptr++)
 			name[i] = *varptr;
 		name[i] = 0;
+#ifdef DEBUGSVARS
 		printf("Name got:%s\n::varptr:%s", name, varptr);
+#endif
 		val = getsvar(name);
 		if (val == name)
 		{
 			val = _strdup("");
 		}
 		free(name);
+#ifdef DEBUGSVARS
 		printf("val got:%s\n", val);
+#endif
 		varvlen = _strlen(val);
 		/* need new buffer for substituted var string */
 		buflen = buflen - varnlen + varvlen + 1;
+#ifdef DEBUGSVARS
 		printf("malloc size:%d\n", buflen);
+#endif
 		name = malloc(sizeof(char) * (buflen));
 		for (ptr = *buf, dest = name, valptr = val; *ptr != 0; ptr++, dest++)
 		{
@@ -51,7 +91,9 @@ char *subsvars(char **buf)
 			*dest = *ptr;
 		}
 		*dest = *ptr;
+#ifdef DEBUGSVARS
 		printf("Resulting buf:%s::varptr:%s\n", name, varptr);
+#endif
 		free(*buf);
 		*buf = name;
 	}
@@ -61,7 +103,7 @@ char *subsvars(char **buf)
 int parseargs(char **buf, char **environ)
 {
 	char *av[1024], *cmd[1024], *ptr;
-	int ac, cc, ret = 0;
+	int ac, cc, ret = 0, numvarset;
 	char *wordd = " ", *cmdd = ";";
 
 	if (*buf[0] == 0)
@@ -108,10 +150,11 @@ int parseargs(char **buf, char **environ)
 		}
 		ac--;
 		av[ac] = NULL;
+		numvarset = parsesetsvar(av);
 #ifdef DEBUGMODE
-		printf("Calling command/builtin\n");
+		printf("Calling command/builtin numvarset %d\n", numvarset);
 #endif
-		ret = builtincall(av, environ);
+		ret = builtincall(av + numvarset, environ);
 		cc++;
 	}
 	return (ret);
