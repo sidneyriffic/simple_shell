@@ -101,8 +101,7 @@ int setsvar(char *name, char *val)
 		printf("Setting %s to %s\n", ptr -> name, val);
 		printf("ptr -> val %p\n", ptr->val);
 		free(ptr -> val);
-		ptr -> val = val;
-		free(name);
+		ptr -> val = _strdup(val);
 	}
 	ptr = vars;
 	if (ptr == NULL)
@@ -110,8 +109,8 @@ int setsvar(char *name, char *val)
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
-		new -> name = name;
-		new -> val = val;
+		new -> name = _strdup(name);
+		new -> val = _strdup(val);
 		vars = new;
 		return (0);
 	}
@@ -120,16 +119,15 @@ int setsvar(char *name, char *val)
 	if (!_strcmp(ptr -> name, name))
 	{
 		free(ptr -> val);
-		ptr -> val = val;
-		free(name);
+		ptr -> val = _strdup(val);
 	}
 	else
 	{
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
-		new -> name = name;
-		new -> val = val;
+		new -> name = _strdup(name);
+		new -> val = _strdup(val);
 		ptr -> next = new;
 	}
 	return (0);
