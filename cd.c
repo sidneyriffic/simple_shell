@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int _cd(char *av[], char **environ)
+int _cd(char *av[])
 {
 	char *buf = NULL;
 	int ret;
@@ -17,9 +17,9 @@ int _cd(char *av[], char **environ)
 	ret = chdir(av[1]);
 	if (ret == 0)
 	{
-		_setenv("OLDPWD", buf, environ);
+		_setenv("OLDPWD", buf);
 		free(buf);
-		_setenv("PWD", av[1], environ);
+		_setenv("PWD", av[1]);
 		return (0);
 	}
 	free(buf);

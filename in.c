@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int shintmode(char **environ)
+int shintmode()
 {
 	char *bufgl = NULL;
 	size_t bufgllen = 0;
@@ -9,6 +9,9 @@ int shintmode(char **environ)
 
 	while(1)
 	{
+#ifdef DEBUGMODE
+		printf("At terminal prompt\n");
+#endif
 		if (istty)
 			printf("Homemade shell:%s$", _getenv("PWD"));
 		lenr = getline(&bufgl, &bufgllen, stdin);
@@ -17,14 +20,14 @@ int shintmode(char **environ)
 #ifdef DEBUGMODE
 		printf("calling parseargs %s\n", bufgl);
 #endif
-		parseargs(bufgl, environ);
+		parseargs(&bufgl);
 	}
 	if (bufgl != NULL)
 		free(bufgl);
 	return (0);
 }
 
-int scriptmode(int ac, char *av[], char **environ)
+int scriptmode(int ac, char *av[])
 {
 	char *buf = NULL;
 	size_t n = 0;
@@ -42,7 +45,7 @@ int scriptmode(int ac, char *av[], char **environ)
 				break;
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
-			parseargs(buf, environ);
+			parseargs(&buf);
 		} while (*buf != 0);
 		fclose(infile);
 		i++;
@@ -55,12 +58,15 @@ int scriptmode(int ac, char *av[], char **environ)
 int main(int ac, char *av[], char **environ)
 {
 	initsvars(ac, av);
+	setallenv(environ, NULL);
+#ifdef DEBUGMODE
 	printf("?:%s\n", getsvar("?"));
 	printf("0:%s\n", getsvar("0"));
 	setsvar(_strdup("simplevar"), _strdup("98"));
 	printf("simplevar:%s\n", getsvar("simplevar"));
+#endif
 	if (ac > 1)
-		return (scriptmode(ac, av, environ));
+		return (scriptmode(ac, av));
 
-	return (shintmode(environ));
+	return (shintmode());
 }

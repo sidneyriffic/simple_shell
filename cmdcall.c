@@ -1,6 +1,6 @@
 #include "shell.h"
-
-int checkpath(char *av[], char **environ)
+#define DEBUGMODE
+int checkpath(char *av[])
 {
 	char *path, *pathptr, *pathvar, *ptr;
 	int pathlen, cmdlen;
@@ -26,7 +26,7 @@ int checkpath(char *av[], char **environ)
 		if (!access(path, F_OK))
 		{
 			av[0] = path;
-			pathlen = cmdcall(av, environ);
+			pathlen = cmdcall(av);
 			free(path);
 			return (pathlen);
 		}
@@ -38,34 +38,53 @@ int checkpath(char *av[], char **environ)
 }
 
 
-int cmdcall(char *av[], char **environ)
+int cmdcall(char *av[])
 {
+	char **environ;
 	pid_t command;
 	int status;
 
+#ifdef DEBUGMODE
+	printf("In cmdcall av[0]:%s\n", av[0]);
+#endif
+	if((environ = getallenv()) == NULL)
+		return (-1);
+	printf("Forking\n");
 	command = fork();
+	printf("command:%d\n", command);
+	fflush(stdout);
 	if (command == 0)
 	{
+#ifdef DEBUGMODE
+		printf("Executing %s\n", av[0]);
+#endif
 		if (execve(av[0], av, environ) == -1)
 		{
 			perror("Could not execute command");
 			exit(-1);
 		}
+#ifdef DEBUGMODE
+		printf("Command done\n");
+#endif
 	}
 	else
 	{
 		wait(&status);
 	}
+	printf("Status %d\n", status);
+	free(environ);
 	return (status);
 }
 
-int builtincall(char *av[], char **environ)
+int builtincall(char *av[])
 {
+	if (av[0] == NULL)
+		return (0);
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
 #endif
 	if (!strcmp(av[0], "cd"))
-		return (_cd(av, environ));
+		return (_cd(av));
 	if (!strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
@@ -76,12 +95,10 @@ int builtincall(char *av[], char **environ)
 	if (!strcmp(av[0], "getenv"))
 		return (printf("%s\n", _getenv(av[1])));
 	if (!strcmp(av[0], "setenv"))
-		return (_setenv(av[1], av[2], environ));
-	printf("%p\n", av);
-	printf("%p\n", av[1]);
+		return (_setenv(av[1], av[2]));
 	if (!strcmp(av[0], "alias"))
 		return (aliascmd(av));
 	if (av[0][0] != '/')
-		return (checkpath(av, environ));
-	return (cmdcall(av, environ));
+		return (checkpath(av));
+	return (cmdcall(av));
 }
