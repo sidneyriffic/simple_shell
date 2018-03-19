@@ -75,7 +75,9 @@ int cmdcall(char *av[])
 	{
 		wait(&status);
 	}
+#ifdef DEBUGMODE
 	printf("Status %d\n", status);
+#endif
 	free(environ);
 	return (status);
 }
