@@ -92,7 +92,7 @@ int setsvar(char *name, char *val)
 	ShellVar *ptr = special, *new;
 
 #ifdef DEBUGMODE
-	printf("%p\n", special);
+	printf("special address: %p\n", special);
 	printf("Got %s %s\n", name, val);
 #endif
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)

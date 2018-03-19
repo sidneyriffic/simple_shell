@@ -11,21 +11,23 @@
 #include <string.h>
 
 /* from in.c */
-int shintmode(char **environ);
+int shintmode();
 
 /* from cmdcall.c */
-int builtincall(char *av[], char **environ);
-int cmdcall(char *av[], char **environ);
+int builtincall(char *av[]);
+int cmdcall(char *av[]);
 
 /* from parser.c */
-int parseargs(char **buf, char **environ);
+int parseargs(char **buf);
 
 /* from errhandl.c */
 int errhandl(int status);
 
 /* from _getenv.c */
+int setallenv(char **environ, char *add);
 char *_getenv(char *avzero);
-int _setenv(char *name, char *val, char **environ);
+int _setenv(char *name, char *val);
+char **getallenv();
 
 /* from utility.c */
 size_t _strlen(char *str);
@@ -34,7 +36,7 @@ int _strcmp(char *, char *);
 char *_strdup(char *str);
 
 /* from cd.c */
-int _cd(char *av[], char **environ);
+int _cd(char *av[]);
 
 /* from alias.c */
 int aliascmd(char **av);

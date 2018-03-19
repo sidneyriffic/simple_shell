@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define DEBUGSVARS
 int parsesetsvar(char **av)
 {
 	int haseq, i = 0, ac = 0;
@@ -30,7 +30,9 @@ char *subsvars(char **buf)
 	size_t buflen = _strlen(*buf);
 	size_t varvlen, varnlen, i;
 
+#ifdef DEBUGSVARS
 	printf("In subsvars\n");
+#endif
 	while (*varptr != 0)
 	{
 #ifdef DEBUGSVARS
@@ -56,10 +58,15 @@ char *subsvars(char **buf)
 #ifdef DEBUGSVARS
 		printf("Name got:%s\n::varptr:%s", name, varptr);
 #endif
-		val = getsvar(name);
+		val = _getenv(name);
 		if (val == name)
 		{
-			val = _strdup("");
+#ifdef DEBUGSVARS
+			printf("%s not an env var, checking env\n", name);
+#endif
+			val = getsvar(name);
+			if (val == name)
+				val = _strdup("");
 		}
 		free(name);
 #ifdef DEBUGSVARS
@@ -95,7 +102,7 @@ char *subsvars(char **buf)
 	return (*buf);
 }
 
-int parseargs(char **buf, char **environ)
+int parseargs(char **buf)
 {
 	char *av[1024], *cmd[1024], *ptr;
 	int ac, cc, ret = 0, numvarset;
@@ -149,7 +156,7 @@ int parseargs(char **buf, char **environ)
 #ifdef DEBUGMODE
 		printf("Calling command/builtin numvarset %d\n", numvarset);
 #endif
-		ret = builtincall(av + numvarset, environ);
+		ret = builtincall(av + numvarset);
 		cc++;
 	}
 	return (ret);
