@@ -49,10 +49,14 @@ int cmdcall(char *av[])
 #endif
 	if((environ = getallenv()) == NULL)
 		return (-1);
+#ifdef DEBUGMODE
 	printf("Forking\n");
+#endif
 	command = fork();
+#ifdef DEBUGMODE
 	printf("command:%d\n", command);
 	fflush(stdout);
+#endif
 	if (command == 0)
 	{
 #ifdef DEBUGMODE
