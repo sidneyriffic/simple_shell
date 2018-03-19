@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 int parsesetsvar(char **av)
 {
 	int haseq, i = 0, ac = 0;
@@ -12,17 +12,11 @@ int parsesetsvar(char **av)
 			for (ptr = av[i]; *ptr; ptr++)
 				if (*ptr == '=')
 				{
-#define DEBUGSVARS
-					printf("setting %s to %s\n", strtok(av[i], "="), strtok(NULL, ""));
-#endif
 					haseq = 1;
-					setsvar(_strdup(strtok(av[ac], "=")), _strdup(strtok(NULL, "")));
-#define DEBUGSVARS
-					printf("get svar ASDF:%s\n", getsvar("ASDF"));
-#endif
+					name = strtok(av[i], "=");
+					val = strtok(NULL, "");
+					setsvar(name, val);
 					ac++;
-					i++;
-					continue;
 				}
 			i++;
 		}
@@ -36,6 +30,7 @@ char *subsvars(char **buf)
 	size_t buflen = _strlen(*buf);
 	size_t varvlen, varnlen, i;
 
+	printf("In subsvars\n");
 	while (*varptr != 0)
 	{
 #ifdef DEBUGSVARS

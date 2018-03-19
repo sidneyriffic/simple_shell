@@ -91,21 +91,29 @@ int setsvar(char *name, char *val)
 {
 	ShellVar *ptr = special, *new;
 
+#ifdef DEBUGMODE
 	printf("%p\n", special);
+	printf("Got %s %s\n", name, val);
+#endif
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
 	{
 		ptr = ptr -> next;
 	}
 	if (!_strcmp(ptr -> name, name))
 	{
+#ifdef DEBUGMODE
 		printf("Setting %s to %s\n", ptr -> name, val);
 		printf("ptr -> val %p\n", ptr->val);
+#endif
 		free(ptr -> val);
 		ptr -> val = _strdup(val);
 	}
 	ptr = vars;
 	if (ptr == NULL)
 	{
+#ifdef DEBUGMODE
+		printf("Setting %s to %s\n", name, val);
+#endif
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
@@ -118,11 +126,17 @@ int setsvar(char *name, char *val)
 		ptr = ptr -> next;
 	if (!_strcmp(ptr -> name, name))
 	{
+#ifdef DEBUGMODE
+		printf("Setting %s to %s\n", ptr -> name, val);
+#endif
 		free(ptr -> val);
 		ptr -> val = _strdup(val);
 	}
 	else
 	{
+#ifdef DEBUGMODE
+		printf("Setting %s to %s\n", name, val);
+#endif
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
