@@ -1,36 +1,86 @@
 #include "shell.h"
-/**
- *
- *
- */
-int _getline(char **s, size_t n)
+char *_fgets(char *s, int size, FILE *stream)
 {
-	int i;
+	char *ptr;
+	int y;
+	int x;
 
-	i = read(STDIN_FILENO, *s, 1024);
-	if (i == -1)
+	x = 0;
+	while (x < size)
 	{
-		perror("Error");
-		return (-1);
+		if ((y = fgetc(stream) == EOF))
+		{
+			*ptr = '\0';
+			break;
+		}
+		if (y == '\n')
+			break;
+		*ptr = y;
+		ptr++;
+		x++;
 	}
-	return (i);
+	*ptr = 0;
+	return (ptr);
+}
+       
+int _getline(char **lineptr, size_t *n, FILE *stream)
+{
+
+	static char line[1024];
+	char *c;
+	unsigned int len;
+	
+	if (lineptr == NULL || n == NULL)
+		return (1);
+
+	fgets(line, 1024, stream);
+
+	c = _strchr(line, '\n');
+	if (c)
+		*c = '\0';
+	len = _strlen(line);
+
+	if ((len + 1) < 1024)
+	{
+		c = realloc(*lineptr, 1024);
+		if (c == NULL)
+			return(-1);
+		*lineptr = c;
+		*n = 1024;
+	}
+	_strcpy(*lineptr,line);//strcpy
+	return(len);
 }
 
-
-int main()
+int main(int ac, char **av)
 {
     char *buffer;
-    size_t bufsize = 1024;
-    size_t characters;
+    FILE *file;
+    int i;
+    size_t bufsize = 0;
+    ssize_t characters;
 
     buffer = (char *)malloc(bufsize * sizeof(char));
-    if( buffer == NULL)
+    if(buffer == NULL)
     {
         perror("Unable to allocate buffer");
         exit(1);
-    }
+    }   
+    file = fopen(av[1], "r+");
 
-    characters = _getline(&buffer, bufsize);
+    characters = _getline(&buffer, &bufsize, file);
+    printf("%lu characters were read.\n",characters);
+    printf("'%s'\n", buffer);
+
+    characters = _getline(&buffer, &bufsize, file);
+    printf("%lu characters were read.\n",characters);
+    printf("'%s'\n", buffer);
+
+    characters = _getline(&buffer, &bufsize, file);
+    printf("%lu characters were read.\n",characters);
+    printf("'%s'\n", buffer);
+
+     characters = _getline(&buffer, &bufsize, file);
     printf("%lu characters were read.\n",characters);
     printf("'%s'\n", buffer);
 
