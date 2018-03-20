@@ -50,4 +50,7 @@ int initsvars(int ac, char **av);
 char *getsvar(char *name);
 int setsvar(char *name, char *val);
 
+/* from _realloc.c */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
 #endif
