@@ -66,32 +66,3 @@ char *_strtok(char *str, char *delim)
 	}
 	return (tmp_str);
 }
-
-int main(void)
-{
-	char a[] = ";apple ;; pie  - tastes good";
-	char b[] = ";apple ;; pie  - tastes good";
-	char delim[] = " ;-";
-	char *test1;
-	char *test2;
-
-	printf("testing strtok\n");
-	test1 = strtok(b, delim);
-	printf("strtok: %s\n", test1);
-
-	while (test1 != NULL)
-	{
-		test1 = strtok(NULL, delim);
-		printf("strtok: %s\n", test1);
-	}
-
-	printf("testing _strtok\n");
-	test2 = _strtok(a, delim);
-       	printf("_strtok: %s\n", test2);
-	while (test2 != NULL)
-	{
-		test2 = _strtok(NULL , delim);
-		printf("_strtok: %s\n", test2);
-	}
-	return(0);
-}

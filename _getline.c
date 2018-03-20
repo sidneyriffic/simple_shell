@@ -60,37 +60,3 @@ int _getline(char **lineptr, size_t *n, FILE *stream)
 	return(len);
 }
 
-int main(int ac, char **av)
-{
-    char *buffer;
-    FILE *file;
-    int i;
-    size_t bufsize = 0;
-    ssize_t characters;
-
-    buffer = (char *)malloc(bufsize * sizeof(char));
-    if(buffer == NULL)
-    {
-        perror("Unable to allocate buffer");
-        exit(1);
-    }   
-    file = fopen(av[1], "r+");
-
-    characters = _getline(&buffer, &bufsize, file);
-    printf("%lu characters were read.\n",characters);
-    printf("'%s'\n", buffer);
-
-    characters = _getline(&buffer, &bufsize, file);
-    printf("%lu characters were read.\n",characters);
-    printf("'%s'\n", buffer);
-
-    characters = _getline(&buffer, &bufsize, file);
-    printf("%lu characters were read.\n",characters);
-    printf("'%s'\n", buffer);
-
-     characters = _getline(&buffer, &bufsize, file);
-    printf("%lu characters were read.\n",characters);
-    printf("'%s'\n", buffer);
-
-    return(0);
-}
