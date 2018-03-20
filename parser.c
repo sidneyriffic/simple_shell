@@ -62,7 +62,7 @@ char *subsvars(char **buf)
 		if (val == name)
 		{
 #ifdef DEBUGSVARS
-			printf("%s not an env var, checking env\n", name);
+			printf("%s not an env var, checking svars\n", name);
 #endif
 			val = getsvar(name);
 			if (val == name)

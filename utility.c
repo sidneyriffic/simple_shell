@@ -1,59 +1,52 @@
 #include "shell.h"
+
 /**
- * _strcmp - compares two strings
- * @s1: char pointer
- * @s2: char pointer
+ * itos - converts integer to string
  *
- * _strcmp: compares two strings at the same spot on each string
- * Returns positive, negative, or 0 if theyre the same
- * Return: int i
+ * @list: variadic argument
+ *
+ * Return: a string
  */
-int _strcmp(char *s1, char *s2)
+char *itos(int digits)
 {
-	int i;
+	int count, i, neg, absMod, digitTest;
+	char *output;
 
-	i = 0;
-	while (s1[i] != '\0' && s2[i] != '\0')
+	digitTest = digits;
+	count = 0;
+	neg = 0;
+	if (digits == 0)
 	{
-		if (s1[i] != s2[i])
-		{
-			return (s1[i] - s2[i]);
-		}
-		i++;
+		output = malloc(sizeof(char) * 2);
+		output[0] = '0';
+		output[1] = 0;
+		return (output);
 	}
-	return (s1[i] - s2[i]);
-}
-
-size_t _strlen(char *str)
-{
-	size_t len = 0;
-
-	while (*str++)
-		len++;
-
-	return (len);
-}
-
-char *_strcpy(char *dest, char *src)
-{
-	while(*src)
-		*dest++ = *src++;
-	*dest = *src;
-
-	return (dest);
-}
-
-char *_strdup(char *str)
-{
-	char *new;
-
-	if (str == NULL)
+	if (digits < 0)
+	{
+		neg = 1;
+		count++;
+	}
+	while (digitTest != 0)
+	{
+		digitTest /= 10;
+		count++;
+	}
+	output = malloc(sizeof(char) * count + 1);
+	if (output == NULL)
 		return (NULL);
-	new = malloc(sizeof(char) * _strlen(str));
-	if (new == NULL)
-		return (NULL);
-	_strcpy(new, str);
-	return (new);
+	if (neg)
+		output[0] = '-';
+	digitTest = digits;
+	for (i = count - 1; i >= 0 + neg; i--)
+	{
+		absMod = digitTest % 10;
+		output[i] = (absMod < 0 ? -absMod : absMod) + '0';
+		digitTest /= 10;
+	}
+	output[count] = '\0';
+	return (output);
+
 }
 
 char *malcat(char *dest, char *src)

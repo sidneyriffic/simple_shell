@@ -40,7 +40,7 @@ int checkpath(char *av[])
 
 int cmdcall(char *av[])
 {
-	char **environ;
+	char **environ, *retstr;
 	pid_t command;
 	int status;
 
@@ -65,7 +65,7 @@ int cmdcall(char *av[])
 		if (execve(av[0], av, environ) == -1)
 		{
 			perror("Could not execute command");
-			exit(-1);
+			exit(1);
 		}
 #ifdef DEBUGMODE
 		printf("Command done\n");
@@ -79,6 +79,10 @@ int cmdcall(char *av[])
 	printf("Status %d\n", status);
 #endif
 	free(environ);
+	retstr = itos(status);
+	printf("Status string:%s\n", retstr);
+	setsvar("?", retstr);
+	free(retstr);
 	return (status);
 }
 
@@ -94,7 +98,7 @@ int builtincall(char *av[])
 	if (!strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
-			exit(31337);
+			exit(97);
 		else
 			exit(0);
 	}

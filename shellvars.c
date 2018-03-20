@@ -1,6 +1,6 @@
 #include "shell.h"
 #include "shellvars.h"
-
+#define DEBUGMODE
 ShellVar *special;
 ShellVar *vars;
 
@@ -61,7 +61,7 @@ char *getsvar(char *name)
 	if (ptr != NULL)
 	{
 #ifdef DEBUGMODE
-		printf("Returning special var %s\n", ptr -> val);
+		printf("Returning special var %s:%s\n", ptr->name, ptr -> val);
 #endif
 		return (ptr -> val);
 	}
@@ -102,7 +102,7 @@ int setsvar(char *name, char *val)
 	if (!_strcmp(ptr -> name, name))
 	{
 #ifdef DEBUGMODE
-		printf("Setting %s to %s\n", ptr -> name, val);
+		printf("Setting special %s to %s\n", ptr -> name, val);
 		printf("ptr -> val %p\n", ptr->val);
 #endif
 		free(ptr -> val);
