@@ -40,7 +40,7 @@ int checkpath(char *av[])
 
 int cmdcall(char *av[])
 {
-	char **environ, *retstr;
+	char **environ;
 	pid_t command;
 	int status;
 
@@ -79,22 +79,19 @@ int cmdcall(char *av[])
 	printf("Status %d\n", status);
 #endif
 	free(environ);
-	retstr = itos(status);
-	printf("Status string:%s\n", retstr);
-	setsvar("?", retstr);
-	free(retstr);
 	return (status);
 }
 
 int builtincall(char *av[])
 {
+	int retval;
+	char *retstr;
+
 	if (av[0] == NULL)
 		return (0);
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
 #endif
-	if (!strcmp(av[0], "cd"))
-		return (_cd(av));
 	if (!strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
@@ -102,13 +99,23 @@ int builtincall(char *av[])
 		else
 			exit(0);
 	}
-	if (!strcmp(av[0], "getenv"))
-		return (printf("%s\n", _getenv(av[1])));
-	if (!strcmp(av[0], "setenv"))
-		return (_setenv(av[1], av[2]));
-	if (!strcmp(av[0], "alias"))
-		return (aliascmd(av));
-	if (av[0][0] != '/')
-		return (checkpath(av));
-	return (cmdcall(av));
+	if (!strcmp(av[0], "cd"))
+		retval = _cd(av);
+	else if (!strcmp(av[0], "getenv"))
+		retval = !printf("%s\n", _getenv(av[1]));
+	else if (!strcmp(av[0], "setenv"))
+		retval = _setenv(av[1], av[2]);
+	else if (!strcmp(av[0], "alias"))
+		retval = aliascmd(av);
+	else if (av[0][0] != '/')
+		retval = checkpath(av);
+	else
+		retval = cmdcall(av);
+	retstr = itos(retval);
+#ifdef DEBUGMODE
+	printf("Status string:%s\n", retstr);
+#endif
+	setsvar("?", retstr);
+	free(retstr);
+	return (retval);
 }
