@@ -139,17 +139,17 @@ int parseargs(char **buf)
 			break;
 		}
 #ifdef DEBUGMODE
-	printf("Setting vars %s\n", *buf);
-#endif
-	*buf = parsesetsvar(*buf);
-	if (*buf == NULL)
-		return (0);
-#ifdef DEBUGMODE
 	printf("Subbing vars %s\n", *buf);
 #endif
 	*buf = subsvars(buf);
 	if (*buf == NULL)
 		return (-1);
+#ifdef DEBUGMODE
+	printf("Setting vars %s\n", *buf);
+#endif
+	*buf = parsesetsvar(*buf);
+	if (*buf == NULL)
+		return (0);
 	left = strtok(*buf, cmdd);
 	right = strtok(NULL, cmdd);
 	printf("left cmd %s\n", left);
@@ -159,6 +159,10 @@ int parseargs(char **buf)
 		parseargs(&left);
 		return (parseargs(&right));
 	}
+#ifdef DEBUGMODE
+	printf("Performing logic %s\n", *buf);
+#endif
+	
 	ac = 0;
 	av[ac++] = strtok(*buf, wordd);
 #ifdef DEBUGMODE
