@@ -57,7 +57,16 @@ char *subsvars(char **buf)
 		printf("Top of svar loop buf:%s::varptr:%s\n", *buf, varptr);
 #endif
 		while (*varptr != '$' && *varptr != 0)
+		{
+			if (*varptr == '\'')
+			{
+				varptr++;
+				while(*varptr != '\'')
+					varptr++;
+			}
 			varptr++;
+		}
+		varptr++;
 		if (*varptr == 0)
 			return (*buf);
 		varptr++;
@@ -141,8 +150,8 @@ int parseargs(char **buf)
 #ifdef DEBUGMODE
 	printf("Breaking command segments:%s\n", *buf);
 #endif
-	left = strtok(*buf, cmdd);
-	right = strtok(NULL, cmdd);
+	left = strtokqe(*buf, cmdd, 7);
+	right = strtokqe(NULL, cmdd, 7);
 	printf("left cmd %s\n", left);
 	printf("right cmd %s\n", right);
 	if (right != NULL && *right != 0)
@@ -153,8 +162,8 @@ int parseargs(char **buf)
 #ifdef DEBUGMODE
 	printf("Performing logic %s\n", *buf);
 #endif
-	left = strtok(*buf, "|&");
-	right = strtok(NULL, "");
+	left = strtokqe(*buf, "|&", 7);
+	right = strtokqe(NULL, "", 7);
 	printf("left cmd %s\n", left);
 	printf("right cmd %s\n", right);
 	if (right != NULL && *right == '&')
@@ -165,8 +174,8 @@ int parseargs(char **buf)
 			return (parseargs(&right));
 		else
 		{
-			strtok(right, "|");
-			right = strtok(NULL, "");
+			strtokqe(right, "|", 7);
+			right = strtokqe(NULL, "", 7);
 			return (parseargs(&right));
 		}
 	}

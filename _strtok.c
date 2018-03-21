@@ -66,3 +66,87 @@ char *strtok(char *str, char *delim)
 	}
 	return (tmp_str);
 }
+
+/* esc flags are bitwise. 
+ * 1 = use \ to escape delims
+ * 2 = single quote skips
+ * 4 = double quote skips
+ */
+char *strtokqe(char *str, char *delim, int escflags)
+{
+	static char *saved_string;
+	int i;
+	int j;
+
+	/*if NULL passed in str becomes where saved string left off*/
+	if (str == 0)
+		str = saved_string;
+	if (str == 0)
+		return (0);
+
+	/*skip initial delimiters*/
+	i = 0;
+	while (str[i] != 0)
+	{
+		j = 0;
+		while (delim[j] != 0)
+		{
+			if (str[i] == delim[j])
+				break;
+			j++;
+		}
+		if (delim[j] == 0)
+			break;
+		i++;
+	}
+	str = str + i;
+	if (*str == 0)
+	{
+		saved_string = str;
+		return(0);
+	}
+
+	/*start new token*/
+	i = 0;
+	while (str[i] != 0)
+	{
+		if (str[i] == '\'' && escflags & 2)
+		{
+			i++;
+			while (str[i] != '\'')
+			{
+				i++;
+			}
+		}
+		if (str[i] == '"' && escflags & 4)
+		{
+			i++;
+			while (str[i] != '"')
+			{
+				i++;
+			}
+		}
+		j = 0;
+		while (delim[j] != 0)
+		{
+			if (str[i] == delim[j])
+				break;
+			j++;
+		}
+		if (delim[j] != 0)
+			break;
+		i++;
+	}
+	saved_string = str;
+	if (str[i] != 0)
+	{
+		/*saves string for next call*/
+		saved_string = (saved_string + i + 1);
+		str[i] = '\0';
+	}
+	else
+	{
+		saved_string = '\0'; /*if end of input string.*/
+	}
+	return (str);
+}

@@ -56,6 +56,6 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* from _strtok.c */
 char *strtok(char *str, char *delim);
-
+char *strtokqe(char *str, char *delim, int escflags);
 
 #endif
