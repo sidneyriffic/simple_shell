@@ -98,7 +98,6 @@ int _setenv(char *name, char *val)
 		return (0);
 	namel = _strlen(name);
 	vall = _strlen(val);
-	i = 0;
 	ptr = malloc(sizeof(char) * (namel + vall + 2));
 	if (ptr == NULL)
 		return (-1);
@@ -112,6 +111,7 @@ int _setenv(char *name, char *val)
 #ifdef DEBUGMODE
 	printf("Ptr mallocd:%s\n", ptr);
 #endif
+	i =0;
 	while (environ[i] != NULL)
 	{
 		s = environ[i];
@@ -129,4 +129,35 @@ int _setenv(char *name, char *val)
 		i++;
 	}
 	return (setallenv(environ, ptr));
+}
+//testing functionality// copy environ, if hits skip over, realloc
+int _unsetenv(char *name)
+{
+	int i, j;
+	char *s, *ptr;
+	char **tmp;
+
+#ifdef DEBUGMODE
+	printf("In unsetenv, name:%s\n", name);
+#endif
+	if (name == NULL)
+		return (0);
+
+	tmp = getallenv(); //get malloced copy of environ
+	while (tmp[i] != NULL)
+	{
+		s = tmp[i];
+		j = 0;
+		while (s[j] == name[j])
+		{
+			j++;
+			if (name[j] == 0 && s[j] == '=')
+			{
+				free(s);
+				tmp[i++];//move to ptr 1 beyond
+			}
+		}
+		i++;
+	}
+	return (setallenv(tmp, NULL)); //No new val. Just resetting environ
 }

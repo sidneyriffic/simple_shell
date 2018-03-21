@@ -27,6 +27,7 @@ int errhandl(int status);
 int setallenv(char **environ, char *add);
 char *_getenv(char *avzero);
 int _setenv(char *name, char *val);
+int _unsetenv(char *name);
 char **getallenv();
 
 /* from string.c */

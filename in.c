@@ -14,7 +14,7 @@ int shintmode()
 #endif
 		if (istty)
 			printf("Homemade shell:%s$", _getenv("PWD"));
-		lenr = getline(&bufgl, &bufgllen, stdin);
+		lenr = _getline(&bufgl, &bufgllen, stdin);
 		if (lenr == 0 || lenr == -1)
 			break;
 #ifdef DEBUGMODE
@@ -41,7 +41,7 @@ int scriptmode(int ac, char *av[])
 		continue;*/
 		do
 		{
-			if (getline(&buf, &n, infile) == -1)
+			if (_getline(&buf, &n, infile) == -1)
 				break;
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
