@@ -133,31 +133,29 @@ int _setenv(char *name, char *val)
 //testing functionality// copy environ, if hits skip over, realloc
 int _unsetenv(char *name)
 {
-	int i, j;
-	char *s, *ptr;
-	char **tmp;
+	int i;
 
-#ifdef DEBUGMODE
+//#ifdef DEBUGMODE
 	printf("In unsetenv, name:%s\n", name);
-#endif
+//#endif
 	if (name == NULL)
 		return (0);
 
-	tmp = getallenv(); //get malloced copy of environ
-	while (tmp[i] != NULL)
+	i = 0;
+	while (environ[i] != NULL)
 	{
-		s = tmp[i];
-		j = 0;
-		while (s[j] == name[j])
+		if (_strcmp(environ[i], name) == 0)
 		{
-			j++;
-			if (name[j] == 0 && s[j] == '=')
-			{
-				free(s);
-				tmp[i++];//move to ptr 1 beyond
-			}
+			break;
 		}
 		i++;
 	}
-	return (setallenv(tmp, NULL)); //No new val. Just resetting environ
+	while (environ[i] != NULL)
+	{
+		environ[i] = environ[i + 1];
+		i++;
+	}
+	i++;
+	i = 0;
+	return (setallenv(environ, NULL)); //No new val. Just resetting environ
 }
