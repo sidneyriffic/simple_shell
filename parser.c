@@ -58,6 +58,13 @@ char *subsvars(char **buf)
 #endif
 		while (*varptr != '$' && *varptr != 0)
 		{
+			if (*varptr == '\\')
+			{
+				varptr++;
+				if (*varptr != 0)
+					varptr++;
+				continue;
+			}
 			if (*varptr == '\'')
 			{
 				varptr++;
