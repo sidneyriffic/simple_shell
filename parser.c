@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define DEBUGMODE
 /* returns buf after var setting */
 char *parsesetsvar(char *buf)
 {
@@ -331,7 +331,7 @@ int parseargs(char **buf)
 	if (av[0] != NULL)
 		av[0] = cleanarg(av[0]);
 #ifdef DEBUGMODE
-		printf("Clean arg %s\n", av[0]);
+	printf("Clean arg[%d] %s\n", ac - 1, av[ac - 1]);
 #endif
 	while (av[ac - 1] != NULL)
 	{
