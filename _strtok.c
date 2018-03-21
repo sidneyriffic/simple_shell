@@ -110,11 +110,25 @@ char *strtokqe(char *str, char *delim, int escflags)
 	i = 0;
 	while (str[i] != 0)
 	{
+		if (str[i] == '\\' && escflags & 1)
+		{
+			if (str[i + 1] != 0)
+				i++;
+			i++;
+			continue;
+		}
 		if (str[i] == '\'' && escflags & 2)
 		{
 			i++;
 			while (str[i] != '\'')
 			{
+				if (str[i] == '\\' && escflags & 1)
+				{
+					if (str[i + 1] != 0)
+						i++;
+					i++;
+					continue;
+				}
 				i++;
 			}
 		}
@@ -123,6 +137,13 @@ char *strtokqe(char *str, char *delim, int escflags)
 			i++;
 			while (str[i] != '"')
 			{
+				if (str[i] == '\\' && escflags & 1)
+				{
+					if (str[i + 1] != 0)
+						i++;
+					i++;
+					continue;
+				}
 				i++;
 			}
 		}
