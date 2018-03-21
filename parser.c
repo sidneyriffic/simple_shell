@@ -146,7 +146,7 @@ char *cleanarg(char *arg)
 	ptr = arg;
 	while (*ptr != 0)
 	{
-		if (*ptr == '\\' && !(inquote == 1))
+		if (*ptr == '\\' && !inquote)
 		{
 			ptr++;
 			if (*ptr != 0)
@@ -154,6 +154,18 @@ char *cleanarg(char *arg)
 				len++;
 				ptr++;
 			}
+			continue;
+		}
+		if (*ptr == '\\' && inquote == 2)
+		{
+			ptr++;
+			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr =='\\')
+			{
+				len++;
+				ptr++;
+			}
+			else
+				len++;
 			continue;
 		}
 		if (!inquote && *ptr == '"')
@@ -187,11 +199,20 @@ char *cleanarg(char *arg)
 	inquote = 0;
 	while (*ptr != 0)
 	{
-		if (*ptr == '\\' && !(inquote == 2))
+		if (*ptr == '\\' && !inquote)
 		{
 			ptr++;
 			if (*ptr != 0)
 				*ptr2++ = *ptr++;
+			continue;
+		}
+		if (*ptr == '\\' && inquote == 2)
+		{
+			ptr++;
+			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr == '\\')
+				*ptr2++ = *ptr++;
+			else
+				*ptr2++ = '\\';
 			continue;
 		}
 		if (!inquote && *ptr == '"')
