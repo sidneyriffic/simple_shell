@@ -1,6 +1,6 @@
 #include "shell.h"
 #include "shellvars.h"
-
+#define DEBUGMODE
 ShellVar *special;
 ShellVar *vars;
 
@@ -92,7 +92,7 @@ int setsvar(char *name, char *val)
 	ShellVar *ptr = special, *new;
 
 #ifdef DEBUGMODE
-	printf("special address: %p\n", special);
+	printf("in setsvar, special address: %p\n", special);
 	printf("Got %s %s\n", name, val);
 #endif
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
@@ -109,10 +109,13 @@ int setsvar(char *name, char *val)
 		ptr -> val = _strdup(val);
 	}
 	ptr = vars;
+#ifdef DEBUGMODE
+	printf("vars address %p\n", vars);
+#endif
 	if (ptr == NULL)
 	{
 #ifdef DEBUGMODE
-		printf("Setting %s to %s\n", name, val);
+		printf("Setting new list %s to %s\n", name, val);
 #endif
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
