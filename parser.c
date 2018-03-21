@@ -200,7 +200,7 @@ int parseargs(char **buf)
 	if (*buf == NULL)
 		return (0);
 	ac = 0;
-	av[ac++] = strtok(*buf, wordd);
+	av[ac++] = strtokqe(*buf, wordd, 7);
 #ifdef DEBUGMODE
 	printf("Got arg %s\n", av[ac - 1]);
 #endif
@@ -210,7 +210,7 @@ int parseargs(char **buf)
 #endif
 	while (av[ac - 1] != NULL)
 	{
-		av[ac++] = strtok(NULL, wordd);
+		av[ac++] = strtokqe(NULL, wordd, 7);
 #ifdef DEBUGMODE
 		printf("Got arg %s\n", av[ac -1]);
 #endif
