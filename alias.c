@@ -39,6 +39,7 @@ int setalias(char *name, char *val)
 			return (-1);
 		new -> name = name;
 		new -> val = val;
+		new -> next = NULL;
 		alist = new;
 		return (0);
 	}
@@ -57,6 +58,7 @@ int setalias(char *name, char *val)
 			return (-1);
 		new -> name = name;
 		new -> val = val;
+		new -> next = NULL;
 		ptr -> next = new;
 	}
 	return (0);

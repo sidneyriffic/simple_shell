@@ -20,6 +20,9 @@ int initsvars(int ac, char **av)
 	special -> next = ptr;
 	while (av[i] != NULL)
 	{
+#ifdef DEBUGMODE
+		printf("av[%d]=%s\n", i, av[i]);
+#endif
 		nums[0] = i + '0';
 		ptr -> val = _strdup(av[i]);
 		ptr -> name = _strdup(nums);
@@ -92,7 +95,7 @@ int setsvar(char *name, char *val)
 	ShellVar *ptr = special, *new;
 
 #ifdef DEBUGMODE
-	printf("special address: %p\n", special);
+	printf("in setsvar, special address: %p\n", special);
 	printf("Got %s %s\n", name, val);
 #endif
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
@@ -107,24 +110,29 @@ int setsvar(char *name, char *val)
 #endif
 		free(ptr -> val);
 		ptr -> val = _strdup(val);
+		return (0);
 	}
 	ptr = vars;
+#ifdef DEBUGMODE
+	printf("vars address %p\n", vars);
+#endif
 	if (ptr == NULL)
 	{
 #ifdef DEBUGMODE
-		printf("Setting %s to %s\n", name, val);
+		printf("Setting new list %s to %s\n", name, val);
 #endif
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
 		new -> name = _strdup(name);
 		new -> val = _strdup(val);
+		new -> next = NULL;
 		vars = new;
 		return (0);
 	}
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
 		ptr = ptr -> next;
-	if (!_strcmp(ptr -> name, name))
+	if (ptr != NULL && !_strcmp(ptr -> name, name))
 	{
 #ifdef DEBUGMODE
 		printf("Setting %s to %s\n", ptr -> name, val);
@@ -135,13 +143,14 @@ int setsvar(char *name, char *val)
 	else
 	{
 #ifdef DEBUGMODE
-		printf("Setting %s to %s\n", name, val);
+		printf("Setting new %s to %s\n", name, val);
 #endif
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
 		new -> name = _strdup(name);
 		new -> val = _strdup(val);
+		new -> next = NULL;
 		ptr -> next = new;
 	}
 	return (0);

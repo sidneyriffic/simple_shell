@@ -36,9 +36,10 @@ size_t _strlen(char *str)
 
 char *_strcpy(char *dest, char *src)
 {
+	char *ptr = dest;
 	while(*src)
-		*dest++ = *src++;
-	*dest = *src;
+		*ptr++ = *src++;
+	*ptr = *src;
 
 	return (dest);
 }

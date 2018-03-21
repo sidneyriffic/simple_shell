@@ -62,5 +62,6 @@ char *strtok(char *str, char *delim);
 int _getline(char **lineptr, size_t *n, FILE *stream);
 char *_fgets(char *s, int size, FILE *stream);
 int _fgetc (FILE *stream);
+char *strtokqe(char *str, char *delim, int escflags);
 
 #endif
