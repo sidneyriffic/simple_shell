@@ -1,6 +1,6 @@
 #include "shell.h"
 #include "shellvars.h"
-#define DEBUGMODE
+
 ShellVar *special;
 ShellVar *vars;
 

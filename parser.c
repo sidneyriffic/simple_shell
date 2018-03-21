@@ -114,7 +114,7 @@ char *subsvars(char **buf)
 #ifdef DEBUGSVARS
 		printf("Resulting buf:%s::varptr:%s\n", name, varptr);
 #endif
-		free(*buf);
+/*		free(*buf);*/
 		*buf = name;
 	}
 	return (*buf);
@@ -139,17 +139,8 @@ int parseargs(char **buf)
 			break;
 		}
 #ifdef DEBUGMODE
-	printf("Subbing vars %s\n", *buf);
+	printf("Breaking command segments:%s\n", *buf);
 #endif
-	*buf = subsvars(buf);
-	if (*buf == NULL)
-		return (-1);
-#ifdef DEBUGMODE
-	printf("Setting vars %s\n", *buf);
-#endif
-	*buf = parsesetsvar(*buf);
-	if (*buf == NULL)
-		return (0);
 	left = strtok(*buf, cmdd);
 	right = strtok(NULL, cmdd);
 	printf("left cmd %s\n", left);
@@ -162,7 +153,43 @@ int parseargs(char **buf)
 #ifdef DEBUGMODE
 	printf("Performing logic %s\n", *buf);
 #endif
-	
+	left = strtok(*buf, "|&");
+	right = strtok(NULL, "");
+	printf("left cmd %s\n", left);
+	printf("right cmd %s\n", right);
+	if (right != NULL && *right == '&')
+	{
+		ret = parseargs(&left);
+		right++;
+		if (ret == 0)
+			return (parseargs(&right));
+		else
+		{
+			strtok(right, "|");
+			right = strtok(NULL, "");
+			return (parseargs(&right));
+		}
+	}
+	if (right != NULL && *right == '|')
+	{
+		ret = parseargs(&left);
+		right++;
+		if (ret == 0)
+			return (1);
+		return (parseargs(&right));
+	}
+#ifdef DEBUGMODE
+	printf("Subbing vars %s\n", *buf);
+#endif
+	*buf = subsvars(buf);
+	if (*buf == NULL)
+		return (-1);
+#ifdef DEBUGMODE
+	printf("Setting vars %s\n", *buf);
+#endif
+	*buf = parsesetsvar(*buf);
+	if (*buf == NULL)
+		return (0);
 	ac = 0;
 	av[ac++] = strtok(*buf, wordd);
 #ifdef DEBUGMODE
