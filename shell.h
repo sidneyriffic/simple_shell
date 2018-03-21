@@ -63,4 +63,7 @@ int _getline(char **lineptr, size_t *n, FILE *stream);
 char *_fgets(char *s, int size, FILE *stream);
 int _fgetc (FILE *stream);
 
+/*from _atoi.c*/
+int atoi(char *s);
+
 #endif
