@@ -57,6 +57,7 @@ int scriptmode(int ac, char *av[])
 
 int main(int ac, char *av[], char **environ)
 {
+	setbuf(stdout, NULL);
 	initsvars(ac, av);
 	setallenv(environ, NULL);
 #ifdef DEBUGMODE
