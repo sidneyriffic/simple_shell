@@ -1,4 +1,8 @@
 #include "shell.h"
+/*FILE *fopen(char *path, char *mode)
+{
+	
+}*/
 int _fgetc (FILE *stream)
 {
 	int c;
