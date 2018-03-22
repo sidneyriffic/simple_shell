@@ -1,32 +1,47 @@
 #include "shell.h"
 
-int parsesetsvar(char **av)
+/* returns buf after var setting */
+char *parsesetsvar(char *buf)
 {
-	int haseq, i = 0, ac = 0;
-	char *ptr, *name, *val;
+	int haseq;
+	char *ptr, *name, *val, *bufstart = buf, *newbuf;
 
 	do {
 		haseq = 0;
-		while (av[i] != NULL)
+		for (ptr = buf; *ptr; ptr++)
 		{
-			for (ptr = av[i]; *ptr; ptr++)
-				if (*ptr == '=')
-				{
-					haseq = 1;
-					name = strtok(av[i], "=");
-					val = strtok(NULL, "");
-					setsvar(name, val);
-					ac++;
-				}
-			i++;
+#ifdef DEBUGSVARS
+			printf("in loop ptr:%s\n", ptr);
+#endif
+			if (*ptr == ' ')
+				break;
+			if (*ptr == '=')
+			{
+				name = strtok(buf, " ");
+				buf = strtok(NULL, "");
+				ptr = buf;
+				haseq = 1;
+				name = strtok(name, "=");
+				val = strtok(NULL, "");
+#ifdef DEBUGSVARS
+				printf("In parsesetvar: setting var %s to %s\n", name, val);
+#endif
+				setsvar(name, val);
+			}
+			if (ptr == NULL)
+				return (NULL);
 		}
-	} while (haseq);
-	return (ac);
+	} while (haseq && *ptr != 0);
+	newbuf = malloc(_strlen(buf));
+	if (newbuf == NULL)
+		return (NULL);
+	newbuf = _strcpy(newbuf, buf);
+	return (newbuf);
 }
 
 char *subsvars(char **buf)
 {
-	char *varptr = *buf, *ptr, *name, *val, *valptr, *dest;
+	char *varptr = *buf, *ptr, *name, *val, *valptr, *dest, *dolptr;
 	size_t buflen = _strlen(*buf);
 	size_t varvlen, varnlen, i;
 
@@ -39,7 +54,26 @@ char *subsvars(char **buf)
 		printf("Top of svar loop buf:%s::varptr:%s\n", *buf, varptr);
 #endif
 		while (*varptr != '$' && *varptr != 0)
+		{
+			if (*varptr == '\\')
+			{
+				if (*varptr != 0)
+					varptr++;
+				varptr++;
+				continue;
+			}
+			if (*varptr == '\'')
+			{
+				varptr++;
+				while(*varptr != '\'')
+					varptr++;
+			}
 			varptr++;
+		}
+#ifdef DEBUGSVARS
+		printf("At $:%s\n", varptr);
+#endif
+		dolptr = varptr;
 		if (*varptr == 0)
 			return (*buf);
 		varptr++;
@@ -56,7 +90,7 @@ char *subsvars(char **buf)
 			name[i] = *varptr;
 		name[i] = 0;
 #ifdef DEBUGSVARS
-		printf("Name got:%s\n::varptr:%s", name, varptr);
+		printf("Name got:%s\n::varptr:%s\n", name, varptr);
 #endif
 		val = _getenv(name);
 		if (val == name)
@@ -81,8 +115,8 @@ char *subsvars(char **buf)
 		name = malloc(sizeof(char) * (buflen));
 		for (ptr = *buf, dest = name, valptr = val; *ptr != 0; ptr++, dest++)
 		{
-			/*printf("copy to new buf %s::%s\n", ptr, name);*/
-			if (val != NULL && *ptr == '$')
+/*		printf("copy to new buf %s::%s\n", ptr, name);*/
+			if (val != NULL && ptr == dolptr)
 			{
 				while (*valptr != 0)
 					*dest++ = *valptr++;
@@ -96,68 +130,224 @@ char *subsvars(char **buf)
 #ifdef DEBUGSVARS
 		printf("Resulting buf:%s::varptr:%s\n", name, varptr);
 #endif
-		free(*buf);
+/*		free(*buf);*/
 		*buf = name;
+		setsvar("?", "0");
 	}
 	return (*buf);
 }
 
+char *cleanarg(char *arg)
+{
+	char *newbuf, *ptr, *ptr2;
+	size_t len = 0;
+	int inquote = 0;
+
+	ptr = arg;
+	while (*ptr != 0)
+	{
+		if (*ptr == '\\' && !inquote)
+		{
+			ptr++;
+			if (*ptr != 0)
+			{
+				len++;
+				ptr++;
+			}
+			continue;
+		}
+		if (*ptr == '\\' && inquote == 2)
+		{
+			ptr++;
+			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr =='\\')
+			{
+				len++;
+				ptr++;
+			}
+			else
+				len++;
+			continue;
+		}
+		if (!inquote && *ptr == '"')
+		{
+			inquote = 2;
+			ptr++;
+			continue;
+		}
+		if (!inquote && *ptr == '\'')
+		{
+			inquote = 1;
+			ptr++;
+			continue;
+		}
+		if ((inquote == 1 && *ptr == '\'') || (inquote == 2 && *ptr == '"'))
+		{
+			inquote = 0;
+			ptr++;
+			continue;
+		}
+		if (*ptr == 0)
+			break;
+		ptr++;
+		len++;
+	}
+	newbuf = malloc(sizeof(char) * (len + 1));
+	if (newbuf == NULL)
+		return (NULL);
+	ptr = arg;
+	ptr2 = newbuf;
+	inquote = 0;
+	while (*ptr != 0)
+	{
+		if (*ptr == '\\' && !inquote)
+		{
+			ptr++;
+			if (*ptr != 0)
+				*ptr2++ = *ptr++;
+			continue;
+		}
+		if (*ptr == '\\' && inquote == 2)
+		{
+			ptr++;
+			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr == '\\')
+				*ptr2++ = *ptr++;
+			else
+				*ptr2++ = '\\';
+			continue;
+		}
+		if (!inquote && *ptr == '"')
+		{
+			inquote = 2;
+			ptr++;
+			continue;
+		}
+		if (!inquote && *ptr == '\'')
+		{
+			inquote = 1;
+			ptr++;
+			continue;
+		}
+		if ((inquote == 1 && *ptr == '\'') || (inquote == 2 && *ptr == '"'))
+		{
+			inquote = 0;
+			ptr++;
+			continue;
+		}
+		if (*ptr != 0)
+			*ptr2++ = *ptr++;
+	}
+	*ptr2 = 0;
+#ifdef DEBUGMODE
+	printf("clean arg return buf:%s\n", newbuf);
+#endif
+	return (newbuf);
+}
+	
+/* double pointer buf so we can free after subbing vars easier */
 int parseargs(char **buf)
 {
-	char *av[1024], *cmd[1024], *ptr;
-	int ac, cc, ret = 0, numvarset;
+	char *av[1024], *ptr, *left, *right;
+	int ac, ret = 0;
 	char *wordd = " ", *cmdd = ";";
 
+#ifdef DEBUGMODE
+	printf("In parseargs. buf:%s\n", *buf);
+#endif
+	if (*buf == NULL)
+		return (0);
 	if (*buf[0] == 0)
 		return (0);
-	*buf = subsvars(buf);
-	if (*buf == NULL)
-		return (-1);
 	for (ptr = *buf; *ptr != 0; ptr++)
 		if (*ptr == '#' || *ptr == '\n')
 		{
 			*ptr = 0;
 			break;
 		}
-	cc = 0;
-	cmd[cc++] = strtok(*buf, cmdd);
 #ifdef DEBUGMODE
-		printf("Got cs %s\n", cmd[cc - 1]);
+	printf("Breaking command segments:%s\n", *buf);
 #endif
-	while(cmd[cc - 1] != NULL)
+	left = strtokqe(*buf, ";", 7);
+	right = strtokqe(NULL, "", 7);
+#ifdef DEBUGMODE
+	printf("left cmd %s\n", left);
+	printf("right cmd %s\n", right);
+#endif
+	if (right != NULL && *right != 0)
 	{
-		cmd[cc++] = strtok(NULL, cmdd);
-#ifdef DEBUGMODE
-		printf("Got cs %s\n", cmd[cc - 1]);
-#endif
+		parseargs(&left);
+		return (parseargs(&right));
 	}
-	cc = 0;
-	while (cmd[cc] != NULL)
+#ifdef DEBUGMODE
+	printf("Performing logic %s\n", *buf);
+#endif
+	left = strtokqe(*buf, "|&", 7);
+	right = strtokqe(NULL, "", 7);
+#ifdef DEBUGMODE
+	printf("left cmd %s\n", left);
+	printf("right cmd %s\n", right);
+#endif
+	if (right != NULL && *right == '&')
 	{
-		ac = 0;
-		av[ac++] = strtok(cmd[cc], wordd);
-#ifdef DEBUGMODE
-		printf("Got arg %s\n", av[ac - 1]);
-#endif
-		av[0] = getalias(av[0]);
-#ifdef DEBUGMODE
-		printf("Alias:%s\n", av[0]);
-#endif
-		while (av[ac - 1] != NULL)
+		ret = parseargs(&left);
+		right++;
+		if (ret == 0)
+			return (parseargs(&right));
+		else
 		{
-			av[ac++] = strtok(NULL, wordd);
-#ifdef DEBUGMODE
-			printf("Got arg %s\n", av[ac -1]);
-#endif
+			strtokqe(right, "|", 7);
+			right = strtokqe(NULL, "", 7);
+			return (parseargs(&right));
 		}
-		ac--;
-		av[ac] = NULL;
-		numvarset = parsesetsvar(av);
-#ifdef DEBUGMODE
-		printf("Calling command/builtin numvarset %d\n", numvarset);
-#endif
-		ret = builtincall(av + numvarset);
-		cc++;
 	}
+	if (right != NULL && *right == '|')
+	{
+		ret = parseargs(&left);
+		right++;
+		if (ret == 0)
+			return (1);
+		return (parseargs(&right));
+	}
+#ifdef DEBUGMODE
+	printf("Subbing vars %s\n", *buf);
+#endif
+	*buf = subsvars(buf);
+	if (*buf == NULL)
+		return (-1);
+#ifdef DEBUGMODE
+	printf("Setting vars %s\n", *buf);
+#endif
+	*buf = parsesetsvar(*buf);
+	if (*buf == NULL)
+		return (0);
+	ac = 0;
+	av[ac++] = strtokqe(*buf, wordd, 7);
+#ifdef DEBUGMODE
+	printf("Got arg %s\n", av[ac - 1]);
+#endif
+	av[0] = getalias(av[0]);
+#ifdef DEBUGMODE
+	printf("Alias:%s\n", av[0]);
+#endif
+	if (av[0] != NULL)
+		av[0] = cleanarg(av[0]);
+#ifdef DEBUGMODE
+		printf("Clean arg %s\n", av[0]);
+#endif
+	while (av[ac - 1] != NULL)
+	{
+		av[ac] = strtokqe(NULL, wordd, 7);
+#ifdef DEBUGMODE
+		printf("Got arg %s\n", av[ac]);
+#endif
+		if (av[ac] != NULL)
+			av[ac] = cleanarg(av[ac]);
+#ifdef DEBUGMODE
+		printf("Clean arg %s\n", av[ac]);
+#endif
+		ac++;
+	}
+	ac--;
+	av[ac] = NULL;
+	ret = builtincall(av);
 	return (ret);
 }

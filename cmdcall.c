@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 int checkpath(char *av[])
 {
 	char *path, *pathptr, *pathvar, *ptr;
@@ -84,7 +84,7 @@ int cmdcall(char *av[])
 
 int builtincall(char *av[])
 {
-	int retval;
+	int retval = 0;
 	char *retstr;
 
 	if (av[0] == NULL)
@@ -95,7 +95,7 @@ int builtincall(char *av[])
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
-			exit(97);
+			exit(atoi(av[1]));
 		else
 			exit(0);
 	}
