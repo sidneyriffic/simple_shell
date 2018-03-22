@@ -70,6 +70,7 @@ int unsetalias(char *name)
 
 	if (alist == NULL)
 		return (0);
+	if (!(strcmp(ptr -> name, name))
 	if (ptr -> name == name)
 	{
 		alist = alist -> next;
