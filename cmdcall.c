@@ -1,20 +1,27 @@
 #include "shell.h"
-
+#define DEBUGMODE
 int checkpath(char *av[])
 {
-	char *path, *pathptr, *pathvar, *ptr;
+	char *path, *pathptr, *pathvar, *ptr, *pathenv;
 	int pathlen, cmdlen;
 
+#ifdef DEBUGMODE
+	printf("In checkpath\n");
+#endif
 	for (ptr = av[0], cmdlen = 0; *ptr != 0; ptr++)
 		cmdlen++;
 	pathvar = _getenv("PATH");
+	pathenv = pathvar;
 	while (*pathvar != 0)
 	{
 		for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
 			pathlen++;
 		path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
 		if (path == NULL)
+		{
+			free(pathenv);
 			return (-1);
+		}
 		pathptr = path;
 		while (*pathvar != ':' && *pathvar != 0)
 			*pathptr++ = *pathvar++;
@@ -25,15 +32,21 @@ int checkpath(char *av[])
 		*pathptr = 0;
 		if (!access(path, F_OK))
 		{
+#ifdef DEBUGMODE
+			printf("Found path:%s\n", path);
+#endif
+			free(av[0]);
 			av[0] = path;
 			pathlen = cmdcall(av);
-			free(path);
+/*			free(path);*/
+			free(pathenv);
 			return (pathlen);
 		}
 		free(path);
 		while (*pathvar == ':')
 			pathvar++;
 	}
+	free(pathenv);
 	return (1);
 }
 
@@ -92,6 +105,7 @@ int builtincall(char *av[])
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
 #endif
+	printf("av[1]:%s\n", av[1]);
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
@@ -113,6 +127,7 @@ int builtincall(char *av[])
 		retval = checkpath(av);
 	else
 		retval = cmdcall(av);
+	printf("After call back in builtin retval:%d\n", retval);
 	retstr = itos(retval);
 #ifdef DEBUGMODE
 	printf("Status string:%s\n", retstr);

@@ -50,7 +50,7 @@ char *_strdup(char *str)
 
 	if (str == NULL)
 		return (NULL);
-	new = malloc(sizeof(char) * _strlen(str));
+	new = malloc(sizeof(char) * (_strlen(str) + 1));
 	if (new == NULL)
 		return (NULL);
 	_strcpy(new, str);

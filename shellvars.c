@@ -66,7 +66,7 @@ char *getsvar(char *name)
 #ifdef DEBUGMODE
 		printf("Returning special var %s:%s\n", ptr->name, ptr -> val);
 #endif
-		return (ptr -> val);
+		return (_strdup(ptr -> val));
 	}
 	ptr = vars;
 	while (ptr != NULL && _strcmp(ptr -> name, name))
@@ -86,7 +86,7 @@ char *getsvar(char *name)
 #ifdef DEBUGMODE
 	printf("Returning var %s\n", ptr -> val);
 #endif
-	return (ptr -> val);
+	return (_strdup(ptr -> val));
 }
 
 
