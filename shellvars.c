@@ -161,19 +161,25 @@ int unsetsvar(char *name)
 {
 	ShellVar *ptr = vars, *next;
 
+	printf("In unsetsvar:vars:%p:name:%s\n", vars, name);
 	if (vars == NULL)
 		return (0);
-	if (ptr -> name == name)
+	printf("ptr->name:%s\n", ptr->name);
+	if (!_strcmp(ptr -> name, name))
 	{
+#ifdef DEBUGMODE
+		printf("First node match\n");
+#endif
 		vars = vars -> next;
 		free(ptr -> name);
 		free(ptr -> val);
 		free(ptr);
+		printf("Returning\n");
 		return (0);
 	}
-	while (ptr -> next != NULL && ptr -> next-> name != name)
+	while (ptr -> next != NULL && !_strcmp(ptr -> next-> name, name))
 		ptr = ptr -> next;
-	if (ptr -> next -> name == name)
+	if (!_strcmp(ptr -> next -> name, name))
 	{
 		next = ptr -> next -> next;
 		free(ptr -> next -> name);
