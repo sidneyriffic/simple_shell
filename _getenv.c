@@ -134,6 +134,7 @@ int _setenv(char *name, char *val)
 int _unsetenv(char *name)
 {
 	int i;
+	char **env;
 
 //#ifdef DEBUGMODE
 	printf("In unsetenv, name:%s\n", name);
@@ -150,12 +151,21 @@ int _unsetenv(char *name)
 		}
 		i++;
 	}
+	free(environ[i]);
 	while (environ[i] != NULL)
 	{
 		environ[i] = environ[i + 1];
 		i++;
 	}
-	i++;
+	environ[i] == NULL;
+	env = environ;
+	setallenv(env, NULL);
 	i = 0;
-	return (setallenv(environ, NULL)); //No new val. Just resetting environ
+	while (env[i])
+	{
+		free (env[i]);
+		i++;
+	}
+	free(env);
+	return (0);
 }
