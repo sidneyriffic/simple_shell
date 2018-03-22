@@ -2,7 +2,7 @@
 #define DEBUGMODE
 int checkpath(char *av[])
 {
-	char *path, *pathptr, *pathvar, *ptr;
+	char *path, *pathptr, *pathvar, *ptr, *pathenv;
 	int pathlen, cmdlen;
 
 #ifdef DEBUGMODE
@@ -11,13 +11,17 @@ int checkpath(char *av[])
 	for (ptr = av[0], cmdlen = 0; *ptr != 0; ptr++)
 		cmdlen++;
 	pathvar = _getenv("PATH");
+	pathenv = pathvar;
 	while (*pathvar != 0)
 	{
 		for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
 			pathlen++;
 		path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
 		if (path == NULL)
+		{
+			free(pathenv);
 			return (-1);
+		}
 		pathptr = path;
 		while (*pathvar != ':' && *pathvar != 0)
 			*pathptr++ = *pathvar++;
@@ -31,15 +35,18 @@ int checkpath(char *av[])
 #ifdef DEBUGMODE
 			printf("Found path:%s\n", path);
 #endif
+			free(av[0]);
 			av[0] = path;
 			pathlen = cmdcall(av);
 /*			free(path);*/
+			free(pathenv);
 			return (pathlen);
 		}
-/*		free(path);*/
+		free(path);
 		while (*pathvar == ':')
 			pathvar++;
 	}
+	free(pathenv);
 	return (1);
 }
 
@@ -84,7 +91,7 @@ int cmdcall(char *av[])
 #ifdef DEBUGMODE
 	printf("Status %d\n", status);
 #endif
-/*	free(environ);*/
+	free(environ);
 	return (status);
 }
 
@@ -124,6 +131,6 @@ int builtincall(char *av[])
 	printf("Status string:%s\n", retstr);
 #endif
 	setsvar("?", retstr);
-/*	free(retstr);*/
+	free(retstr);
 	return (retval);
 }

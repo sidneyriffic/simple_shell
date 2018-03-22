@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define DEBUGMODE
 int shintmode()
 {
 	char *bufgl = NULL;
@@ -21,9 +21,8 @@ int shintmode()
 		printf("calling parseargs %s\n", bufgl);
 #endif
 		parseargs(&bufgl);
+		bufgl = NULL;
 	}
-	if (bufgl != NULL)
-		free(bufgl);
 	return (0);
 }
 
@@ -50,8 +49,6 @@ int scriptmode(int ac, char *av[])
 		fclose(infile);
 		i++;
 	}
-	if (buf != NULL)
-		free(buf);
 	return (0);
 }
 
@@ -60,7 +57,7 @@ int main(int ac, char *av[], char **environ)
 	setbuf(stdout, NULL);
 	initsvars(ac, av);
 	setallenv(environ, NULL);
-#ifdef DEBUGMODE
+#ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));
 	printf("0:%s\n", getsvar("0"));
 	setsvar(_strdup("simplevar"), _strdup("98"));

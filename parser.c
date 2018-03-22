@@ -1,6 +1,8 @@
 #include "shell.h"
 #define DEBUGMODE
-/* returns buf after var setting */
+#define DEBUGSVARS
+
+/* returns new buf after var setting */
 char *parsesetsvar(char *buf)
 {
 	int haseq;
@@ -13,8 +15,6 @@ char *parsesetsvar(char *buf)
 #ifdef DEBUGSVARS
 			printf("in loop ptr:%s\n", ptr);
 #endif
-			if (*ptr == ' ')
-				break;
 			if (*ptr == '=')
 			{
 				name = strtok(buf, " ");
@@ -29,13 +29,20 @@ char *parsesetsvar(char *buf)
 				setsvar(name, val);
 			}
 			if (ptr == NULL)
+			{
+#ifdef DEBUGSVARS
+				printf("No other args found, returning\n");
+#endif
+				free(bufstart);
 				return (NULL);
+			}
 		}
 	} while (haseq && *ptr != 0);
-	newbuf = malloc(_strlen(buf));
+	newbuf = malloc(sizeof(char) * (_strlen(buf) + 1));
 	if (newbuf == NULL)
 		return (NULL);
 	newbuf = _strcpy(newbuf, buf);
+	free(bufstart);
 	return (newbuf);
 }
 
@@ -44,6 +51,7 @@ char *subsvars(char **buf)
 	char *varptr = *buf, *ptr, *name, *val, *valptr, *dest, *dolptr;
 	size_t buflen = _strlen(*buf);
 	size_t varvlen, varnlen, i;
+	int inquotes = 0;
 
 #ifdef DEBUGSVARS
 	printf("In subsvars\n");
@@ -55,17 +63,24 @@ char *subsvars(char **buf)
 #endif
 		while (*varptr != '$' && *varptr != 0)
 		{
+			printf("inquotes:%d:varptr:%s\n", inquotes, varptr);
 			if (*varptr == '\\')
 			{
+				varptr++;
 				if (*varptr != 0)
 					varptr++;
-				varptr++;
 				continue;
 			}
-			if (*varptr == '\'')
+			if (inquotes == 2 && *varptr == '"')
+				inquotes = 0;
+			if (inquotes == 0 && *varptr == '"')
+				inquotes = 2;
+			if (*varptr == '\'' && inquotes != 2)
 			{
 				varptr++;
-				while(*varptr != '\'')
+				/* change this later to read more stdin if 
+				 * single quote not matched */
+				while(*varptr != '\'' && *varptr != 0)
 					varptr++;
 			}
 			varptr++;
@@ -120,6 +135,7 @@ char *subsvars(char **buf)
 			{
 				while (*valptr != 0)
 					*dest++ = *valptr++;
+				free(val);
 				val = NULL;
 				varptr = dest;
 				ptr += varnlen + 1;
@@ -130,7 +146,7 @@ char *subsvars(char **buf)
 #ifdef DEBUGSVARS
 		printf("Resulting buf:%s::varptr:%s\n", name, varptr);
 #endif
-/*		free(*buf);*/
+		free(*buf);
 		*buf = name;
 		setsvar("?", "0");
 	}
@@ -240,22 +256,22 @@ char *cleanarg(char *arg)
 #ifdef DEBUGMODE
 	printf("clean arg return buf:%s\n", newbuf);
 #endif
+	free(arg);
 	return (newbuf);
 }
 	
-/* double pointer buf so we can free after subbing vars easier */
+/* double pointer buf so we can free after subbing vars easier
+ * frees buf at end */
 int parseargs(char **buf)
 {
 	char *av[1024], *ptr, *left, *right;
 	int ac, ret = 0;
-	char *wordd = " ", *cmdd = ";";
+	char *wordd = " ";
 
 #ifdef DEBUGMODE
 	printf("In parseargs. buf:%s\n", *buf);
 #endif
 	if (*buf == NULL)
-		return (0);
-	if (*buf[0] == 0)
 		return (0);
 	for (ptr = *buf; *ptr != 0; ptr++)
 		if (*ptr == '#' || *ptr == '\n')
@@ -263,11 +279,19 @@ int parseargs(char **buf)
 			*ptr = 0;
 			break;
 		}
+	if (*buf[0] == 0)
+	{
+		free (*buf);
+		return (0);
+	}
 #ifdef DEBUGMODE
-	printf("Breaking command segments:%s\n", *buf);
+	printf("Breaking command segments:%p:%s\n", *buf, *buf);
 #endif
-	left = strtokqe(*buf, ";", 7);
-	right = strtokqe(NULL, "", 7);
+	left = _strdup(strtokqe(*buf, ";", 7));
+	right = _strdup(strtokqe(NULL, "", 7));
+	printf("buf:%p:%s:left:%p:%s:right:%p:%s:\n", *buf, *buf, left, left, right, right);
+	free(*buf);
+	*buf = left;
 #ifdef DEBUGMODE
 	printf("left cmd %s\n", left);
 	printf("right cmd %s\n", right);
@@ -275,13 +299,16 @@ int parseargs(char **buf)
 	if (right != NULL && *right != 0)
 	{
 		parseargs(&left);
+		*buf = right;
 		return (parseargs(&right));
 	}
 #ifdef DEBUGMODE
 	printf("Performing logic %s\n", *buf);
 #endif
-	left = strtokqe(*buf, "|&", 7);
-	right = strtokqe(NULL, "", 7);
+	left = _strdup(strtokqe(*buf, "|&", 7));
+	right = _strdup(strtokqe(NULL, "", 7));
+	free(*buf);
+	*buf = left;
 #ifdef DEBUGMODE
 	printf("left cmd %s\n", left);
 	printf("right cmd %s\n", right);
@@ -289,22 +316,44 @@ int parseargs(char **buf)
 	if (right != NULL && *right == '&')
 	{
 		ret = parseargs(&left);
+		free(left);
+		*buf = right;
 		right++;
+		right = _strdup(right);
+		free(*buf);
 		if (ret == 0)
 			return (parseargs(&right));
 		else
 		{
+			*buf = right;
 			strtokqe(right, "|", 7);
 			right = strtokqe(NULL, "", 7);
-			return (parseargs(&right));
+			if (right != NULL)
+			{
+				right++;
+				right = _strdup(right);
+				free(*buf);
+				return (parseargs(&right));
+			}
+			else
+			{
+				free(*buf);
+				return (ret);
+			}
 		}
 	}
 	if (right != NULL && *right == '|')
 	{
 		ret = parseargs(&left);
+		left = right;
 		right++;
+		right = _strdup(right);
+		free(left);
 		if (ret == 0)
+		{
+			free(right);
 			return (1);
+		}
 		return (parseargs(&right));
 	}
 #ifdef DEBUGMODE
@@ -320,7 +369,7 @@ int parseargs(char **buf)
 	if (*buf == NULL)
 		return (0);
 	ac = 0;
-	av[ac++] = strtokqe(*buf, wordd, 7);
+	av[ac++] = _strdup(strtokqe(*buf, wordd, 7));
 #ifdef DEBUGMODE
 	printf("Got arg %s\n", av[ac - 1]);
 #endif
@@ -335,7 +384,7 @@ int parseargs(char **buf)
 #endif
 	while (av[ac - 1] != NULL)
 	{
-		av[ac] = strtokqe(NULL, wordd, 7);
+		av[ac] = _strdup(strtokqe(NULL, wordd, 7));
 #ifdef DEBUGMODE
 		printf("Got arg %s\n", av[ac]);
 #endif
@@ -349,5 +398,18 @@ int parseargs(char **buf)
 	ac--;
 	av[ac] = NULL;
 	ret = builtincall(av);
+#ifdef DEBUGMODE
+	printf("After cmdcall ret:%d\n", ret);
+#endif
+	free(*buf);
+	*buf = NULL;
+#ifdef DEBUGMODE
+	printf("Free av strings\n");
+#endif
+	for (ac = 0; av[ac] != NULL; ac++)
+		free(av[ac]);
+#ifdef DEBUGMODE
+	printf("Returning, ret:%d\n", ret);
+#endif
 	return (ret);
 }
