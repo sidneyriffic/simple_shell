@@ -145,7 +145,7 @@ int _unsetenv(char *name)
 	i = 0;
 	while (environ[i] != NULL)
 	{
-		if (_strcmp(environ[i], name) == 0)
+		if (!(_strcmp(environ[i], name)))
 		{
 			break;
 		}
