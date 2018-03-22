@@ -15,8 +15,11 @@ int shintmode()
 		if (istty)
 			printf("Homemade shell:%s$", _getenv("PWD"));
 		lenr = getline(&bufgl, &bufgllen, stdin);
-		if (lenr == 0 || lenr == -1)
+		if ((lenr == 0 && !istty) || lenr == -1)
+		{
+			free(bufgl);
 			break;
+		}
 #ifdef DEBUGMODE
 		printf("calling parseargs %s\n", bufgl);
 #endif
