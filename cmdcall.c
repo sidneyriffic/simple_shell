@@ -119,6 +119,8 @@ int builtincall(char *av[])
 		retval = !printf("%s\n", _getenv(av[1]));
 	else if (!_strcmp(av[0], "setenv"))
 		retval = _setenv(av[1], av[2]);
+	else if (!_strcmp(av[0], "unsetenv"))
+		retval = _unsetenv(av[1]);
 	else if (!_strcmp(av[0], "alias"))
 		retval = aliascmd(av);
 	else if (av[0][0] != '/')

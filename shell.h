@@ -27,6 +27,7 @@ int errhandl(int status);
 int setallenv(char **environ, char *add);
 char *_getenv(char *avzero);
 int _setenv(char *name, char *val);
+int _unsetenv(char *name);
 char **getallenv();
 
 /* from string.c */
@@ -56,6 +57,11 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* from _strtok.c */
 char *strtok(char *str, char *delim);
+
+/* from _getline.c */
+int _getline(char **lineptr, size_t *n, FILE *stream);
+char *_fgets(char *s, int size, FILE *stream);
+int _fgetc (FILE *stream);
 char *strtokqe(char *str, char *delim, int escflags);
 
 #endif

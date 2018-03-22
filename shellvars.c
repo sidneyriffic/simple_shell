@@ -156,16 +156,17 @@ int setsvar(char *name, char *val)
 	return (0);
 }
 
-/*
+
 int unsetsvar(char *name)
 {
-	AliasData *ptr = alist, *next;
+	ShellVar *ptr = vars, *next;
 
-	if (alist == NULL)
+	if (vars == NULL)
 		return (0);
 	if (ptr -> name == name)
 	{
-		alist = alist -> next;
+		vars = vars -> next;
+		free(ptr -> name);
 		free(ptr -> val);
 		free(ptr);
 		return (0);
@@ -176,12 +177,13 @@ int unsetsvar(char *name)
 	{
 		next = ptr -> next -> next;
 		free(ptr -> next -> name);
+		free(ptr -> next -> val);
 		free(ptr -> next);
 		ptr -> next = next;
 	}
 	return (0);
 }
-*/
+
 /*
 int aliascmd(char *av[])
 {

@@ -42,7 +42,7 @@ int setalias(char *name, char *val)
 		new -> next = NULL;
 		alist = new;
 		return (0);
-	}	
+	}
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
 		ptr = ptr -> next;
 	if (!_strcmp(ptr -> name, name))
@@ -88,7 +88,7 @@ int unsetalias(char *name)
 	}
 	return (0);
 }
-		
+
 int aliascmd(char *av[])
 {
 	AliasData *ptr = alist;

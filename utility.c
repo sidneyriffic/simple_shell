@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * itos - converts integer to string
  *
