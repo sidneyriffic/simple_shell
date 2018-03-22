@@ -43,7 +43,7 @@ int scriptmode(int ac, char *av[])
 		continue;*/
 		do
 		{
-			if (_getline(&buf, &n, infile) == -1)
+			if (getline(&buf, &n, infile) == -1)
 				break;
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */

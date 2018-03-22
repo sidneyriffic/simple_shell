@@ -130,15 +130,15 @@ int _setenv(char *name, char *val)
 	}
 	return (setallenv(environ, ptr));
 }
-//testing functionality// copy environ, if hits skip over, realloc
+/*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
 	int i;
 	char **env;
 
-//#ifdef DEBUGMODE
+#ifdef DEBUGMODE
 	printf("In unsetenv, name:%s\n", name);
-//#endif
+#endif
 	if (name == NULL)
 		return (0);
 

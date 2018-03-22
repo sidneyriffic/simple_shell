@@ -46,11 +46,13 @@ int _cd(char *av[]);
 /* from alias.c */
 int aliascmd(char **av);
 char *getalias(char *name);
+int unsetalias(char *name);
 
 /* from shellvars.c */
 int initsvars(int ac, char **av);
 char *getsvar(char *name);
 int setsvar(char *name, char *val);
+int unsetsvar(char *name);
 
 /* from _realloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

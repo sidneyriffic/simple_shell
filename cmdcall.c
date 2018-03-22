@@ -123,6 +123,10 @@ int builtincall(char *av[])
 		retval = _unsetenv(av[1]);
 	else if (!_strcmp(av[0], "alias"))
 		retval = aliascmd(av);
+	else if (!_strcmp(av[0], "unset"))
+		retval = unsetsvar(av[1]);
+	else if (!_strcmp(av[0], "unalias"))
+		retval = unsetalias(av[1]);
 	else if (av[0][0] != '/')
 		retval = checkpath(av);
 	else
