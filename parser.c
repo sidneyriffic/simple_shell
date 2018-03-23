@@ -523,12 +523,12 @@ int parseargs(char **buf)
 	}
 	ac--;
 	av[ac] = NULL;
+	free(*buf);
+	*buf = NULL;
 	ret = builtincall(av);
 #ifdef DEBUGMODE
 	printf("After cmdcall ret:%d\n", ret);
 #endif
-	free(*buf);
-	*buf = NULL;
 #ifdef DEBUGMODE
 	printf("Free av strings\n");
 #endif

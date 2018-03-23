@@ -1,5 +1,5 @@
-#ifndef ALIASH
-#define ALIASH
+#ifndef SHELLVARH
+#define SHELLVARH
 
 typedef struct ShellVar
 {

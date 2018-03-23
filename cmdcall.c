@@ -117,6 +117,7 @@ int builtincall(char *av[])
 {
 	int retval = 0;
 	char *retstr;
+	char *exitstr;
 
 	if (av[0] == NULL)
 		return (0);
@@ -127,9 +128,19 @@ int builtincall(char *av[])
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
-			exit(atoi(av[1]) % 256);
+		{
+			int retval = atoi(av[1]);
+			exitcleanup(av);
+			exit_hist();
+			exit(retval);
+		}
 		else
+		{
+			exitcleanup(av);
+			printf("Var done\n");
+			exit_hist();
 			exit(0);
+		}
 	}
 	if (!_strcmp(av[0], "cd"))
 		retval = _cd(av);

@@ -70,10 +70,8 @@ int print_hist()
 	}
 	return (i);
 }
-/*
- *
- *
-int cleanup ()
+
+int exit_hist()
 {
 	int fd;
 	char *file = ".simple_shell_history";
@@ -83,24 +81,24 @@ int cleanup ()
 	HistList **hlistroot = gethistory();
 	HistList *hlist = *hlistroot;
 	HistList *ptr = hlist;
-
+/*
 	file = tildeexpand(file);
 	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
 	if (fd == -1)
 		return (-1);
 
-	
+*/	
 
 	while (hlist != NULL)
 	{
 		ptr = hlist->next;
 		free(hlist->cmd);
 		free(hlist);
-		ptr = tmp;
+		hlist = ptr;
 	}
 
-	close(fd);
+/*	close(fd);*/
 
 	return(1);
 }
-*/
+

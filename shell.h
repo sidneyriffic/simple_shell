@@ -87,4 +87,7 @@ int exit_hist();
 /*from help.c*/
 int help (char *cmd);
 
+/* from exitcleanup.c */
+void exitcleanup();
+
 #endif

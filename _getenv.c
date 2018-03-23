@@ -56,7 +56,10 @@ int setallenv(char **envin, char *newval)
 		return (-1);
 	for (len = 0; envin[len] != NULL; len++)
 		if (newval == NULL)
+		{
+			printf("copying:len:%d:%s\n", len, envin[len]);
 			(*environ)[len] = _strdup(envin[len]);
+		}
 		else
 			(*environ)[len] = envin[len];
 	if (newval != NULL)
@@ -67,6 +70,7 @@ int setallenv(char **envin, char *newval)
 		(*environ)[len] = newval;
 		len++;
 	}
+	printf("Environ len:%d\n", len);
 	(*environ)[len] = 0;
 #ifdef DEBUGMODE
 	printf("At end. Free old environ if adding a string\n");
