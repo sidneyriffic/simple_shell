@@ -192,6 +192,9 @@ int inputvalidator(char **buf, int fd)
 #ifdef DEBUGVALID
 	printf("Final buf:%s\n", *buf);
 #endif
+	/*history begin*/
+	sethist(*buf);
+	/*end history*/
 	return (parseargs(buf));
 }
 
@@ -224,9 +227,6 @@ int shintmode()
 			}
 		}
 		lenr = _getline(&bufgl, STDIN_FILENO);
-		/*history begin*/
-		sethist(bufgl);
-		/*end history*/
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{
 			free(bufgl);
