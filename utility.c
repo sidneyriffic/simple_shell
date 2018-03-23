@@ -1,20 +1,21 @@
 #include "shell.h"
 #include <stdarg.h>
-
+/**
+ * linecount - count lines
+ * @increment: icnrementer
+ * Return: count
+ */
 int linecount(int increment)
 {
-	static int count = 0;
+	static int count;
 
 	count += increment;
 
-	return count;
+	return (count);
 }
-
 /**
  * itos - converts integer to string
- *
- * @list: variadic argument
- *
+ * @digits: int
  * Return: a string
  */
 char *itos(int digits)
@@ -58,8 +59,12 @@ char *itos(int digits)
 	return (output);
 
 }
-
-/* null prints errno error with perror, otherwise print string as error */
+/**
+ * printerr - printerrors
+ * @str: string
+ * null prints errno error with perror, otherwise print string as error
+ * Return: 0
+ */
 int printerr(char *str)
 {
 	char *pathname, *numstr;
@@ -79,7 +84,11 @@ int printerr(char *str)
 	free(numstr);
 	return (0);
 }
-
+/**
+ * fprintstrs - fprintf recreation
+ * @fd: file descriptor
+ * @str: string
+ * Return: 0
 /* va args should have a NULL last arg */
 int fprintstrs(int fd, char *str, ...)
 {
@@ -97,7 +106,12 @@ int fprintstrs(int fd, char *str, ...)
 	}
 	return (0);
 }
-	
+/**
+ * malcat - malloc concat
+ * @dest: dest string
+ * @src: source string
+ * Return: dest string
+ */
 char *malcat(char *dest, char *src)
 {
 	int len_dest;

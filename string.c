@@ -23,7 +23,11 @@ int _strcmp(char *s1, char *s2)
 	}
 	return (s1[i] - s2[i]);
 }
-
+/**
+ * _strlen - string length
+ * @str: string
+ * Return: length
+ */
 size_t _strlen(char *str)
 {
 	size_t len = 0;
@@ -33,17 +37,27 @@ size_t _strlen(char *str)
 
 	return (len);
 }
-
+/**
+ * _strcpy - string copy
+ * @dest: dest string
+ * @src: source string
+ * Return: string
+ */
 char *_strcpy(char *dest, char *src)
 {
 	char *ptr = dest;
-	while(*src)
+
+	while (*src)
 		*ptr++ = *src++;
 	*ptr = *src;
 
 	return (dest);
 }
-
+/**
+ * _strdup - string duplication
+ * @str: string
+ * Return: string
+ */
 char *_strdup(char *str)
 {
 	char *new;
@@ -56,7 +70,12 @@ char *_strdup(char *str)
 	_strcpy(new, str);
 	return (new);
 }
-
+/**
+ * _strcat - string concnat
+ * @dest: destination
+ * @src: source
+ * Return: concated string
+ */
 char *_strcat(char *dest, char *src)
 {
 	char *ptr = dest;
