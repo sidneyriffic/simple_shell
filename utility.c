@@ -85,11 +85,10 @@ int printerr(char *str)
 	return (0);
 }
 /**
- * fprintstrs - fprintf recreation
+ * fprintstrs - simple string printer, va args should have a NULL last arg
  * @fd: file descriptor
  * @str: string
- * Return: 0
-/* va args should have a NULL last arg */
+ * Return: 0 */
 int fprintstrs(int fd, char *str, ...)
 {
 	va_list list;
