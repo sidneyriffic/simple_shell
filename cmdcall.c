@@ -1,8 +1,9 @@
 #include "shell.h"
 #define DEBUGMODE
 /**
- * checkpath - 
- *
+ * checkpath - checks the path
+ * @av[] : arguments
+ * Return: 1
  */
 int checkpath(char *av[])
 {
@@ -53,8 +54,11 @@ int checkpath(char *av[])
 	free(pathenv);
 	return (1);
 }
-
-
+/**
+ * cmdcall - calls commands
+ * @av[]: arguments
+ * Return: retval
+ */
 int cmdcall(char *av[])
 {
 	char **environ;
