@@ -7,23 +7,31 @@
 int _cd(char *av[])
 {
 	char *oldpwd = NULL, *newpath, *pathbit, *newptr;
-	int ret;
+	char *homestr = "HOME", *oldpwdstr = "OLDPWD";
+	int ret, printpath = 0;
 
 	oldpwd = getcwd(oldpwd, 0);
 	if (oldpwd == NULL)
 		return (1);
 	if (av[1] == NULL || av[1][0] == 0)
 	{
-		newpath = _getenv("HOME");
+		newpath = _getenv(homestr);
+		if (newpath == homestr)
+			newpath = _strdup("");
+		av[1] = newpath;
+		av[2] = NULL;
 	}
 	else if (av[1][0] == '-' && av[1][1] == 0)
 	{
 		/*check getenv malloc error here and above*/
-		newpath = _getenv("OLDPWD");
-		fprintstrs(1, newpath);
+		newpath = _getenv(oldpwdstr);
+		if (newpath == oldpwdstr)
+			newpath = _strdup("");
+		printpath = 1;
+		free(av[1]);
+		av[1] = newpath;
 	}
-	else
-	{
+	/*{*/
 #ifdef DEBUGCD
 		printf("Making new path %s:%c\n", av[1], av[1][0]);
 #endif
@@ -73,13 +81,15 @@ int _cd(char *av[])
 #ifdef DEBUGCD
 		printf("New path:%s\n", newpath);
 #endif
-	}
+		/*}*/
 	ret = chdir(newpath);
 	if (ret == 0)
 	{
 		_setenv("OLDPWD", oldpwd);
 		free(oldpwd);
 		_setenv("PWD", newpath);
+		if (printpath)
+			fprintstrs(1, newpath, "\n", NULL);
 		free(newpath);
 		return (0);
 	}
