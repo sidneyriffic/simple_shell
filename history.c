@@ -81,7 +81,7 @@ int exit_hist(void)
 
 	int fd;
 	char *file = ".simple_shell_history";
-	int i, len, w;
+	int len;
 	char *s;
 
 	HistList **hlistroot = gethistory();
