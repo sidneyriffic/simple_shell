@@ -117,7 +117,6 @@ int builtincall(char *av[])
 {
 	int retval = 0;
 	char *retstr;
-	char *exitstr;
 
 	if (av[0] == NULL)
 		return (0);

@@ -73,7 +73,7 @@ int print_hist()
 
 int exit_hist()
 {
-	int fd;
+/*	int fd;
 	char *file = ".simple_shell_history";
 	int i, len, w;
 	char *s;
@@ -81,13 +81,12 @@ int exit_hist()
 	HistList **hlistroot = gethistory();
 	HistList *hlist = *hlistroot;
 	HistList *ptr = hlist;
-/*
+
 	file = tildeexpand(file);
 	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
 	if (fd == -1)
 		return (-1);
-
-*/	
+	
 
 	while (hlist != NULL)
 	{
@@ -96,7 +95,7 @@ int exit_hist()
 		free(hlist);
 		hlist = ptr;
 	}
-
+*/
 /*	close(fd);*/
 
 	return(1);
