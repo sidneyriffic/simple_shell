@@ -27,7 +27,7 @@ int _cd(char *av[])
 #ifdef DEBUGCD
 		printf("Making new path %s:%c\n", av[1], av[1][0]);
 #endif
-		newpath = malloc(sizeof(char)* (_strlen(oldpwd) + _strlen(av[1]) + 2));
+		newpath = malloc(sizeof(char) * (_strlen(oldpwd) + _strlen(av[1]) + 2));
 		if (newpath == NULL)
 			return (-1);
 		newptr = newpath;
@@ -51,7 +51,7 @@ int _cd(char *av[])
 #endif
 				newptr--;
 				if (newptr != newpath)
-					newptr --;
+					newptr--;
 				while (*newptr != '/')
 					newptr--;
 				*newptr++ = '/';

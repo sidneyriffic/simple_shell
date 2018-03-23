@@ -1,9 +1,9 @@
 #include "shell.h"
 #include "alias.h"
 /**
- * getalias - get alias value
- * @name: name of alias
- * Return: original argument if not found, otherwise value
+ * getalist - static wrapper getalias list
+ * Return: address alist
+ *
  */
 AliasData **getalist()
 {
@@ -11,8 +11,12 @@ AliasData **getalist()
 
 	return (&alist);
 }
-
-/* returns original argument if not found */
+/**
+ * getalias - get alias value
+ * returns original argument if not found
+ * @name: name of alias
+ * Return: original argument if not found, otherwise value
+ */
 char *getalias(char *name)
 {
 	AliasData *alist = *(getalist());
@@ -37,7 +41,7 @@ char *getalias(char *name)
 #endif
 
 	free(name);
-	return (_strdup(ptr -> val));
+	return (_strdup(ptr->val));
 }
 /**
  * setalias - set alias and value
@@ -56,7 +60,6 @@ int setalias(char *name, char *val)
 		new = malloc(sizeof(AliasData));
 		if (new == NULL)
 			return (-1);
-    
 		new->name = name;
 		new->val = val;
 		new->next = NULL;
@@ -103,9 +106,9 @@ int unsetalias(char *name)
 		return (0);
 	}
 
-	while (ptr -> next != NULL && _strcmp(ptr -> next-> name, name))
-		ptr = ptr -> next;
-	if (!_strcmp(ptr -> next -> name, name))
+	while (ptr->next != NULL && _strcmp(ptr->next->name, name))
+		ptr = ptr->next;
+	if (!_strcmp(ptr->next->name, name))
 	{
 		next = ptr->next->next;
 		free(ptr->next->name);
@@ -148,7 +151,7 @@ int aliascmd(char *av[])
 		printf("Alias arg %s\n", av[i]);
 #endif
 		name = strtok(av[i], "=");
-		val = strtok(NULL,"=");
+		val = strtok(NULL, "=");
 		if (val != NULL)
 		{
 #ifdef DEBUGMODE

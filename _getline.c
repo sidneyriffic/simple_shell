@@ -5,7 +5,7 @@
  * @fd: file descriptor
  * Return: num of characters
  */
-int _getline(char **lineptr, __attribute__((unused)) int fd)
+int _getline(char **lineptr, int fd)
 {
 	int size = 1025;
 	int old_size = 0;
@@ -34,7 +34,7 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 		{
 			while (sum < 1024 && r != 0)
 			{
-				r = read(0, buffer + sum, 1024 - sum);
+				r = read(fd, buffer + sum, 1024 - sum);
 				begin = 0;
 				sum += r;
 				end = sum;

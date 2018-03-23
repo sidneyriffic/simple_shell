@@ -1,6 +1,10 @@
 #include "shell.h"
-
-/* returns new buf after var setting */
+/**
+ * parsesetsvar - parse set shell vars
+ * @buf: buffer
+ * Return: string
+ * returns new buf after var setting
+ */
 char *parsesetsvar(char *buf)
 {
 	int haseq;
@@ -89,7 +93,7 @@ char *subsvars(char **buf)
 			if (*varptr == '\'' && inquotes != 2)
 			{
 				varptr++;
-				while(*varptr != '\'' && *varptr != 0)
+				while (*varptr != '\'' && *varptr != 0)
 					varptr++;
 			}
 			varptr++;
@@ -107,7 +111,7 @@ char *subsvars(char **buf)
 #ifdef DEBUGSVARS
 		printf("varnlen:%d varptr:%s\n", varnlen, varptr);
 #endif
-		name = malloc (sizeof(char) * (varnlen + 1));
+		name = malloc(sizeof(char) * (varnlen + 1));
 		if (name == NULL)
 			return (NULL);
 		for (i = 0; i < varnlen; i++, varptr++)
@@ -131,7 +135,9 @@ char *subsvars(char **buf)
 		printf("val got:%s\n", val);
 #endif
 		varvlen = _strlen(val);
-		/* need new buffer for substituted var string */
+/*
+ *need new buffer for substituted var string
+ */
 		buflen = buflen - varnlen + varvlen + 1;
 #ifdef DEBUGSVARS
 		printf("malloc size:%d\n", buflen);
@@ -139,7 +145,9 @@ char *subsvars(char **buf)
 		name = malloc(sizeof(char) * (buflen));
 		for (ptr = *buf, dest = name, valptr = val; *ptr != 0; ptr++, dest++)
 		{
-/*		printf("copy to new buf %s::%s\n", ptr, name);*/
+/*
+ * printf("copy to new buf %s::%s\n", ptr, name);
+ */
 			if (val != NULL && ptr == dolptr)
 			{
 				while (*valptr != 0)
@@ -185,7 +193,7 @@ char *cleanarg(char *arg)
 		if (*ptr == '\\' && inquote == 2)
 		{
 			ptr++;
-			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr =='\\')
+			if (*ptr == '$' || *ptr == '#' || *ptr == ';' || *ptr == '\\')
 			{
 				len++;
 				ptr++;
@@ -295,7 +303,7 @@ char *tildeexpand(char *buf)
 			if (inquotes != 1 && *tildeptr == '"')
 			{
 				inquotes = 2;
-				while(*tildeptr != '"' && *tildeptr != 0)
+				while (*tildeptr != '"' && *tildeptr != 0)
 				{
 					if (*tildeptr == '\\')
 					{
@@ -306,18 +314,18 @@ char *tildeexpand(char *buf)
 					}
 					tildeptr++;
 				}
-			}				
+			}
 			if (*tildeptr == '\'' && inquotes != 2)
 			{
 				tildeptr++;
-				while(*tildeptr != '\'' && *tildeptr != 0)
+				while (*tildeptr != '\'' && *tildeptr != 0)
 					tildeptr++;
 			}
 			tildeptr++;
 		}
 		if (*tildeptr == 0)
 			return (buf);
-		endptr=tildeptr;
+		endptr = tildeptr;
 		while (*endptr != '/' && *endptr != ' ' && *endptr != 0)
 			endptr++;
 		homepath = _getenv("HOME");
@@ -351,9 +359,13 @@ char *tildeexpand(char *buf)
 	}
 	return (newbuf);
 }
-	
-/* double pointer buf so we can free after subbing vars easier
- * frees buf at end */
+/**
+ * Parseargs - parse arguments function
+ * @buf: buffer pointer
+ * Return: int
+ * double pointer buf so we can free after subbing vars easier
+ * frees buf at end
+*/
 int parseargs(char **buf)
 {
 	char *av[1024], *ptr, *left, *right;
@@ -368,13 +380,15 @@ int parseargs(char **buf)
 	newchk = _strlen(*buf) - 1;
 	if (ptr[newchk] == '\n')
 		ptr[newchk] = 0;
-/*	for (ptr = *buf; *ptr != 0; ptr++)
-		if (*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' '))
-		{
-			printf("ptr:%p:*buf:%p:*(ptr - 1):%c\n", ptr, *buf, *(ptr-1));
-			*ptr = 0;
-			break;
-			}*/
+/*
+ *for (ptr = *buf; *ptr != 0; ptr++)
+ *if (*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' '))
+ *		{
+ *	       	printf("ptr:%p:*buf:%p:*(ptr - 1):%c\n", ptr, *buf, *(ptr-1));
+ *			*ptr = 0;
+ *			break;
+ *			}
+ */
 	if (*buf[0] == 0)
 	{
 		free (*buf);
@@ -475,7 +489,6 @@ int parseargs(char **buf)
 	{
 		*(right - 1) = '|';
 	}
-	
 #ifdef DEBUGMODE
 	printf("Subbing vars %s\n", *buf);
 #endif
