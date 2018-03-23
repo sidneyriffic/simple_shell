@@ -141,25 +141,33 @@ int builtincall(char *av[])
 #endif
 	if (!_strcmp(av[0], "exit"))
 	{
-		if (av[1] != NULL)
+		if (av[1][0] >= '0' && av[1][0] <= '9')
 		{
-			retval = atoi(av[1]);
-
-			exitcleanup(av);
-			exit_hist();
-			exit(retval);
+			if (av[1] != NULL)
+			{
+				retval = _atoi(av[1]);
+				exitcleanup(av);
+				exit_hist();
+				exit(retval);
+			}
+			else
+			{
+				retstr = getsvar("?");
+				retval = _atoi(retstr);
+				free(retstr);
+				exitcleanup(av);
+				exit_hist();
+				exit(retval);
+			}
 		}
 		else
 		{
-			retstr = getsvar("?");
-			retval = _atoi(retstr);
-			free(retstr);
-			exitcleanup(av);
-			exit_hist();
-			exit(retval);
+			printerr(" exit: Illegal number: ");
+			fprintstrs(STDERR_FILENO, av[1], "\n", NULL);
+			retval = 2;
 		}
 	}
-	if (!_strcmp(av[0], "cd"))
+	else if (!_strcmp(av[0], "cd"))
 		retval = _cd(av);
 /*
  *
