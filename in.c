@@ -250,29 +250,35 @@ int shintmode()
  * @av: arguments
  * Return: 0 upon success or -1 if failure
  */
-int scriptmode(int ac, char *av[])
+int scriptmode(char *av[])
 {
-	char *buf = NULL;
-	int i = 1;
-	ssize_t n;
+	char *bufgl = NULL;
 	int infile;
+	ssize_t lenr = 0, eofflag = 0, ret = 0;
 
-	while (i < ac)
+	infile = open(av[1], O_RDONLY);
+	if (infile == -1)
+		return (-1);
+	while (!eofflag)
 	{
-		infile = open(av[i], O_RDONLY);
-		/*if (infile == -1)*/
-		/*continue;*/
-		do {
-			n = _getline(&buf, infile);
-			if (buf == NULL)
-				return (-1); /* fix buffer allocation error later */
-			parseargs(&buf);
-			buf = NULL;
-		} while (n > 0);
-		close(infile);
-		i++;
+		lenr = _getline(&bufgl, infile);
+		if (lenr == 0 || lenr == -1)
+		{
+			free(bufgl);
+			break;
+		}
+		if (bufgl[lenr - 1] != '\n')
+			eofflag = 1;
+#ifdef DEBUGMODE
+		printf("calling parseargs %s\n", bufgl);
+#endif
+		ret = inputvalidator(&bufgl, STDIN_FILENO);
+		bufgl = NULL;
+		if (eofflag)
+			break;
 	}
-	return (0);
+	close (infile);
+	return (ret);
 }
 
 int main(int ac, char *av[], char **environ)
@@ -287,7 +293,7 @@ int main(int ac, char *av[], char **environ)
 	printf("simplevar:%s\n", getsvar("simplevar"));
 #endif
 	if (ac > 1)
-		ret = scriptmode(ac, av);
+		ret = scriptmode(av);
 	else
 		ret = shintmode();
 	exitcleanup(NULL);
