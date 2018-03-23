@@ -1,5 +1,9 @@
 #include "shell.h"
 #define DEBUGMODE
+/**
+ * checkpath - 
+ *
+ */
 int checkpath(char *av[])
 {
 	char *path, *pathptr, *pathvar, *ptr, *pathenv;

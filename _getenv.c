@@ -1,7 +1,10 @@
 #include "shell.h"
 
 char **environ;
-
+/**
+ * getallenv - copy whole environ
+ * Return: environ copy
+ */
 char **getallenv()
 {
 	char **envcopy;
@@ -24,7 +27,12 @@ char **getallenv()
 	envcopy[len] = environ[len];
 	return (envcopy);
 }
-
+/**
+ * setallenv - set whole environment for new value
+ * @environ: environment
+ * @newval: new value to be added
+ * Return: 0 if success, -1 if failure
+ */
 /* add should be null for first init to not free passed array */
 int setallenv(char **envin, char *newval)
 {
@@ -58,7 +66,11 @@ int setallenv(char **envin, char *newval)
 		free(envin);
 	return (0);
 }
-
+/**
+ * _getenv - get local environment
+ * @name: environment variable
+ * Return: string of local environment
+ */
 char *_getenv(char *name)
 {
 	int i, j;
@@ -85,7 +97,12 @@ char *_getenv(char *name)
 	}
 	return(name);
 }
-
+/**
+ * _setenv - setenvironment for new value
+ * @name: name of variable
+ * @val: value of variable
+ * Return: 0 or setallenv if success, -1 if fail
+ */
 int _setenv(char *name, char *val)
 {
 	int i, j, namel, vall;
@@ -130,6 +147,11 @@ int _setenv(char *name, char *val)
 	}
 	return (setallenv(environ, ptr));
 }
+/**
+ * _unsetenv - unset environment
+ * @name: name of variable to unset
+ * Return: 0 if sucess
+ */
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {

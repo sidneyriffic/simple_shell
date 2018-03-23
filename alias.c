@@ -2,7 +2,11 @@
 #include "alias.h"
 
 AliasData *alist;
-
+/**
+ * getalias - get alias value
+ * @name: name of alias
+ * Return: original argument if not found, otherwise value
+ */
 /* returns original argument if not found */
 char *getalias(char *name)
 {
@@ -27,7 +31,12 @@ char *getalias(char *name)
 #endif
 	return (ptr -> val);
 }
-
+/**
+ * setalias - set alias and value
+ * @name: name of alias
+ * @value: value to set alias to
+ * Return: 0 upon success
+ */
 int setalias(char *name, char *val)
 {
 	AliasData *ptr = alist, *new;
@@ -63,7 +72,11 @@ int setalias(char *name, char *val)
 	}
 	return (0);
 }
-
+/**
+ * unsetalias - unset alias of @name
+ * @name: name of alias value to unset
+ * Return: 0 if sucess
+ */
 int unsetalias(char *name)
 {
 	AliasData *ptr = alist, *next;
@@ -88,7 +101,11 @@ int unsetalias(char *name)
 	}
 	return (0);
 }
-
+/**
+ * aliasmcd - tokenizes arguments for alias command
+ * @av[]: arguments
+ * Return: 1
+ */
 int aliascmd(char *av[])
 {
 	AliasData *ptr = alist;
