@@ -136,7 +136,6 @@ int builtincall(char *av[])
 		else
 		{
 			exitcleanup(av);
-			printf("Var done\n");
 			exit_hist();
 			exit(0);
 		}

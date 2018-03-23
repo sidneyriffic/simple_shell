@@ -69,7 +69,7 @@ int setallenv(char **envin, char *newval)
 		(*environ)[len] = newval;
 		len++;
 	}
-	(*environ)[len] = 0;
+	(*environ)[len] = NULL;
 #ifdef DEBUGMODE
 	printf("At end. Free old environ if adding a string\n");
 #endif
