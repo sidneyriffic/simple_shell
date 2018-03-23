@@ -7,7 +7,7 @@
  */
 int _getline(char **lineptr, __attribute__((unused)) int fd)
 {
-	int size = 1024;
+	int size = 1025;
 	int old_size = 0;
 	int r = 1;
 	int sum = 0;
@@ -33,8 +33,7 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 		{
 			while (sum < 1024 && r != 0)
 			{
-				/*printf("reading\n");*/
-				r = read(0, buffer + sum, 1024);
+				r = read(0, buffer + sum, 1024 - sum);
 				begin = 0;
 				sum += r;
 				end = sum;
@@ -49,8 +48,9 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 				return(sum);
 			}
 			buffer[sum] = 0;
+			sum = 0;
 		}
-		for (c = 0; buffer[begin] && c < size; begin++)
+		for (c = 0; buffer[begin]; begin++)
 		{
 			if (begin == 1024)
 			{
