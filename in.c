@@ -278,7 +278,7 @@ int scriptmode(int ac, char *av[])
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;
-	initsvars(ac, av);
+	initsvars(ac - 1, av);
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));
@@ -286,9 +286,10 @@ int main(int ac, char *av[], char **environ)
 	setsvar(_strdup("simplevar"), _strdup("98"));
 	printf("simplevar:%s\n", getsvar("simplevar"));
 #endif
-/*	if (ac > 1)
+	if (ac > 1)
 		ret = scriptmode(ac, av);
-		ret = shintmode();*/
+	else
+		ret = shintmode();
 	exitcleanup(NULL);
 	exit_hist();
 	return (ret);
