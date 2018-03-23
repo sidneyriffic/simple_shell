@@ -78,31 +78,36 @@ int print_hist(void)
  */
 int exit_hist(void)
 {
+
+	int fd;
+	char *file = ".simple_shell_history";
+	int i, len, w;
+	char *s;
+
+	HistList **hlistroot = gethistory();
+	HistList *hlist = *hlistroot;
+	HistList *ptr = hlist;
+
 /*
- *	int fd;
- *	char *file = ".simple_shell_history";
- *	int i, len, w;
- *	char *s;
- *
- *	HistList **hlistroot = gethistory();
- *	HistList *hlist = *hlistroot;
- *	HistList *ptr = hlist;
- *
- *	file = tildeexpand(file);
- *	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
- *	if (fd == -1)
- *		return (-1);
- *
- *	while (hlist != NULL)
- *	{
- *		ptr = hlist->next;
- *		free(hlist->cmd);
- *		free(hlist);
- *		hlist = ptr;
- *	}
- *
- *	close(fd);
- */
+	file = tildeexpand(file);
+*/
+	fd = open(file, O_CREAT | O_RDWR, 0600);
+	if (fd == -1)
+		return (-1);
+
+	while (hlist != NULL)
+	{
+		ptr = hlist->next;
+		s = hlist->cmd;
+		len = _strlen(s);
+		write(fd, s, len);
+		free(hlist->cmd);
+		free(hlist);
+		hlist = ptr;
+	}
+
+	close(fd);
+
 
 	return (1);
 }

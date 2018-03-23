@@ -10,6 +10,14 @@ int help(char *cmd)
 	int fd, r;
 	char *s;
 
+	if (cmd == NULL)
+	{
+		s = "help: no builtin entered.\n";
+		r = _strlen(s);
+		r = write(1, s, r);
+		return (0);
+	}
+
 	if (!_strcmp(cmd, "cd"))
 	{
 		file = "help_cd";
