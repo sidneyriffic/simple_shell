@@ -179,7 +179,9 @@ int builtincall(char *av[])
 		retval = unsetsvar(av[1]);
 	else if (!_strcmp(av[0], "unalias"))
 		retval = unsetalias(av[1]);
-	else if (av[0][0] != '/')
+	else if (av[0][0] != '/' &&
+		 !(av[0][0] == '.' && (av[0][1] == '/' ||
+				       (av[0][1] == '.' && av[0][2] == '/'))))
 		retval = checkpath(av);
 	else
 		retval = cmdcall(av, av[0]);
