@@ -97,6 +97,8 @@ char *subsvars(char **buf)
 					varptr++;
 			}
 			varptr++;
+			if (*varptr == '$' && (varptr[1] == ' ' || varptr[1] == 0 || varptr[1] == '\n'))
+				varptr++;
 		}
 #ifdef DEBUGSVARS
 		printf("At $:%s\n", varptr);
