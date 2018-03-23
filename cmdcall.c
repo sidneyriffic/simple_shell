@@ -59,7 +59,7 @@ int checkpath(char *av[])
 	free(path);
 	free(linect);
 	free(pathenv);
-	return (1);
+	return (127);
 }
 /**
  * cmdcall - calls commands
@@ -71,6 +71,7 @@ int cmdcall(char *av[], char *cmd)
 {
 	pid_t command;
 	int status;
+	char *linect, *dolz;
 
 #ifdef DEBUGMODE
 	printf("In cmdcall av[0]:%s\n", av[0]);
@@ -92,7 +93,20 @@ int cmdcall(char *av[], char *cmd)
 #endif
 		if (execve(cmd, av, *(getenviron())) == -1)
 		{
-			printerr(NULL);
+			if (!access(cmd, F_OK))
+			{
+				printerr(NULL);
+				exit(126);
+			}
+			else
+			{
+				linect = itos(linecount(0));
+				dolz = getsvar("0");
+				fprintstrs(2, dolz, ": ", linect, ": ", cmd, ": not found\n", NULL);
+				free(dolz);
+				free(linect);
+				exit(127);
+			}
 			exit(1);
 		}
 #ifdef DEBUGMODE
