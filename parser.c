@@ -374,7 +374,7 @@ int parseargs(char **buf)
 #ifdef DEBUGMODE
 	printf("In parseargs. buf:%s\n", *buf);
 #endif
-	if (*buf == NULL)
+	if (*buf == NULL || **buf == 0)
 		return (0);
 	ptr = *buf;
 	newchk = _strlen(*buf) - 1;
