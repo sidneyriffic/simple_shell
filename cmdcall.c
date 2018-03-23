@@ -151,9 +151,12 @@ int builtincall(char *av[])
 		}
 		else
 		{
+			retstr = getsvar("?");
+			retval = _atoi(retstr);
+			free(retstr);
 			exitcleanup(av);
 			exit_hist();
-			exit(0);
+			exit(retval);
 		}
 	}
 	if (!_strcmp(av[0], "cd"))
