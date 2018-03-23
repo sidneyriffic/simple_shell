@@ -15,7 +15,7 @@ ShellVar **getvars()
 	return (&vars);
 }
 
-int initsvars(__attribute__((unused)) int ac, char **av)
+int initsvars(int ac, char **av)
 {
 	ShellVar **specialroot = getspecial();
 	ShellVar *special;
@@ -61,7 +61,7 @@ int initsvars(__attribute__((unused)) int ac, char **av)
 	ptr -> next = ptr + 1;
 	ptr = ptr -> next;
 	ptr -> name = _strdup("#");
-	ptr -> val = _strdup("0");
+	ptr -> val = itos(ac);
 	ptr -> next = NULL;
 	return (0);
 }
