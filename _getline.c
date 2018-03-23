@@ -15,6 +15,7 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 	static int begin;
 	static int end;
 	int c = 0;
+	int d;
 
 	if (lineptr == NULL)
 	{
@@ -38,8 +39,8 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 				sum += r;
 				end = sum;
 				/*printf("r : %d\n", r);*/
-				for (c = 0; r != 0 && c < end; c++)
-					if (buffer[c] == '\n')
+				for (d = 0; r != 0 && d < end; d++)
+					if (buffer[d] == '\n')
 						r = 0;
 			}
 			if (sum == 0)
@@ -50,7 +51,7 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 			buffer[sum] = 0;
 			sum = 0;
 		}
-		for (c = 0; buffer[begin]; begin++)
+		for (; buffer[begin]; begin++)
 		{
 			if (begin == 1024)
 			{
