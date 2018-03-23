@@ -151,7 +151,7 @@ int builtincall(char *av[])
 			}
 			else
 			{
-				printerr(" exit: Illegal number: ");
+				printerr(": exit: Illegal number: ");
 				fprintstrs(STDERR_FILENO, av[1], "\n", NULL);
 				retval = 2;
 			}
