@@ -289,7 +289,6 @@ int parseargs(char **buf)
 #endif
 	left = _strdup(strtokqe(*buf, ";", 7));
 	right = _strdup(strtokqe(NULL, "", 7));
-	printf("buf:%p:%s:left:%p:%s:right:%p:%s:\n", *buf, *buf, left, left, right, right);
 	free(*buf);
 	*buf = left;
 #ifdef DEBUGMODE
@@ -299,7 +298,6 @@ int parseargs(char **buf)
 	if (right != NULL && *right != 0)
 	{
 		parseargs(&left);
-		*buf = right;
 		return (parseargs(&right));
 	}
 #ifdef DEBUGMODE

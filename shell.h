@@ -13,6 +13,9 @@
 /* from in.c */
 int shintmode();
 
+/* from _printenv.c */
+int _printenv();
+
 /* from cmdcall.c */
 int builtincall(char *av[]);
 int cmdcall(char *av[]);
@@ -61,9 +64,12 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *strtok(char *str, char *delim);
 
 /* from _getline.c */
-int _getline(char **lineptr, size_t *n, FILE *stream);
+char *_getline();
 char *_fgets(char *s, int size, FILE *stream);
 int _fgetc (FILE *stream);
 char *strtokqe(char *str, char *delim, int escflags);
+
+/*from _putchar.c*/
+int _putchar(char c);
 
 #endif
