@@ -26,6 +26,8 @@ char *parsesetsvar(char *buf)
 #endif
 				setsvar(name, val);
 			}
+			if (*ptr == ' ')
+				return (0);
 			if (ptr == NULL)
 			{
 #ifdef DEBUGSVARS
