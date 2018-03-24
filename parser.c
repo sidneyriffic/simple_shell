@@ -424,14 +424,30 @@ int parseargs(char **buf)
 	if (right != NULL && *right == '|')
 	{
 		ret = parseargs(&left);
-		left = right;
+		free(left);
+		*buf = right;
 		right++;
 		right = _strdup(right);
-		free(left);
-		if (ret == 0)
+		free(*buf);
+		if (ret != 0)
+			return (parseargs(&right));
+		else
 		{
-			free(right);
-			return (1);
+			*buf = right;
+			strtokqe(right, "&", 7);
+			right = strtokqe(NULL, "", 7);
+			if (right != NULL)
+			{
+				right++;
+				right = _strdup(right);
+				free(*buf);
+				return (parseargs(&right));
+			}
+			else
+			{
+				free(*buf);
+				return (ret);
+			}
 		}
 		return (parseargs(&right));
 	}
