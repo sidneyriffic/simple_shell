@@ -177,7 +177,7 @@ int unsetsvar(char *name)
 		printf("Returning\n");
 		return (0);
 	}
-	while (ptr -> next != NULL && !_strcmp(ptr -> next-> name, name))
+	while (ptr -> next != NULL && _strcmp(ptr -> next-> name, name))
 		ptr = ptr -> next;
 	if (!_strcmp(ptr -> next -> name, name))
 	{
