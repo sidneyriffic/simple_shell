@@ -160,7 +160,7 @@ int _unsetenv(char *name)
 		environ[i] = environ[i + 1];
 		i++;
 	}
-	environ[i] == NULL;
+	environ[i] = NULL;
 	env = environ;
 	setallenv(env, NULL);
 	i = 0;
