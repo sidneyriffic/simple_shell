@@ -57,18 +57,14 @@ char *_strdup(char *str)
 	return (new);
 }
 
-char *strcat(char *a, char *b)
+char *_strcat(char *dest, char *src)
 {
-	char *ret, *ptr;
+	char *ptr = dest;
 
-	ret = malloc(_strlen(a) + _strlen(b) + 1);
-	if (ret == NULL)
-		return (NULL);
-	ptr = ret;
-	while (*a)
-		*ptr++ = *a++;
-	while (*b)
+	while (*ptr)
+		ptr++;
+	while (*src)
 		*ptr++ = *b++;
 	*ptr = 0;
-	return (ret);
+	return (dest);
 }
