@@ -161,7 +161,9 @@ int unsetsvar(char *name)
 {
 	ShellVar *ptr = vars, *next;
 
+#ifdef DEBUGMODE
 	printf("In unsetsvar:vars:%p:name:%s\n", vars, name);
+#endif
 	if (vars == NULL)
 		return (0);
 	printf("ptr->name:%s\n", ptr->name);
