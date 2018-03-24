@@ -95,7 +95,7 @@ int _setenv(char *name, char *val)
 	char *s, *ptr;
 
 #ifdef DEBUGMODE
-	printf("In setenv, name:%s\n", name);
+	printf("In setenv, name:%s:val:%s\n", name, val);
 #endif
 	if (name == NULL || val == NULL)
 		return (0);
@@ -133,6 +133,8 @@ int _setenv(char *name, char *val)
 	}
 	return (setallenv(environ, ptr));
 }
+
+
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
