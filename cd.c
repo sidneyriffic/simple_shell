@@ -34,10 +34,11 @@ int _cd(char *av[])
 			    && pathbit[2] == 0)
 			{
 #ifdef DEBUGCD
-				printf("going back a directory%s\n", newpath);
+				printf("going back a directory%s:%s\n", newpath, newpath);
 #endif
+				newptr--;
 				if (newptr != newpath)
-					newptr -= 2;
+					newptr --;
 				while (*newptr != '/')
 					newptr--;
 				*newptr++ = '/';
