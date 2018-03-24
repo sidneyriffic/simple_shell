@@ -274,7 +274,7 @@ int parseargs(char **buf)
 	if (*buf == NULL)
 		return (0);
 	for (ptr = *buf; *ptr != 0; ptr++)
-		if (*ptr == '#' || *ptr == '\n')
+		if ((*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' ')) || *ptr == '\n')
 		{
 			*ptr = 0;
 			break;
