@@ -56,3 +56,19 @@ char *_strdup(char *str)
 	_strcpy(new, str);
 	return (new);
 }
+
+char *strcat(char *a, char *b)
+{
+	char *ret, *ptr;
+
+	ret = malloc(_strlen(a) + _strlen(b) + 1);
+	if (ret == NULL)
+		return (NULL);
+	ptr = ret;
+	while (*a)
+		*ptr++ = *a++;
+	while (*b)
+		*ptr++ = *b++;
+	*ptr = 0;
+	return (ret);
+}
