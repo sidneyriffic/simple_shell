@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 int checkpath(char *av[])
 {
 	char *path, *pathptr, *pathvar, *ptr, *pathenv;
@@ -104,8 +104,8 @@ int builtincall(char *av[])
 		return (0);
 #ifdef DEBUGMODE
 	printf("In builtincall %p\n%s\n", av[0], av[0]);
-#endif
 	printf("av[1]:%s\n", av[1]);
+#endif
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
@@ -131,7 +131,9 @@ int builtincall(char *av[])
 		retval = checkpath(av);
 	else
 		retval = cmdcall(av);
+#ifdef DEBUGMODE
 	printf("After call back in builtin retval:%d\n", retval);
+#endif
 	retstr = itos(retval);
 #ifdef DEBUGMODE
 	printf("Status string:%s\n", retstr);

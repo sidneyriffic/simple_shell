@@ -1,6 +1,4 @@
 #include "shell.h"
-#define DEBUGMODE
-#define DEBUGSVARS
 
 /* returns new buf after var setting */
 char *parsesetsvar(char *buf)
@@ -63,7 +61,7 @@ char *subsvars(char **buf)
 #endif
 		while (*varptr != '$' && *varptr != 0)
 		{
-			printf("inquotes:%d:varptr:%s\n", inquotes, varptr);
+/*			printf("inquotes:%d:varptr:%s\n", inquotes, varptr);*/
 			if (*varptr == '\\')
 			{
 				varptr++;
@@ -289,7 +287,6 @@ int parseargs(char **buf)
 #endif
 	left = _strdup(strtokqe(*buf, ";", 7));
 	right = _strdup(strtokqe(NULL, "", 7));
-	printf("buf:%p:%s:left:%p:%s:right:%p:%s:\n", *buf, *buf, left, left, right, right);
 	free(*buf);
 	*buf = left;
 #ifdef DEBUGMODE

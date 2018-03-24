@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 int shintmode()
 {
 	char *bufgl = NULL;
