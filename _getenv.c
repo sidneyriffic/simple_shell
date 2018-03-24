@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 char **environ;
 
 char **getallenv()

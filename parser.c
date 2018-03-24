@@ -26,8 +26,8 @@ char *parsesetsvar(char *buf)
 #endif
 				setsvar(name, val);
 			}
-			if (*ptr == ' ')
-				return (0);
+			if (*ptr == ' ' || *ptr == 0)
+				return (buf);
 			if (ptr == NULL)
 			{
 #ifdef DEBUGSVARS
@@ -78,8 +78,6 @@ char *subsvars(char **buf)
 			if (*varptr == '\'' && inquotes != 2)
 			{
 				varptr++;
-				/* change this later to read more stdin if 
-				 * single quote not matched */
 				while(*varptr != '\'' && *varptr != 0)
 					varptr++;
 			}
@@ -93,7 +91,7 @@ char *subsvars(char **buf)
 			return (*buf);
 		varptr++;
 		for (ptr = varptr, varnlen = 0; *ptr != 0 && *ptr != ' '
-			     && *ptr != '\n' && *ptr != '$'; ptr++)
+			     && *ptr != '\n' && *ptr != '$' && *ptr != '\\'; ptr++)
 			varnlen++;
 #ifdef DEBUGSVARS
 		printf("varnlen:%d varptr:%s\n", varnlen, varptr);
@@ -259,6 +257,82 @@ char *cleanarg(char *arg)
 	free(arg);
 	return (newbuf);
 }
+
+/* currently only replaces with env $HOME */
+char *tildeexpand(char *buf)
+{
+	char *tildeptr = buf, *endptr, *homepath, *newbuf, *bufptr, *newptr;
+	int inquotes = 0;
+
+	printf("In tildeexpand:%s\n", tildeptr);
+	while (*tildeptr != 0)
+	{
+		tildeptr = buf;
+		while (*tildeptr != '~' && *tildeptr != 0)
+		{
+			printf("Finding ~:%s\n", tildeptr);
+			if (*tildeptr == '\\')
+			{
+				tildeptr++;
+				if (*tildeptr != 0)
+					tildeptr++;
+				continue;
+			}
+			if (inquotes != 1 && *tildeptr == '"')
+			{
+				inquotes = 2;
+				while(*tildeptr != '"' && *tildeptr != 0)
+				{
+					if (*tildeptr == '\\')
+					{
+						tildeptr++;
+						if (*tildeptr != 0)
+							tildeptr++;
+						continue;
+					}
+					tildeptr++;
+				}
+			}				
+			if (*tildeptr == '\'' && inquotes != 2)
+			{
+				tildeptr++;
+				while(*tildeptr != '\'' && *tildeptr != 0)
+					tildeptr++;
+			}
+			tildeptr++;
+		}
+		if (*tildeptr == 0)
+			return (buf);
+		endptr=tildeptr;
+		while (*endptr != '/' && *endptr != ' ' && *endptr != 0)
+			endptr++;
+		homepath = _getenv("HOME");
+		printf("tildeexpand got homepath:%s\n", homepath);
+		if (homepath == NULL)
+			return (NULL);
+		newbuf = malloc(_strlen(buf) - (size_t) endptr + (size_t) tildeptr + _strlen(homepath) + 1);
+		if (newbuf == NULL)
+		{
+			free(homepath);
+			return (NULL);
+		}
+		bufptr = buf;
+		newptr = newbuf;
+		while (bufptr < tildeptr)
+			*newptr++ = *bufptr++;
+		bufptr = homepath;
+		while (*bufptr)
+			*newptr++ = *bufptr++;
+		while (*endptr)
+			*newptr++ = *endptr++;
+		*newptr = 0;
+		printf("tilde expanded %s\n", newbuf);
+		free(homepath);
+		free(buf);
+		buf = newbuf;
+	}
+	return (newbuf);
+}
 	
 /* double pointer buf so we can free after subbing vars easier
  * frees buf at end */
@@ -269,7 +343,7 @@ int parseargs(char **buf)
 	char *wordd = " ";
 
 #ifdef DEBUGMODE
-	printf("In parseargs. buf:%s\n", *buf);
+	printf("In parseargs. buf:%s\n", buf);
 #endif
 	if (*buf == NULL)
 		return (0);
@@ -359,6 +433,12 @@ int parseargs(char **buf)
 	printf("Subbing vars %s\n", *buf);
 #endif
 	*buf = subsvars(buf);
+	if (*buf == NULL)
+		return (-1);
+#ifdef DEBUGMODE
+	printf("expanding tildes %s\n", *buf);
+#endif
+	*buf = tildeexpand(*buf);
 	if (*buf == NULL)
 		return (-1);
 #ifdef DEBUGMODE
