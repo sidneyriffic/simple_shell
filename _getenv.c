@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define DEBUGMODE
 char **environ;
 
 char **getallenv()
@@ -41,7 +41,10 @@ int setallenv(char **envin, char *newval)
 	if (environ == NULL)
 		return (-1);
 	for (len = 0; envin[len] != NULL; len++)
-		environ[len] = envin[len];
+		if (newval == NULL)
+			environ[len] = _strdup(envin[len]);
+		else
+			environ[len] = envin[len];
 	if (newval != NULL)
 	{
 #ifdef DEBUGMODE
@@ -121,7 +124,7 @@ int _setenv(char *name, char *val)
 			j++;
 			if (name[j] == 0 && s[j] == '=')
 			{
-				free(s);
+				free(environ[i]);
 				environ[i] = ptr;
 				return (0);
 			}
