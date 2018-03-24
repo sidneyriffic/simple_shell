@@ -264,13 +264,15 @@ char *tildeexpand(char *buf)
 	char *tildeptr = buf, *endptr, *homepath, *newbuf, *bufptr, *newptr;
 	int inquotes = 0;
 
+#ifdef DEBUGMODE
 	printf("In tildeexpand:%s\n", tildeptr);
+#endif
 	while (*tildeptr != 0)
 	{
 		tildeptr = buf;
 		while (*tildeptr != '~' && *tildeptr != 0)
 		{
-			printf("Finding ~:%s\n", tildeptr);
+/*			printf("Finding ~:%s\n", tildeptr);*/
 			if (*tildeptr == '\\')
 			{
 				tildeptr++;
@@ -307,7 +309,9 @@ char *tildeexpand(char *buf)
 		while (*endptr != '/' && *endptr != ' ' && *endptr != 0)
 			endptr++;
 		homepath = _getenv("HOME");
+#ifdef DEBUGMODE
 		printf("tildeexpand got homepath:%s\n", homepath);
+#endif
 		if (homepath == NULL)
 			return (NULL);
 		newbuf = malloc(_strlen(buf) - (size_t) endptr + (size_t) tildeptr + _strlen(homepath) + 1);
@@ -326,7 +330,9 @@ char *tildeexpand(char *buf)
 		while (*endptr)
 			*newptr++ = *endptr++;
 		*newptr = 0;
+#ifdef DEBUGMODE
 		printf("tilde expanded %s\n", newbuf);
+#endif
 		free(homepath);
 		free(buf);
 		buf = newbuf;
