@@ -104,7 +104,7 @@ int aliascmd(char *av[])
 	{
 		while(ptr != NULL)
 		{
-			printf("%s=%s\n", ptr -> name, ptr-> val);
+			printf("%s='%s'\n", ptr -> name, ptr-> val);
 			ptr = ptr -> next;
 
 		}
@@ -118,7 +118,7 @@ int aliascmd(char *av[])
 #ifdef DEBUGMODE
 		printf("Setting alias %s\n", av[i]);
 #endif
-		name = strtok(av[1], "=");
+		name = strtok(av[i], "=");
 		val = strtok(NULL,"=");
 		name = _strdup(name);
 		if (name == NULL)
@@ -129,7 +129,7 @@ int aliascmd(char *av[])
 			free(name);
 			return (-1);
 		}
-		return (setalias(name, val));
+		setalias(name, val);
 	}
-	return (1);
+	return (0);
 }
