@@ -26,7 +26,10 @@ char *parsesetsvar(char *buf)
 #endif
 				setsvar(name, val);
 				if (buf == NULL)
+				{
+					free(bufstart);
 					return (NULL);
+				}
 				continue;
 			}
 			if (*ptr == ' ' || *ptr == 0)
