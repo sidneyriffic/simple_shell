@@ -109,7 +109,7 @@ int _setenv(char *name, char *val)
 	s += namel;
 	_strcpy(s++, "=");
 	_strcpy(s, val);
-	s += vall + 1;
+	s += vall;
 	*s = 0;
 #ifdef DEBUGMODE
 	printf("Ptr mallocd:%s\n", ptr);
