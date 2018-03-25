@@ -15,7 +15,7 @@ int shintmode();
 
 /* from cmdcall.c */
 int builtincall(char *av[]);
-int cmdcall(char *av[]);
+int cmdcall(char *av[], char *path);
 
 /* from parser.c */
 int parseargs(char **buf);
