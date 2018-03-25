@@ -140,6 +140,8 @@ char *subsvars(char **buf)
 				val = NULL;
 				varptr = dest;
 				ptr += varnlen + 1;
+				if (*ptr == 0)
+					break;
 			}
 			*dest = *ptr;
 		}
@@ -149,7 +151,6 @@ char *subsvars(char **buf)
 #endif
 		free(*buf);
 		*buf = name;
-		setsvar("?", "0");
 	}
 	return (*buf);
 }
