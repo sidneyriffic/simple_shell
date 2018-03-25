@@ -67,4 +67,8 @@ char *_fgets(char *s, int size, FILE *stream);
 int _fgetc (FILE *stream);
 char *strtokqe(char *str, char *delim, int escflags);
 
+/* from _printenv.c */
+int _printenv();
+int _putchar(char c);
+
 #endif
