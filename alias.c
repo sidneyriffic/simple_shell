@@ -25,7 +25,8 @@ char *getalias(char *name)
 #ifdef DEBUGMODE
 	printf("Returning alias %s\n", ptr -> val);
 #endif
-	return (ptr -> val);
+	free(name);
+	return (_strdup(ptr -> val));
 }
 
 int setalias(char *name, char *val)
