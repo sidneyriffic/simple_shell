@@ -107,7 +107,7 @@ int builtincall(char *av[])
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
-			exit(atoi(av[1]));
+			exit(atoi(av[1]) % 256);
 		else
 			exit(0);
 	}
@@ -134,7 +134,7 @@ int builtincall(char *av[])
 #ifdef DEBUGMODE
 	printf("After call back in builtin retval:%d\n", retval);
 #endif
-	retstr = itos(retval);
+	retstr = itos(retval % 128);
 #ifdef DEBUGMODE
 	printf("Status string:%s\n", retstr);
 #endif
