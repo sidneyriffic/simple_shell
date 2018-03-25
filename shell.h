@@ -64,8 +64,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *strtok(char *str, char *delim);
 
 /* from _getline.c */
-char *_getline();
-int _getc();
+char *_getline(int fd);
 
 char *strtokqe(char *str, char *delim, int escflags);
 
