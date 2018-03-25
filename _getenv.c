@@ -75,7 +75,7 @@ char *_getenv(char *name)
 	{
 		s = environ[i];
 		j = 0;
-#ifdef DEBUGMODE
+#ifdef DEBUGSVARS
 		printf("Checking against:%s\n", environ[i]);
 #endif
 		while (s[j] == name[j])
