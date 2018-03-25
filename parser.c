@@ -25,6 +25,9 @@ char *parsesetsvar(char *buf)
 				printf("In parsesetvar: setting var %s to %s\n", name, val);
 #endif
 				setsvar(name, val);
+				if (buf == NULL)
+					return (NULL);
+				continue;
 			}
 			if (*ptr == ' ' || *ptr == 0)
 				return (buf);
