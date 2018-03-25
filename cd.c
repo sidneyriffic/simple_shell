@@ -14,12 +14,15 @@ int _cd(char *av[])
 		av[1] = _getenv("OLDPWD");
 	else
 	{
-		newpath = malloc(sizeof(char)* (_strlen(oldpwd) + _strlen(av[1]) + 1));
+#ifdef DEBUGCD
+		printf("Making new path %s:%c\n", av[1], av[1][0]);
+#endif
+		newpath = malloc(sizeof(char)* (_strlen(oldpwd) + _strlen(av[1]) + 2));
 		if (newpath == NULL)
 			return (-1);
 		newptr = newpath;
 		pathbit = oldpwd;
-		if (av[1][0] != '/')
+		if (av[1][0] != '/' && pathbit[1] != 0)
 			while (*pathbit)
 				*newptr++ = *pathbit++;
 		*newptr++ = '/';
