@@ -1,56 +1,85 @@
 #include "shell.h"
-char *_getline()
+int _getc()
 {
-	int size = 1024;
-	int old_size = 0;
-	char *buffer;
+	static char buffer[1024];
+	static int begin;
+	static int end;
+	int i = 0;
+	int retval;
+
+
+	if (begin == end)
+	{
+		i = read(0, buffer, 1024);
+		if (i == 0)
+			return(-1);
+		end = i;
+		begin = 0;
+	}
+	if (i >= 0)
+	{
+		retval = buffer[begin];
+		begin++;
+		return(retval);
+		//begin++;
+		//printf("%c: retval\n", retval);
+		//return(retval);
+	}
+	return(-1);
+}
+char *_getline(char *file)
+{
+	int size = 256;
+	int old_size;
+	int fd;
 	char *line;
 	int r = 0;
-	int j = 0;
-	int i;
+	int i = 0;
 
-	buffer = malloc(sizeof(char) * size);
-	if (buffer == NULL)
-		return (NULL);
 	line = malloc(sizeof(char) * size);
 	if (line == NULL)
+	{
 		return (NULL);
-
-	do {
-		r = read(0, buffer, 1024);
-		/*printf("beginning for\n");//debug check*/
-		for (i = 0;i <= r; i++)
+	}
+	fd = open(file, O_RDWR);
+	//if (fd == -1)
+	//return (0);
+	while(1)
+	{
+		r = _getc();
+		//r = read(0, buffer, 1024);
+		//printf("r: %d\n", r);
+		if (r == -1)
 		{
-			if(buffer[i] == EOF)
-			{
-				line[i + j] = buffer[i];
-				free(buffer);
-				return(line);
-			}
-			else if (buffer[i] == '\n')
-			{
-				line[i + j] = '\0';
-				free(buffer);
-				return(line);
-			}
-			else
-				line[i + j] = buffer[i];
+			/*printf("inside r == 0 loop:%d\n" , i);*/
+			//	free(buffer);
+			line[i] = '\0';
+			return(line);
 		}
+		/*printf("beginning for\n");//debug check*/
+		else if(r == '\n')
+		{
+			line[i] = '\0';
+			//free (buffer);
+			return(line);
+		}
+		else
+			line[i] = r;
+		i++;
 		/*printf("exiting for\n");//debug check*/
-		i--;
 		/*printf("i: %d\n", i);//debug check*/
-		if (i >= 1024)
+		if (i >= 256)
 		{
 			old_size = size;
-			size = size + 1024;
+			size = size + 256;
 			line = _realloc(line, old_size ,size);
 			if (line == NULL)
 			{
+				//free(buffer);
 				return(NULL);
 			}
-			/*printf("realloc line: %d\n", size);*/
+			/*printf("realloc line: %d, i : %d r: %d\n", size, i, r);*/
 		}
-		j = j + 1024;
-		/*printf("j: %d\n, i:%d, r:%d", j, i ,r);*/
-	}while(i == r);
+		/*printf("j: %d, i:%d, r:%d\n", j, i ,r);*/
+	}
 }
