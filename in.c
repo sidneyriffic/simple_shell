@@ -18,7 +18,7 @@ int shintmode()
 #endif
 		if (istty)
 			printf("Homemade shell:%s$", _getenv("PWD"));
-		bufgl = _getline();
+		lenr = _getline(&bufgl, STDIN_FILENO);
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{
 			free(bufgl);
@@ -43,20 +43,20 @@ int scriptmode(int ac, char *av[])
 	char *buf = NULL;
 	size_t n = 0;
 	int i = 1;
-	FILE *infile;
+	int infile;
 
 	while (i < ac)
 	{
-		infile = fopen(av[i], "r");
+		infile = open(av[i], O_RDONLY);
 		/*if (infile == -1)*/
 		/*continue;*/
 		do {
-			buf = _getline();
+			n = _getline(&buf, infile);
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
 			parseargs(&buf);
 		} while (*buf != 0);
-		fclose(infile);
+		close(infile);
 		i++;
 	}
 	return (0);
