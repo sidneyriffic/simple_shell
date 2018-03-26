@@ -7,7 +7,7 @@
 int shintmode()
 {
 	char *bufgl = NULL, *pwd;
-	size_t bufgllen = 0;
+	ssize_t lenr = 0;
 	int istty = isatty(0) && isatty(1);
 
 	while (1)
@@ -52,6 +52,7 @@ int scriptmode(int ac, char *av[])
 {
 	char *buf = NULL;
 	int i = 1;
+	ssize_t n;
 	int infile;
 
 	while (i < ac)
