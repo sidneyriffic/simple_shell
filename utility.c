@@ -50,7 +50,7 @@ char *itos(int digits)
 
 }
 
-int fprintstrings(int fd, char *str, ...)
+int fprintstrs(int fd, char *str, ...)
 {
 	va_list list;
 

@@ -44,7 +44,7 @@ char *_strcat(char *a, char *b);
 /* from utility.c */
 char *itos(int digits);
 char *_strchr(char *s, char c);
-int fprintstrings(int fd, char *str, ...);
+int fprintstrs(int fd, char *str, ...);
 
 /* from cd.c */
 int _cd(char *av[]);
