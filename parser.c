@@ -25,6 +25,12 @@ char *parsesetsvar(char *buf)
 				printf("In parsesetvar: setting var %s to %s\n", name, val);
 #endif
 				setsvar(name, val);
+				if (buf == NULL)
+				{
+					free(bufstart);
+					return (NULL);
+				}
+				continue;
 			}
 			if (*ptr == ' ' || *ptr == 0)
 				return (buf);
@@ -137,6 +143,8 @@ char *subsvars(char **buf)
 				val = NULL;
 				varptr = dest;
 				ptr += varnlen + 1;
+				if (*ptr == 0)
+					break;
 			}
 			*dest = *ptr;
 		}
@@ -146,7 +154,6 @@ char *subsvars(char **buf)
 #endif
 		free(*buf);
 		*buf = name;
-		setsvar("?", "0");
 	}
 	return (*buf);
 }
@@ -349,7 +356,7 @@ int parseargs(char **buf)
 	char *wordd = " ";
 
 #ifdef DEBUGMODE
-	printf("In parseargs. buf:%s\n", buf);
+	printf("In parseargs. buf:%s\n", *buf);
 #endif
 	if (*buf == NULL)
 		return (0);
@@ -382,20 +389,22 @@ int parseargs(char **buf)
 		return (parseargs(&right));
 	}
 #ifdef DEBUGMODE
-	printf("Performing logic %s\n", *buf);
+	printf("Performing logic &&:%s\n", *buf);
 #endif
-	left = _strdup(strtokqe(*buf, "|&", 7));
-	right = _strdup(strtokqe(NULL, "", 7));
-	free(*buf);
-	*buf = left;
-#ifdef DEBUGMODE
-	printf("left cmd %s\n", left);
-	printf("right cmd %s\n", right);
-#endif
+	left = strtokqe(*buf, "&", 7);
+	right = strtokqe(NULL, "", 7);
 	if (right != NULL && *right == '&')
 	{
+		/* need to check malloc fails here */
+		left = _strdup(left);
+		right = _strdup(right);
+		free(*buf);
+		*buf = left;
+#ifdef DEBUGMODE
+		printf("left cmd %s\n", left);
+		printf("right cmd %s\n", right);
+#endif
 		ret = parseargs(&left);
-		free(left);
 		*buf = right;
 		right++;
 		right = _strdup(right);
@@ -421,10 +430,27 @@ int parseargs(char **buf)
 			}
 		}
 	}
+	else if (right != NULL)
+	{
+		*(right - 1) = '&';
+	}
+#ifdef DEBUGMODE
+	printf("Performing logic ||:%s\n", *buf);
+#endif
+	left = strtokqe(*buf, "|", 7);
+	right = strtokqe(NULL, "", 7);
 	if (right != NULL && *right == '|')
 	{
+		/* need to check for malloc fails here */
+		left = _strdup(left);
+		right = _strdup(right);
+		free(*buf);
+		*buf = left;
+#ifdef DEBUGMODE
+		printf("left cmd %s\n", left);
+		printf("right cmd %s\n", right);
+#endif
 		ret = parseargs(&left);
-		free(left);
 		*buf = right;
 		right++;
 		right = _strdup(right);
@@ -433,24 +459,15 @@ int parseargs(char **buf)
 			return (parseargs(&right));
 		else
 		{
-			*buf = right;
-			strtokqe(right, "&", 7);
-			right = strtokqe(NULL, "", 7);
-			if (right != NULL)
-			{
-				right++;
-				right = _strdup(right);
-				free(*buf);
-				return (parseargs(&right));
-			}
-			else
-			{
-				free(*buf);
-				return (ret);
-			}
+			free(right);
+			return (ret);
 		}
-		return (parseargs(&right));
 	}
+	else if (right != NULL)
+	{
+		*(right - 1) = '|';
+	}
+	
 #ifdef DEBUGMODE
 	printf("Subbing vars %s\n", *buf);
 #endif

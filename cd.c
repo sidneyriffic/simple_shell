@@ -9,17 +9,26 @@ int _cd(char *av[])
 	if (oldpwd == NULL)
 		return (1);
 	if (av[1] == NULL || av[1][0] == 0)
-		av[1] = _getenv("HOME");
+	{
+		newpath = _getenv("HOME");
+	}
 	else if (av[1][0] == '-' && av[1][1] == 0)
-		av[1] = _getenv("OLDPWD");
+	{
+		/*check getenv malloc error here and above*/
+		newpath = _getenv("OLDPWD");
+		puts(newpath);
+	}
 	else
 	{
-		newpath = malloc(sizeof(char)* (_strlen(oldpwd) + _strlen(av[1]) + 1));
+#ifdef DEBUGCD
+		printf("Making new path %s:%c\n", av[1], av[1][0]);
+#endif
+		newpath = malloc(sizeof(char)* (_strlen(oldpwd) + _strlen(av[1]) + 2));
 		if (newpath == NULL)
 			return (-1);
 		newptr = newpath;
 		pathbit = oldpwd;
-		if (av[1][0] != '/')
+		if (av[1][0] != '/' && pathbit[1] != 0)
 			while (*pathbit)
 				*newptr++ = *pathbit++;
 		*newptr++ = '/';
@@ -54,24 +63,23 @@ int _cd(char *av[])
 			printf("Got pathbit:%s\n", pathbit);
 #endif
 		}
+		if (newptr != newpath && newptr != newpath + 1)
+			newptr--;
 		*newptr = 0;
-		newptr--;
-		if (newptr != newpath)
-			*newptr = 0;
 #ifdef DEBUGCD
 		printf("New path:%s\n", newpath);
 #endif
-		free(av[1]);
-		av[1] = newpath;
 	}
-	ret = chdir(av[1]);
+	ret = chdir(newpath);
 	if (ret == 0)
 	{
 		_setenv("OLDPWD", oldpwd);
 		free(oldpwd);
-		_setenv("PWD", av[1]);
+		_setenv("PWD", newpath);
+		free(newpath);
 		return (0);
 	}
 	free(oldpwd);
+	free(newpath);
 	return (ret);
 }

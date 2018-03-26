@@ -35,10 +35,8 @@ int checkpath(char *av[])
 #ifdef DEBUGMODE
 			printf("Found path:%s\n", path);
 #endif
-			free(av[0]);
-			av[0] = path;
-			pathlen = cmdcall(av);
-/*			free(path);*/
+			pathlen = cmdcall(av, path);
+			free(path);
 			free(pathenv);
 			return (pathlen);
 		}
@@ -51,9 +49,8 @@ int checkpath(char *av[])
 }
 
 
-int cmdcall(char *av[])
+int cmdcall(char *av[], char *cmd)
 {
-	char **environ;
 	pid_t command;
 	int status;
 
@@ -75,7 +72,7 @@ int cmdcall(char *av[])
 #ifdef DEBUGMODE
 		printf("Executing %s\n", av[0]);
 #endif
-		if (execve(av[0], av, environ) == -1)
+		if (execve(cmd, av, *(getenviron())) == -1)
 		{
 			perror("Could not execute command");
 			exit(1);
@@ -109,7 +106,7 @@ int builtincall(char *av[])
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
-			exit(atoi(av[1]));
+			exit(atoi(av[1]) % 256);
 		else
 			exit(0);
 	}
@@ -132,11 +129,13 @@ int builtincall(char *av[])
 	else if (av[0][0] != '/')
 		retval = checkpath(av);
 	else
-		retval = cmdcall(av);
+		retval = cmdcall(av, av[0]);
 #ifdef DEBUGMODE
 	printf("After call back in builtin retval:%d\n", retval);
 #endif
-	retstr = itos(retval);
+	if (retval % 256 == 0 && retval != 0)
+		retval = 1;
+	retstr = itos(retval % 128);
 #ifdef DEBUGMODE
 	printf("Status string:%s\n", retstr);
 #endif
