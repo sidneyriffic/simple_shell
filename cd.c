@@ -75,6 +75,7 @@ int _cd(char *av[])
 		_setenv("OLDPWD", oldpwd);
 		free(oldpwd);
 		_setenv("PWD", newpath);
+		free(newpath);
 		return (0);
 	}
 	free(oldpwd);
