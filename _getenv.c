@@ -28,7 +28,7 @@ char **getallenv()
 }
 /**
  * setallenv - set whole environment for new value
- * @environ: environment
+ * @envin: environment
  * @newval: new value to be added
  * Return: 0 if success, -1 if failure
  */
@@ -94,10 +94,10 @@ char *_getenv(char *name)
 		}
 		i++;
 	}
-	return(name);
+	return (name);
 }
 /**
- * _setenv - setenvironment for new value
+ * _setenv - set environment for new value
  * @name: name of variable
  * @val: value of variable
  * Return: 0 or setallenv if success, -1 if fail
@@ -127,7 +127,7 @@ int _setenv(char *name, char *val)
 #ifdef DEBUGMODE
 	printf("Ptr mallocd:%s\n", ptr);
 #endif
-	i =0;
+	i = 0;
 	while (environ[i] != NULL)
 	{
 		s = environ[i];
@@ -184,7 +184,7 @@ int _unsetenv(char *name)
 	i = 0;
 	while (env[i])
 	{
-		free (env[i]);
+		free(env[i]);
 		i++;
 	}
 	free(env);

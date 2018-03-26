@@ -1,5 +1,9 @@
 #include "shell.h"
 #define DEBUGMODE
+/**
+ * shintmode - shell interactive mode
+ * Return: 0
+ */
 int shintmode()
 {
 	char *bufgl = NULL;
@@ -7,7 +11,7 @@ int shintmode()
 	ssize_t lenr;
 	int istty = isatty(0) && isatty(1);
 
-	while(1)
+	while (1)
 	{
 #ifdef DEBUGMODE
 		printf("At terminal prompt\n");
@@ -28,7 +32,12 @@ int shintmode()
 	}
 	return (0);
 }
-
+/**
+ * scriptmode - shell script mode
+ * @ac: num of arguments
+ * @av: arguments
+ * Return: 0 upon success or -1 if failure
+ */
 int scriptmode(int ac, char *av[])
 {
 	char *buf = NULL;
@@ -39,10 +48,9 @@ int scriptmode(int ac, char *av[])
 	while (i < ac)
 	{
 		infile = fopen(av[i], "r");
-/*		if (infile == -1)
-		continue;*/
-		do
-		{
+		/*if (infile == -1)*/
+		/*continue;*/
+		do {
 			buf = _getline();
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */

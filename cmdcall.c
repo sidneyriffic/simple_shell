@@ -2,7 +2,7 @@
 #define DEBUGMODE
 /**
  * checkpath - checks the path
- * @av[] : arguments
+ * @av: arguments
  * Return: 1
  */
 int checkpath(char *av[])
@@ -56,7 +56,7 @@ int checkpath(char *av[])
 }
 /**
  * cmdcall - calls commands
- * @av[]: arguments
+ * @av: arguments
  * Return: retval
  */
 int cmdcall(char *av[])
@@ -68,7 +68,7 @@ int cmdcall(char *av[])
 #ifdef DEBUGMODE
 	printf("In cmdcall av[0]:%s\n", av[0]);
 #endif
-	if((environ = getallenv()) == NULL)
+	if ((environ = getallenv()) == NULL)
 		return (-1);
 #ifdef DEBUGMODE
 	printf("Forking\n");
@@ -102,7 +102,11 @@ int cmdcall(char *av[])
 	free(environ);
 	return (status);
 }
-
+/**
+ * builtincall - calls builtin commands
+ * @av: arguments
+ * Return: retval
+ */
 int builtincall(char *av[])
 {
 	int retval = 0;
