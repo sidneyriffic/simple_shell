@@ -169,6 +169,7 @@ int _unsetenv(char *name)
 {
 	char **environ = *getenviron();
 	int i, j;
+	int check = 0;
 	char *s;
 	char **env;
 
@@ -188,10 +189,11 @@ int _unsetenv(char *name)
 			j++;
 			if (s[j] == '=' && name[j] == '\0')
 			{
+				check = 1;
 				break;
 			}
 		}
-		if (name[j] == '\0')
+		if (check == 1)
 			break;
 		i++;
 	}
