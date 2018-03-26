@@ -1,4 +1,6 @@
 #include "shell.h"
+#include <stdarg.h>
+
 /**
  * itos - converts integer to string
  *
@@ -48,6 +50,23 @@ char *itos(int digits)
 
 }
 
+int fprintstrings(int fd, char *str, ...)
+{
+	va_list list;
+
+	if (str == NULL)
+		return (0);
+	va_start(list, str);
+	write(fd, str, _strlen(str));
+	str = va_arg(list, char *);
+	while (str != NULL)
+	{
+		write(fd, str, _strlen(str));
+		str = va_arg(list, char *);
+	}
+	return (0);
+}
+	
 char *malcat(char *dest, char *src)
 {
 	int len_dest;
