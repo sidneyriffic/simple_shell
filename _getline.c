@@ -38,33 +38,36 @@ int _getline(char **lineptr, int fd)
 				return (c);
 			end = r;
 			begin = 0;
+			//printf("r : %d\n", r);
 		}
 
 		for (c; buffer[begin] && c < size; begin++)
 		{
-			if (buffer[begin] == EOF)
+			if (begin == 1024)
 			{
-			/*printf("inside r == 0 loop:%d\n" , i);*/
-				/*free(buffer);*/
-				(*lineptr)[c] = EOF;
-				return (c);
+			/*free(buffer);*/
+				//(*lineptr)[c] = EOF;
+				//return (c);
+				break;
 			}
 		/*printf("beginning for\n");//debug check*/
-			else if (buffer[begin] == '\n')
+			if (buffer[begin] == '\n')
 			{
 				(*lineptr)[c] = '\n';
-				(*lineptr)[c + 1] = '\0';
 				begin++;
-				/*printf("%d\n", c);*/
-				return (c + 1);
+				c++;
+				(*lineptr)[c] = '\0';
+				return (c);
 			}
 			else
+			{
 				(*lineptr)[c] = buffer[begin];
+			}
 			c++;
 		}
-		/*printf("exiting for\n");//debug check*/
-		/*printf("i: %d\n", i);//debug check*/
-		if (c >= 1024)
+		//printf("exiting for begin: %d\n", begin);//debug check*/
+		/*printf("begin: %d\n", begin);//debug check*/
+		if (c + begin >= 1024)
 		{
 			old_size = size;
 			size = size + 1024;
@@ -73,8 +76,10 @@ int _getline(char **lineptr, int fd)
 			{
 				return (-1);
 			}
-		   /*printf("realloc line: %d, c : %d r: %d\n", begin, c, r);*/
+			//printf("realloc\n");
 		}
+		else
+			return(c);
 		/*printf("j: %d, i:%d, r:%d\n", j, i ,r);*/
 	}
 }
