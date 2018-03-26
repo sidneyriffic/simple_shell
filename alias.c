@@ -37,7 +37,8 @@ char *getalias(char *name)
 
 int setalias(char *name, char *val)
 {
-	AliasData *alist = *(getalist());
+	AliasData **alistroot = getalist();
+	AliasData *alist = *alistroot;
 	AliasData *ptr = alist, *new;
 
 	if (alist == NULL)
@@ -48,7 +49,7 @@ int setalias(char *name, char *val)
 		new -> name = name;
 		new -> val = val;
 		new -> next = NULL;
-		alist = new;
+		*alistroot = new;
 		return (0);
 	}
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
