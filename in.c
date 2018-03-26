@@ -65,7 +65,8 @@ int scriptmode(int ac, char *av[])
 			if (buf == NULL)
 				return (-1); /* fix buffer allocation error later */
 			parseargs(&buf);
-		} while (*buf != 0);
+			buf = NULL;
+		} while (n > 0);
 		close(infile);
 		i++;
 	}
