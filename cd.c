@@ -57,10 +57,9 @@ int _cd(char *av[])
 			printf("Got pathbit:%s\n", pathbit);
 #endif
 		}
-		*newptr = 0;
-		newptr--;
 		if (newptr != newpath)
-			*newptr = 0;
+			newptr--;
+		*newptr = 0;
 #ifdef DEBUGCD
 		printf("New path:%s\n", newpath);
 #endif
