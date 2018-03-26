@@ -29,7 +29,7 @@ int shintmode()
 				printf("Homemade shell$");
 			}
 		}
-		lenr = getline(&bufgl, STDIN_FILENO);
+		lenr = _getline(&bufgl, STDIN_FILENO);
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{
 			free(bufgl);
