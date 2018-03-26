@@ -143,7 +143,9 @@ int aliascmd(char *av[])
 #endif
 			val = _strdup(name);
 			val = getalias(val);
+#ifdef DEBUGMODE
 			printf("Val:%s\n", val);
+#endif
 			if (!_strcmp(val, name))
 			{
 				printf("alias: %s not found\n", name);
