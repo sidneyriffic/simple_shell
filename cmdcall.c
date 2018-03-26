@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 /**
  * checkpath - checks the path
  * @av: arguments

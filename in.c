@@ -1,5 +1,5 @@
 #include "shell.h"
-#define DEBUGMODE
+
 /**
  * shintmode - shell interactive mode
  * Return: 0
