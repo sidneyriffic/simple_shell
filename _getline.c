@@ -38,7 +38,7 @@ int _getline(char **lineptr, int fd)
 				return (c);
 			end = r;
 			begin = 0;
-			//printf("r : %d\n", r);
+			/*printf("r : %d\n", r);*/
 		}
 
 		for (c; buffer[begin] && c < size; begin++)
@@ -46,8 +46,8 @@ int _getline(char **lineptr, int fd)
 			if (begin == 1024)
 			{
 			/*free(buffer);*/
-				//(*lineptr)[c] = EOF;
-				//return (c);
+				/*(*lineptr)[c] = EOF;*/
+				/*return (c);*/
 				break;
 			}
 		/*printf("beginning for\n");//debug check*/
@@ -65,8 +65,6 @@ int _getline(char **lineptr, int fd)
 			}
 			c++;
 		}
-		//printf("exiting for begin: %d\n", begin);//debug check*/
-		/*printf("begin: %d\n", begin);//debug check*/
 		if (c + begin >= 1024)
 		{
 			old_size = size;
@@ -76,10 +74,9 @@ int _getline(char **lineptr, int fd)
 			{
 				return (-1);
 			}
-			//printf("realloc\n");
 		}
 		else
-			return(c);
+			return (c);
 		/*printf("j: %d, i:%d, r:%d\n", j, i ,r);*/
 	}
 }

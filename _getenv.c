@@ -167,8 +167,9 @@ int _setenv(char *name, char *val)
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
-	char **environ=*getenviron();
-	int i;
+	char **environ = *getenviron();
+	int i, j;
+	char *s;
 	char **env;
 
 #ifdef DEBUGMODE
@@ -180,10 +181,18 @@ int _unsetenv(char *name)
 	i = 0;
 	while (environ[i] != NULL)
 	{
-		if (!(_strcmp(environ[i], name)))
+		s = environ[i];
+		j = 0;
+		while (s[j] == name[j])
 		{
-			break;
+			j++;
+			if (s[j] == '=' && name[j] == '\0')
+			{
+				break;
+			}
 		}
+		if (name[j] == '\0')
+			break;
 		i++;
 	}
 	free(environ[i]);
