@@ -99,7 +99,8 @@ char *_getenv(char *name)
 
 int _setenv(char *name, char *val)
 {
-	char **environ=*(getenviron());
+	char ***environroot = getenviron();
+	char **environ=*environroot;
 	int i, j, namel, vall;
 	char *s, *ptr;
 
@@ -140,7 +141,7 @@ int _setenv(char *name, char *val)
 		}
 		i++;
 	}
-	return (setallenv(environ, ptr));
+	return (setallenv(*environroot, ptr));
 }
 
 

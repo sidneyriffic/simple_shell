@@ -24,6 +24,7 @@ int parseargs(char **buf);
 int errhandl(int status);
 
 /* from _getenv.c */
+char ***getenviron();
 int setallenv(char **environ, char *add);
 char *_getenv(char *avzero);
 int _setenv(char *name, char *val);

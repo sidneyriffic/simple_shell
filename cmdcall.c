@@ -51,7 +51,6 @@ int checkpath(char *av[])
 
 int cmdcall(char *av[], char *cmd)
 {
-	char **environ;
 	pid_t command;
 	int status;
 
@@ -73,7 +72,7 @@ int cmdcall(char *av[], char *cmd)
 #ifdef DEBUGMODE
 		printf("Executing %s\n", av[0]);
 #endif
-		if (execve(cmd, av, environ) == -1)
+		if (execve(cmd, av, *(getenviron())) == -1)
 		{
 			perror("Could not execute command");
 			exit(1);

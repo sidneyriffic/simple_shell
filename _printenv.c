@@ -1,5 +1,5 @@
 #include "shell.h"
-extern char **environ;
+
 /**
  * _putchar - writes the character c to stdout
  * @c: The character to print
@@ -13,6 +13,7 @@ int _putchar(char c)
 }
 int _printenv()
 {
+	char **environ=*(getenviron());
 	int i;
 	int j;
 
