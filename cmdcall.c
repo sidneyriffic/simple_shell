@@ -133,6 +133,8 @@ int builtincall(char *av[])
 #ifdef DEBUGMODE
 	printf("After call back in builtin retval:%d\n", retval);
 #endif
+	if (retval % 256 == 0 && retval != 0)
+		retval = 1;
 	retstr = itos(retval % 128);
 #ifdef DEBUGMODE
 	printf("Status string:%s\n", retstr);
