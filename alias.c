@@ -1,7 +1,5 @@
 #include "shell.h"
 #include "alias.h"
-
-AliasData *alist;
 /**
  * getalias - get alias value
  * @name: name of alias

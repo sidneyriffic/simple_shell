@@ -1,5 +1,4 @@
 #include "shell.h"
-char **environ;
 /**
  * getallenv - copy whole environ
  * Return: environ copy
