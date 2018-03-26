@@ -49,6 +49,7 @@ int checkpath(char *av[])
 		while (*pathvar == ':')
 			pathvar++;
 	}
+	printerr();
 	free(pathenv);
 	return (1);
 }
@@ -82,7 +83,7 @@ int cmdcall(char *av[], char *cmd)
 #endif
 		if (execve(cmd, av, *(getenviron())) == -1)
 		{
-			perror("Could not execute command");
+			printerr();
 			exit(1);
 		}
 #ifdef DEBUGMODE

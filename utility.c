@@ -50,6 +50,18 @@ char *itos(int digits)
 
 }
 
+int printerr()
+{
+	static unsigned int num = 0;
+	char *pathname;
+
+	pathname = getsvar("0");
+	fprintstrs(2, pathname, ": ", NULL);
+	perror(itos(num));
+	num++;
+	return (0);
+}
+
 int fprintstrs(int fd, char *str, ...)
 {
 	va_list list;

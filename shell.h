@@ -45,6 +45,7 @@ char *_strcat(char *a, char *b);
 char *itos(int digits);
 char *_strchr(char *s, char c);
 int fprintstrs(int fd, char *str, ...);
+int printerr();
 
 /* from cd.c */
 int _cd(char *av[]);
