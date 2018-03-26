@@ -1,5 +1,5 @@
 #include "shell.h"
-char *_getline(int fd)
+int _getline(char **lineptr, int fd)
 {
 	int size = 1024;
 	int old_size;
@@ -11,10 +11,15 @@ char *_getline(int fd)
 	int c = 0;
 	int retval;
 
-	line = malloc(sizeof(char) * size);
-	if (line == NULL)
+	if (lineptr == NULL)
 	{
-		return (NULL);
+		return (0);
+	}
+	if (*lineptr == NULL)
+	{
+		*lineptr = malloc(sizeof(char) * size);
+		if (*lineptr == NULL)
+			return (-1);
 	}
 
 	while(1)
@@ -24,7 +29,7 @@ char *_getline(int fd)
 			/*printf("reading\n");*/
 			r = read(0, buffer, 1024);
 			if (r == 0)
-				return(line);
+				return(c);
 			end = r;
 			begin = 0;
 		}
@@ -35,19 +40,21 @@ char *_getline(int fd)
 			{
 			/*printf("inside r == 0 loop:%d\n" , i);*/
 			//	free(buffer);
-				line[c] = EOF;
-				return(line);
+				(*lineptr)[c] = EOF;
+				return(c);
 			}
 		/*printf("beginning for\n");//debug check*/
 			else if(buffer[begin] == '\n')
 			{
-				line[c] = '\0';
+				(*lineptr)[c] = '\n';
+				(*lineptr)[c + 1] = '\0';
 				begin++;
 				//free (buffer);
-				return(line);
+				/*printf("%d\n", c);*/
+				return(c + 1);
 			}
 			else
-				line[c] = buffer[begin];
+				(*lineptr)[c] = buffer[begin];
 			c++;
 		}
 		/*printf("exiting for\n");//debug check*/
@@ -56,11 +63,11 @@ char *_getline(int fd)
 		{
 			old_size = size;
 			size = size + 1024;
-			line = _realloc(line, old_size ,size);
+			*lineptr = _realloc(*lineptr, old_size ,size);
 			if (line == NULL)
 			{
 				//free(buffer);
-				return(NULL);
+				return(-1);
 			}
 			/*printf("realloc line: %d, c : %d r: %d\n", begin, c, r);*/
 		}
