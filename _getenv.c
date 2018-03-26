@@ -1,12 +1,15 @@
 #include "shell.h"
-
+char **environ;
+/**
+ * getallenv - copy whole environ
+ * Return: environ copy
+ */
 char ***getenviron()
 {
 	static char **environ;
 
 	return (&environ);
 }
-
 char **getallenv()
 {
 	char **environ=*(getenviron());
@@ -30,7 +33,12 @@ char **getallenv()
 	envcopy[len] = environ[len];
 	return (envcopy);
 }
-
+/**
+ * setallenv - set whole environment for new value
+ * @envin: environment
+ * @newval: new value to be added
+ * Return: 0 if success, -1 if failure
+ */
 /* add should be null for first init to not free passed array */
 int setallenv(char **envin, char *newval)
 {
@@ -68,7 +76,11 @@ int setallenv(char **envin, char *newval)
 		free(envin);
 	return (0);
 }
-
+/**
+ * _getenv - get local environment
+ * @name: environment variable
+ * Return: string of local environment
+ */
 char *_getenv(char *name)
 {
 	char **environ=*(getenviron());
@@ -94,9 +106,14 @@ char *_getenv(char *name)
 		}
 		i++;
 	}
-	return(name);
+	return (name);
 }
-
+/**
+ * _setenv - set environment for new value
+ * @name: name of variable
+ * @val: value of variable
+ * Return: 0 or setallenv if success, -1 if fail
+ */
 int _setenv(char *name, char *val)
 {
 	char ***environroot = getenviron();
@@ -124,7 +141,7 @@ int _setenv(char *name, char *val)
 #ifdef DEBUGMODE
 	printf("Ptr mallocd:%s\n", ptr);
 #endif
-	i =0;
+	i = 0;
 	while (environ[i] != NULL)
 	{
 		s = environ[i];
@@ -143,8 +160,11 @@ int _setenv(char *name, char *val)
 	}
 	return (setallenv(*environroot, ptr));
 }
-
-
+/**
+ * _unsetenv - unset environment
+ * @name: name of variable to unset
+ * Return: 0 if sucess
+ */
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
@@ -179,7 +199,7 @@ int _unsetenv(char *name)
 	i = 0;
 	while (env[i])
 	{
-		free (env[i]);
+		free(env[i]);
 		i++;
 	}
 	free(env);

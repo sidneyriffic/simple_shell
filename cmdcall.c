@@ -1,5 +1,10 @@
 #include "shell.h"
-
+#define DEBUGMODE
+/**
+ * checkpath - checks the path
+ * @av: arguments
+ * Return: 1
+ */
 int checkpath(char *av[])
 {
 	char *path, *pathptr, *pathvar, *ptr, *pathenv;
@@ -47,8 +52,11 @@ int checkpath(char *av[])
 	free(pathenv);
 	return (1);
 }
-
-
+/**
+ * cmdcall - calls commands
+ * @av: arguments
+ * Return: retval
+ */
 int cmdcall(char *av[], char *cmd)
 {
 	pid_t command;
@@ -57,7 +65,7 @@ int cmdcall(char *av[], char *cmd)
 #ifdef DEBUGMODE
 	printf("In cmdcall av[0]:%s\n", av[0]);
 #endif
-	if((environ = getallenv()) == NULL)
+	if ((environ = getallenv()) == NULL)
 		return (-1);
 #ifdef DEBUGMODE
 	printf("Forking\n");
@@ -91,7 +99,11 @@ int cmdcall(char *av[], char *cmd)
 	free(environ);
 	return (status);
 }
-
+/**
+ * builtincall - calls builtin commands
+ * @av: arguments
+ * Return: retval
+ */
 int builtincall(char *av[])
 {
 	int retval = 0;

@@ -385,7 +385,6 @@ int parseargs(char **buf)
 	if (right != NULL && *right != 0)
 	{
 		parseargs(&left);
-		*buf = right;
 		return (parseargs(&right));
 	}
 #ifdef DEBUGMODE
