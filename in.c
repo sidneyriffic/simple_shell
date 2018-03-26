@@ -20,12 +20,12 @@ int shintmode()
 			pwd = _getenv("PWD");
 			if (pwd != NULL)
 			{
-				printf("Homemade shell:%s$", pwd);
+				fprintstrs(1, "Homemade shell:", pwd, "$", NULL);
 				free(pwd);
 			}
 			else
 			{
-				printf("Homemade shell$");
+				fprintstrs(1, "Homemade shell$", NULL);
 			}
 		}
 		lenr = _getline(&bufgl, STDIN_FILENO);
