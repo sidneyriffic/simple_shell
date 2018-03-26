@@ -125,8 +125,8 @@ int builtincall(char *av[])
 	}
 	if (!_strcmp(av[0], "cd"))
 		retval = _cd(av);
-	else if (!_strcmp(av[0], "getenv"))
-		retval = !printf("%s\n", _getenv(av[1]));
+/*	else if (!_strcmp(av[0], "getenv"))
+	retval = !printf("%s\n", _getenv(av[1]));*/
 	else if (!_strcmp(av[0], "env"))
 		retval = _printenv(av[1]);
 	else if (!_strcmp(av[0], "setenv"))

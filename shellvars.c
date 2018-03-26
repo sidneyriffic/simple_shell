@@ -186,7 +186,9 @@ int unsetsvar(char *name)
 #endif
 	if (vars == NULL)
 		return (0);
+#ifdef DEBUGMODE
 	printf("ptr->name:%s\n", ptr->name);
+#endif
 	if (!_strcmp(ptr -> name, name))
 	{
 #ifdef DEBUGMODE
@@ -196,7 +198,6 @@ int unsetsvar(char *name)
 		free(ptr -> name);
 		free(ptr -> val);
 		free(ptr);
-		printf("Returning\n");
 		return (0);
 	}
 	while (ptr -> next != NULL && _strcmp(ptr -> next-> name, name))

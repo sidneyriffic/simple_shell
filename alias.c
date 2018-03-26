@@ -134,7 +134,7 @@ int aliascmd(char *av[])
 	{
 		while (ptr != NULL)
 		{
-			printf("%s=%s\n", ptr->name, ptr->val);
+			fprintstrs(1, name, "='", val "'\n", NULL);
 			ptr = ptr->next;
 		}
 		return (0);
@@ -177,12 +177,12 @@ int aliascmd(char *av[])
 #endif
 			if (!_strcmp(val, name))
 			{
-				printf("alias: %s not found\n", name);
+				fprintstrs(1, "alias: ", name, " not found\n", NULL);
 				free(val);
 			}
 			else
 			{
-				printf("%s='%s'\n", name, val);
+				fprintstrs(1, name, "='", val, "'\n", NULL);
 				free(val);
 			}
 		}
