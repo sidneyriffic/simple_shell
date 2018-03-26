@@ -134,7 +134,7 @@ int aliascmd(char *av[])
 	{
 		while (ptr != NULL)
 		{
-			fprintstrs(1, name, "='", val "'\n", NULL);
+			fprintstrs(1, ptr->name, "='", ptr->val, "'\n", NULL);
 			ptr = ptr->next;
 		}
 		return (0);
