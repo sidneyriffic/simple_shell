@@ -116,20 +116,45 @@ int aliascmd(char *av[])
 	for (i = 1; av[i] != NULL; i++)
 	{
 #ifdef DEBUGMODE
-		printf("Setting alias %s\n", av[i]);
+		printf("Alias arg %s\n", av[i]);
 #endif
 		name = strtok(av[i], "=");
 		val = strtok(NULL,"=");
-		name = _strdup(name);
-		if (name == NULL)
-			return (-1);
-		val = _strdup(val);
-		if (val == NULL)
+		if (val != NULL)
 		{
-			free(name);
-			return (-1);
+#ifdef DEBUGMODE
+			printf("Setting alias:%s:to:%s:\n", name, val);
+#endif
+			name = _strdup(name);
+			if (name == NULL)
+				return (-1);
+			val = _strdup(val);
+			if (val == NULL)
+			{
+				free(name);
+				return (-1);
+			}
+			setalias(name, val);
 		}
-		setalias(name, val);
+		else
+		{
+#ifdef DEBUGMODE
+			printf("Printing alias:%s:\n", name);
+#endif
+			val = _strdup(name);
+			val = getalias(val);
+			printf("Val:%s\n", val);
+			if (!_strcmp(val, name))
+			{
+				printf("alias: %s not found\n", name);
+				free(val);
+			}
+			else
+			{
+				printf("%s='%s'\n", name, val);
+				free(val);
+			}
+		}
 	}
 	return (0);
 }
