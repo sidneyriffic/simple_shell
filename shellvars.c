@@ -1,19 +1,36 @@
 #include "shell.h"
 #include "shellvars.h"
 
-ShellVar *special;
-ShellVar *vars;
+ShellVar **getspecial()
+{
+	static ShellVar *special;
+
+	return (&special);
+}
+
+ShellVar **getvars()
+{
+	static ShellVar *vars;
+
+	return (&vars);
+}
 
 int initsvars(int ac, char **av)
 {
+	ShellVar **specialroot = getspecial();
+	ShellVar *special;
 	ShellVar *ptr;
 	int i = 0;
 	char nums[2] = {0, 0};
 
 	/* 0-9, #, $, ?, dash, underscore */
-	special = malloc(sizeof(ShellVar) * 15);
-	if (special == NULL)
+	*specialroot = malloc(sizeof(ShellVar) * 15);
+	if (*specialroot == NULL)
 		return (-1);
+	special = *specialroot;
+#ifdef DEBUGMODE
+	printf("special:%p:*getspecial():%p:\n", special, *(getspecial()));
+#endif
 	special -> val = _strdup("0");
 	special -> name = _strdup("?");
 	ptr = special + 1;
@@ -52,7 +69,8 @@ int initsvars(int ac, char **av)
 /* returns original argument if not found */
 char *getsvar(char *name)
 {
-	ShellVar *ptr=special;
+	ShellVar *special = *(getspecial()), *vars = *(getvars());
+	ShellVar *ptr = special;
 
 	while (ptr != NULL && _strcmp(ptr -> name, name))
 	{
@@ -92,6 +110,8 @@ char *getsvar(char *name)
 
 int setsvar(char *name, char *val)
 {
+	ShellVar **vars = getvars();
+	ShellVar *special = *(getspecial());
 	ShellVar *ptr = special, *new;
 
 #ifdef DEBUGMODE
@@ -112,9 +132,9 @@ int setsvar(char *name, char *val)
 		ptr -> val = _strdup(val);
 		return (0);
 	}
-	ptr = vars;
+	ptr = *vars;
 #ifdef DEBUGMODE
-	printf("vars address %p\n", vars);
+	printf("vars address %p\n", *vars);
 #endif
 	if (ptr == NULL)
 	{
@@ -127,7 +147,7 @@ int setsvar(char *name, char *val)
 		new -> name = _strdup(name);
 		new -> val = _strdup(val);
 		new -> next = NULL;
-		vars = new;
+		*vars = new;
 		return (0);
 	}
 	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
@@ -156,9 +176,9 @@ int setsvar(char *name, char *val)
 	return (0);
 }
 
-
 int unsetsvar(char *name)
 {
+	ShellVar *vars = *getvars();
 	ShellVar *ptr = vars, *next;
 
 #ifdef DEBUGMODE
@@ -172,7 +192,7 @@ int unsetsvar(char *name)
 #ifdef DEBUGMODE
 		printf("First node match\n");
 #endif
-		vars = vars -> next;
+		*vars = *vars -> next;
 		free(ptr -> name);
 		free(ptr -> val);
 		free(ptr);

@@ -1,11 +1,17 @@
 #include "shell.h"
 #include "alias.h"
 
-AliasData *alist;
+AliasData **getalist()
+{
+	static AliasData *alist;
+
+	return (&alist);
+}
 
 /* returns original argument if not found */
 char *getalias(char *name)
 {
+	AliasData *alist = *(getalist());
 	AliasData *ptr = alist;
 
 	while (ptr != NULL && _strcmp(ptr -> name, name))
@@ -31,6 +37,7 @@ char *getalias(char *name)
 
 int setalias(char *name, char *val)
 {
+	AliasData *alist = *(getalist());
 	AliasData *ptr = alist, *new;
 
 	if (alist == NULL)
@@ -67,6 +74,7 @@ int setalias(char *name, char *val)
 
 int unsetalias(char *name)
 {
+	AliasData *alist = *(getalist());
 	AliasData *ptr = alist, *next;
 
 	if (alist == NULL)
@@ -92,6 +100,7 @@ int unsetalias(char *name)
 
 int aliascmd(char *av[])
 {
+	AliasData *alist = *(getalist());
 	AliasData *ptr = alist;
 	int i;
 	char *name, *val;

@@ -1,18 +1,15 @@
 #include "shell.h"
 
-char ***getenviron(char **newenviron)
+char ***getenviron()
 {
 	static char **environ;
-
-	if (newenviron != NULL)
-		environ = newenviron;
 
 	return (&environ);
 }
 
 char **getallenv()
 {
-	char **environ=*(getenviron(NULL));
+	char **environ=*(getenviron());
 	char **envcopy;
 	size_t len = 0;
 
@@ -37,7 +34,7 @@ char **getallenv()
 /* add should be null for first init to not free passed array */
 int setallenv(char **envin, char *newval)
 {
-	char ***environ = getenviron(NULL);
+	char ***environ = getenviron();
 	size_t len = 0;
 
 #ifdef DEBUGMODE
@@ -74,7 +71,7 @@ int setallenv(char **envin, char *newval)
 
 char *_getenv(char *name)
 {
-	char **environ=*(getenviron(NULL));
+	char **environ=*(getenviron());
 	int i, j;
 	char *s;
 
@@ -102,7 +99,7 @@ char *_getenv(char *name)
 
 int _setenv(char *name, char *val)
 {
-	char **environ=*(getenviron(NULL));
+	char **environ=*(getenviron());
 	int i, j, namel, vall;
 	char *s, *ptr;
 
@@ -150,7 +147,7 @@ int _setenv(char *name, char *val)
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
-	char **environ=*getenviron((NULL));
+	char **environ=*getenviron();
 	int i;
 	char **env;
 
