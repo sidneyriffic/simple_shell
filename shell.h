@@ -18,7 +18,7 @@ int _printenv();
 
 /* from cmdcall.c */
 int builtincall(char *av[]);
-int cmdcall(char *av[]);
+int cmdcall(char *av[], char *path);
 
 /* from parser.c */
 int parseargs(char **buf);
@@ -27,6 +27,7 @@ int parseargs(char **buf);
 int errhandl(int status);
 
 /* from _getenv.c */
+char ***getenviron();
 int setallenv(char **environ, char *add);
 char *_getenv(char *avzero);
 int _setenv(char *name, char *val);
@@ -38,6 +39,7 @@ size_t _strlen(char *str);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *, char *);
 char *_strdup(char *str);
+char *_strcat(char *a, char *b);
 
 /* from utility.c */
 char *itos(int digits);
@@ -68,7 +70,9 @@ int _getline(char **lineptr, int fd);
 
 char *strtokqe(char *str, char *delim, int escflags);
 
-/*from _putchar.c*/
+
+/* from _printenv.c */
+int _printenv();
 int _putchar(char c);
 
 #endif

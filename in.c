@@ -6,7 +6,7 @@
  */
 int shintmode()
 {
-	char *bufgl = NULL;
+	char *bufgl = NULL, *pwd;
 	size_t bufgllen = 0;
 	ssize_t lenr;
 	int istty = isatty(0) && isatty(1);
@@ -17,8 +17,19 @@ int shintmode()
 		printf("At terminal prompt\n");
 #endif
 		if (istty)
-			printf("Homemade shell:%s$", _getenv("PWD"));
-		lenr = _getline(&bufgl, STDIN_FILENO);
+		{
+			pwd = _getenv("PWD");
+			if (pwd != NULL)
+			{
+				printf("Homemade shell:%s$", pwd);
+				free(pwd);
+			}
+			else
+			{
+				printf("Homemade shell$");
+			}
+		}
+		lenr = getline(&bufgl, STDIN_FILENO);
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{
 			free(bufgl);

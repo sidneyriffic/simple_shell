@@ -1,0 +1,91 @@
+.TH hsh 1 "21 March 2018" "1.0" "Holberton simple_shell Manual"
+
+.SH NAME
+hsh \- Simple UNIX shell
+
+.SH SYNOPSIS
+.B ./hsh
+.I options are not available
+Part of a project at holberton school.
+
+.SH DESCRIPTION
+
+hsh is a simplified shell that takes user input as UNIX commands and interprets\
+them.  It based on the first UNIX shell created by Ken Thompson. It is designed\
+to be used in a UNIX-like environment.
+
+.SH INVOCATION
+.br
+.\&
+.RS
+\&$ ./hsh
+
+A prompt will then appear and the user can begin entering and executing\
+commands by pressing 'enter'.
+
+Commands can also be entered and then piped into ./hsh.
+.br
+.\&
+\&$ echo "I have a purple penguin" | ./hsh
+
+.SH FEATURES
+.br
+.B Accepts piped input
+.br
+.B Accepts file as an argument
+.br
+.B Variable substitution
+.br
+-$? $$ $# $0-9
+.br
+.B Set local vars with FOO=bar
+.br
+-Local variables not passed with environment
+.br
+.B escape characters with -&&, || and ; -tilde expansion to home \
+directory from env
+
+
+.SH BUILTINS
+The following builtins are supported by hsh
+.br
+.br
+.B env
+.br
+-prints environment.Falls through to std env if more than 1 arg -quotes around\
+ arguments (accepting more stdin on mismatch in progress)
+.br
+.B exit
+-with status
+.br
+-exits the program
+.br
+.B cd
+.br
+- change directories
+.br
+.B setenv
+.br
+- sets environment variable
+.br
+.B unsetenv
+.br
+- unsets environment variable
+.br
+.B alias
+.br
+- creates alias variable
+.br
+.B unalias
+.br
+- removes alias variable
+
+.SH BUGS
+No known bugs, but hey we aren't perfect. Please report any bugs to the twitter\
+ accounts @gjdame or @sidneyriffic
+
+.SH "SEE ALSO"
+.SH sh
+
+.SH "AUTHORS"
+Sidney Burkett and Greg Dame

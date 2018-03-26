@@ -4,8 +4,15 @@ char **environ;
  * getallenv - copy whole environ
  * Return: environ copy
  */
+char ***getenviron()
+{
+	static char **environ;
+
+	return (&environ);
+}
 char **getallenv()
 {
+	char **environ=*(getenviron());
 	char **envcopy;
 	size_t len = 0;
 
@@ -35,6 +42,7 @@ char **getallenv()
 /* add should be null for first init to not free passed array */
 int setallenv(char **envin, char *newval)
 {
+	char ***environ = getenviron();
 	size_t len = 0;
 
 #ifdef DEBUGMODE
@@ -44,20 +52,23 @@ int setallenv(char **envin, char *newval)
 		len++;
 	if (newval != NULL)
 		len++;
-	environ = malloc(sizeof(char **) * (len + 1));
-	if (environ == NULL)
+	*environ = malloc(sizeof(char **) * (len + 1));
+	if (*environ == NULL)
 		return (-1);
 	for (len = 0; envin[len] != NULL; len++)
-		environ[len] = envin[len];
+		if (newval == NULL)
+			(*environ)[len] = _strdup(envin[len]);
+		else
+			(*environ)[len] = envin[len];
 	if (newval != NULL)
 	{
 #ifdef DEBUGMODE
 		printf("Adding newval:%s\n", newval);
 #endif
-		environ[len] = newval;
+		(*environ)[len] = newval;
 		len++;
 	}
-	environ[len] = 0;
+	(*environ)[len] = 0;
 #ifdef DEBUGMODE
 	printf("At end. Free old environ if adding a string\n");
 #endif
@@ -72,6 +83,7 @@ int setallenv(char **envin, char *newval)
  */
 char *_getenv(char *name)
 {
+	char **environ=*(getenviron());
 	int i, j;
 	char *s;
 
@@ -83,7 +95,7 @@ char *_getenv(char *name)
 	{
 		s = environ[i];
 		j = 0;
-#ifdef DEBUGMODE
+#ifdef DEBUGSVARS
 		printf("Checking against:%s\n", environ[i]);
 #endif
 		while (s[j] == name[j])
@@ -104,11 +116,13 @@ char *_getenv(char *name)
  */
 int _setenv(char *name, char *val)
 {
+	char ***environroot = getenviron();
+	char **environ=*environroot;
 	int i, j, namel, vall;
 	char *s, *ptr;
 
 #ifdef DEBUGMODE
-	printf("In setenv, name:%s\n", name);
+	printf("In setenv, name:%s:val:%s\n", name, val);
 #endif
 	if (name == NULL || val == NULL)
 		return (0);
@@ -122,7 +136,7 @@ int _setenv(char *name, char *val)
 	s += namel;
 	_strcpy(s++, "=");
 	_strcpy(s, val);
-	s += vall + 1;
+	s += vall;
 	*s = 0;
 #ifdef DEBUGMODE
 	printf("Ptr mallocd:%s\n", ptr);
@@ -137,14 +151,14 @@ int _setenv(char *name, char *val)
 			j++;
 			if (name[j] == 0 && s[j] == '=')
 			{
-				free(s);
+				free(environ[i]);
 				environ[i] = ptr;
 				return (0);
 			}
 		}
 		i++;
 	}
-	return (setallenv(environ, ptr));
+	return (setallenv(*environroot, ptr));
 }
 /**
  * _unsetenv - unset environment
@@ -154,6 +168,7 @@ int _setenv(char *name, char *val)
 /*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
+	char **environ=*getenviron();
 	int i;
 	char **env;
 
@@ -178,7 +193,7 @@ int _unsetenv(char *name)
 		environ[i] = environ[i + 1];
 		i++;
 	}
-	environ[i] == NULL;
+	environ[i] = NULL;
 	env = environ;
 	setallenv(env, NULL);
 	i = 0;
