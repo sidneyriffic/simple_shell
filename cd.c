@@ -16,6 +16,7 @@ int _cd(char *av[])
 	{
 		/*check getenv malloc error here and above*/
 		newpath = _getenv("OLDPWD");
+		puts(newpath);
 	}
 	else
 	{
