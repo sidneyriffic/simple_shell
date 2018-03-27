@@ -32,17 +32,20 @@ int inputvalidator(char **buf, int fd)
 						printerr(": syntax error near unexpected token `;;'\n");
 					else
 						printerr(": syntax error near unexpected token `;\n");
+				free(bufgl);
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '&' && *(bufptr + 1) == '&')
 			{
+				free(bufgl);
 				printerr(": syntax error near unexpected token `&&'\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '|' && *(bufptr + 1) == '|')
 			{
+				free(bufgl);
 				printerr(": syntax error near unexpected token `||'\n");
 				setsvar("0", "2");
 				return (2);
@@ -80,6 +83,7 @@ int inputvalidator(char **buf, int fd)
 		{
 			if (bufptr[2] == '&')
 			{
+				free(bufgl);
 				printerr(": syntax error near unexpected token `&'");
 				setsvar("0", "2");
 				return (2);
@@ -91,6 +95,7 @@ int inputvalidator(char **buf, int fd)
 		{
 			if (bufptr[2] == '|')
 			{
+				free(bufgl);
 				printerr(": syntax error near unexpected token `|'\n");
 				setsvar("0", "2");
 				return (2);
