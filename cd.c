@@ -83,6 +83,7 @@ int _cd(char *av[])
 		free(newpath);
 		return (0);
 	}
+	printerr(NULL);
 	free(oldpwd);
 	free(newpath);
 	return (ret);
