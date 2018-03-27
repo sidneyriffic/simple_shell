@@ -28,24 +28,24 @@ int inputvalidator(char **buf, int fd)
 			if (*bufptr == ';')
 			{
 				if (bufptr == *buf)
-					printerr(": syntax error near unexpected token `;'");
+					printerr(": syntax error near unexpected token `;'\n");
 				else
 					if (*(bufptr - 1) == ';')
-						printerr(": syntax error near unexpected token `;;'");
+						printerr(": syntax error near unexpected token `;;'\n");
 					else
-						printerr(": syntax error near unexpected token `;'");
+						printerr(": syntax error near unexpected token `;\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '&' && *(bufptr + 1) == '&')
 			{
-				printerr(": syntax error near unexpected token `&&'");
+				printerr(": syntax error near unexpected token `&&'\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '|' && *(bufptr + 1) == '|')
 			{
-				printerr(": syntax error near unexpected token `||'");
+				printerr(": syntax error near unexpected token `||'\n");
 				setsvar("0", "2");
 				return (2);
 			}
@@ -93,7 +93,7 @@ int inputvalidator(char **buf, int fd)
 		{
 			if (bufptr[2] == '|')
 			{
-				printerr(": syntax error near unexpected token `|'");
+				printerr(": syntax error near unexpected token `|'\n");
 				setsvar("0", "2");
 				return (2);
 			}
@@ -119,7 +119,7 @@ int inputvalidator(char **buf, int fd)
 		if (lenr == 0 && !isatty(fd))
 		{
 			free(bufgl);
-			printerr(": Syntax error: unterminated quoted string");
+			printerr(": Syntax error: unterminated quoted string\n");
 			return (-1);
 		}
 		if (lenr == -1)
