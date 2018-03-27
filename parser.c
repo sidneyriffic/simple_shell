@@ -33,7 +33,12 @@ char *parsesetsvar(char *buf)
 				continue;
 			}
 			if (*ptr == ' ' || *ptr == 0)
+			{
+				buf = _strdup(buf);
+				/* do malloc fail test */
+				free(bufstart);
 				return (buf);
+			}
 			if (ptr == NULL)
 			{
 #ifdef DEBUGSVARS
