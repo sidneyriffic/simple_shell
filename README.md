@@ -14,9 +14,10 @@ Current feature set:
 -A mix of the above 2 in one alias command
 -cd
 -env builtin to print environment. Falls through to std env if more than 1 arg
--quotes around arguments (accepting more stdin on mismatch in progress)
+-quotes around arguments
 -escape characters with \
 -&&, || and ;
+-input continuation for ", ', && and ||
 -tilde expansion to home directory from env
 -exit with status
 -history
