@@ -1,8 +1,6 @@
 #include "shell.h"
 
 /* complete is bit flag type to complete. 0 none, 1 single quote, 2 double quote, 4 logic,
- * 8 is start of an input or ; separated command. first call should be 8 since we're starting
- * a new input
  * fd is fd we used to get input the first time */
 int inputvalidator(char **buf, int fd)
 {
