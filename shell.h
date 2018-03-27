@@ -85,7 +85,4 @@ int exit_hist();
 /*from help.c*/
 int help (char *cmd);
 
-/*from helpcd.c*/
-void helpcd();
-
 #endif
