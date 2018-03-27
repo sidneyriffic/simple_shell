@@ -84,7 +84,7 @@ int cmdcall(char *av[], char *cmd)
 		if (execve(cmd, av, *(getenviron())) == -1)
 		{
 			printerr(NULL);
-			_exit(1);
+			exit(1);
 		}
 #ifdef DEBUGMODE
 		printf("Command done\n");
