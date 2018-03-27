@@ -7,6 +7,7 @@
 int shintmode()
 {
 	char *bufgl = NULL, *pwd;
+	char *s;
 	ssize_t lenr = 0;
 	int istty = isatty(0) && isatty(1);
 
@@ -29,6 +30,9 @@ int shintmode()
 			}
 		}
 		lenr = _getline(&bufgl, STDIN_FILENO);
+		/*history begin*/
+		history(bufgl);
+		/*end history*/
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{
 			free(bufgl);

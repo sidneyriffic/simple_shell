@@ -77,4 +77,14 @@ char *strtokqe(char *str, char *delim, int escflags);
 int _printenv();
 int _putchar(char c);
 
+/*from history.c*/
+void history (char *cmd);
+void print_hist();
+
+/*from help.c*/
+int help (char *cmd);
+
+/*from helpcd.c*/
+void helpcd();
+
 #endif
