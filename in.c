@@ -1,5 +1,147 @@
 #include "shell.h"
 
+/* complete is bit flag type to complete. 0 none, 1 single quote, 2 double quote, 4 logic,
+ * 8 is start of an input or ; separated command. first call should be 8 since we're starting
+ * a new input
+ * fd is fd we used to get input the first time */
+int inputvalidator(char **buf, int fd)
+{
+	char *newbuf, *bufgl, *bufptr = *buf;
+	ssize_t lenr;
+	size_t lenbuf;
+	int start = 1;
+	int complete = 0;
+
+	if (*bufptr == 0)
+		return (0);
+	while (*bufptr)
+	{
+#ifdef DEBUGVALID
+		printf("In valid loop complete:%d:bufptr:%s", complete, bufptr);
+#endif
+		while ((*bufptr == ' ' || *bufptr == '\n') && !(complete & 3))
+			bufptr++;
+		if (*bufptr == 0)
+			break;
+		if (start)
+		{
+			if (*bufptr == ';')
+			{
+				if (bufptr == *buf)
+					printerr(": syntax error near unexpected token `;'");
+				else
+					if (*(bufptr - 1) == ';')
+						printerr(": syntax error near unexpected token `;;'");
+					else
+						printerr(": syntax error near unexpected token `;'");
+				setsvar("0", "2");
+				return (2);
+			}
+			if (*bufptr == '&' && *(bufptr + 1) == '&')
+			{
+				printerr(": syntax error near unexpected token `&&'");
+				setsvar("0", "2");
+				return (2);
+			}
+			if (*bufptr == '|' && *(bufptr + 1) == '|')
+			{
+				printerr(": syntax error near unexpected token `||'");
+				setsvar("0", "2");
+				return (2);
+			}
+			start = 0;
+		}
+		if (bufptr[0] == '\n' && bufptr[1] == 0)
+			break;
+		if (*bufptr == '#' && !(complete & 3))
+		{
+			*bufptr = 0;
+			break;
+		}
+		complete &= ~4;
+#ifdef DEBUGVALID
+		printf("!(complete&3):%d\n", !(complete&3));
+#endif
+		if (*bufptr == '"' && !(complete & 3))
+		{
+			complete |= 2;
+			bufptr++;
+			continue;
+		}
+		if (*bufptr == '"' && complete & 2)
+			complete &= ~2;
+		if (*bufptr == '\'' && !(complete & 3))
+		{
+			complete |= 1;
+			bufptr++;
+			continue;
+		}
+		if (*bufptr == '\'' && complete & 1)
+			complete &= ~1;
+		if (((bufptr[0] == '&' && bufptr[1] == '&') && !(complete & 3)))
+		{
+			if (bufptr[2] == '&')
+			{
+				printerr(": syntax error near unexpected token `&'");
+				setsvar("0", "2");
+				return (2);
+			}
+			complete |= 4;
+			bufptr++;
+		}	
+		if (((bufptr[0] == '|' && bufptr[1] == '|')) && !(complete & 3))
+		{
+			if (bufptr[2] == '|')
+			{
+				printerr(": syntax error near unexpected token `|'");
+				setsvar("0", "2");
+				return (2);
+			}
+			complete |= 4;
+			bufptr++;
+		}
+		if (*bufptr == ';')
+			start = 1;
+		bufptr++;
+	}
+#ifdef DEBUGVALID
+	printf("out of while complete:%d\n", complete);
+#endif
+	if (complete & 7)
+	{
+#ifdef DEBUGVALID
+		printf("not complete:%d", complete);
+#endif
+		bufgl = NULL;
+		if (isatty(fd))
+			fprintstrs(1, ">", NULL);
+		lenr = _getline(&bufgl, fd);
+		if (lenr == 0 && !isatty(fd))
+		{
+			free(bufgl);
+			printerr(": Syntax error: unterminated quoted string");
+			return (-1);
+		}
+		if (lenr == -1)
+			;/* do something here if getline fails */
+		lenbuf = _strlen(*buf);
+		newbuf = malloc(lenbuf + lenr + 1);
+		/* check malloc fail here */
+		_strcpy(newbuf, *buf);
+		_strcpy(newbuf + lenbuf, bufgl);
+		free(*buf);
+		free(bufgl);
+#ifdef DEBUGVALID
+		printf("Passing buf:%s\n", newbuf);
+#endif
+		return (inputvalidator(&newbuf, fd));
+	}
+#ifdef DEBUGVALID
+	printf("Final buf:%s\n", *buf);
+#endif
+	return (parseargs(buf));
+}
+
 /**
  * shintmode - shell interactive mode
  * Return: 0
@@ -37,7 +179,7 @@ int shintmode()
 #ifdef DEBUGMODE
 		printf("calling parseargs %s\n", bufgl);
 #endif
-		parseargs(&bufgl);
+		inputvalidator(&bufgl, STDIN_FILENO);
 		bufgl = NULL;
 	}
 	return (0);

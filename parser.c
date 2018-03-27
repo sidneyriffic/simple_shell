@@ -352,16 +352,19 @@ char *tildeexpand(char *buf)
 int parseargs(char **buf)
 {
 	char *av[1024], *ptr, *left, *right;
-	int ac, ret = 0;
-	char *wordd = " ";
+	int ac, ret = 0, newchk;
 
 #ifdef DEBUGMODE
 	printf("In parseargs. buf:%s\n", *buf);
 #endif
 	if (*buf == NULL)
 		return (0);
+	ptr = *buf;
+	newchk = _strlen(*buf) - 1;
+	if (ptr[newchk] == '\n')
+		ptr[newchk] = 0;
 	for (ptr = *buf; *ptr != 0; ptr++)
-		if ((*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' ')) || *ptr == '\n')
+		if (*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' '))
 		{
 			*ptr = 0;
 			break;
@@ -486,7 +489,7 @@ int parseargs(char **buf)
 	if (*buf == NULL)
 		return (0);
 	ac = 0;
-	av[ac++] = _strdup(strtokqe(*buf, wordd, 7));
+	av[ac++] = _strdup(strtokqe(*buf, "\n ", 7));
 #ifdef DEBUGMODE
 	printf("Got arg %s\n", av[ac - 1]);
 #endif
@@ -501,7 +504,7 @@ int parseargs(char **buf)
 #endif
 	while (av[ac - 1] != NULL)
 	{
-		av[ac] = _strdup(strtokqe(NULL, wordd, 7));
+		av[ac] = _strdup(strtokqe(NULL, "\n ", 7));
 #ifdef DEBUGMODE
 		printf("Got arg %s\n", av[ac]);
 #endif
