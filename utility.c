@@ -50,18 +50,30 @@ char *itos(int digits)
 
 }
 
-int printerr()
+/* null prints errno error with perror, otherwise print string as error */
+int printerr(char *str)
 {
-	static unsigned int num = 0;
-	char *pathname;
+	static unsigned int num = 1;
+	char *pathname, *numstr;
 
 	pathname = getsvar("0");
-	fprintstrs(2, pathname, ": ", NULL);
-	perror(itos(num));
+	numstr = itos(num);
+	if (str != NULL)
+	{
+		fprintstrs(2, pathname, ": ", numstr, str, NULL);
+	}
+	else
+	{
+		fprintstrs(2, pathname, ": ", numstr, NULL);
+		perror(pathname);
+	}
+	free(pathname);
+	free(pathname);
 	num++;
 	return (0);
 }
 
+/* va args should have a NULL last arg */
 int fprintstrs(int fd, char *str, ...)
 {
 	va_list list;

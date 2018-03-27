@@ -49,7 +49,7 @@ int checkpath(char *av[])
 		while (*pathvar == ':')
 			pathvar++;
 	}
-	printerr();
+	printerr(NULL);
 	free(pathenv);
 	return (1);
 }
