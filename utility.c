@@ -68,7 +68,7 @@ int printerr(char *str)
 		perror(pathname);
 	}
 	free(pathname);
-	free(pathname);
+	free(numstr);
 	num++;
 	return (0);
 }
