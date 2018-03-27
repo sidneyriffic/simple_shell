@@ -4,7 +4,7 @@
 void history(char *cmd)
 {
 	int i;
-	if (count < 1024)
+	if (count < 4096)
 	{
 		buffer[count] = _strdup(cmd);
 		count++;
@@ -13,12 +13,12 @@ void history(char *cmd)
 	{
 		free(buffer[0]);
 		i = 1;
-		while (i < 1024)
+		while (i < 4096)
 		{
 			buffer[i - 1] = buffer[i];
 			i++;
 		}
-		buffer[1024 - 1] = _strdup(cmd);
+		buffer[4096 - 1] = _strdup(cmd);
 	}
 }
 void print_hist()
@@ -50,4 +50,36 @@ void print_hist()
 		}
 		i++;
 	}
+}
+int exit_hist()
+{
+	int fd;
+	int i, len, w;
+	char *s;
+
+	fd = open(.simple_shell_history, O_CREAT | O_RDWR | O_TRUNC);
+	if (fd == -1)
+		return (-1);
+
+	i = 0;
+	while (buffer[i])
+	{
+		s = buffer[i];
+		len = _strlen(s);
+		w = write(fd, s, len);
+		if (w == -1)
+			return (-1);
+		i++;
+	}
+
+	while (buffer[i])
+	{
+		free(buffer[i]);
+		i--;
+	}
+	free(buffer);
+
+	close(fd);
+
+	return(1);
 }
