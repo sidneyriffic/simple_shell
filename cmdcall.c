@@ -83,7 +83,7 @@ int cmdcall(char *av[], char *cmd)
 #endif
 		if (execve(cmd, av, *(getenviron())) == -1)
 		{
-			printerr();
+			printerr(NULL);
 			exit(1);
 		}
 #ifdef DEBUGMODE
