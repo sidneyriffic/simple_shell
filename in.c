@@ -117,7 +117,7 @@ int inputvalidator(char **buf, int fd)
 				setsvar("0", "2");
 				return (2);
 			}
-		}	
+		}
 		if ((bufptr[0] == '|') && !(complete & 3))
 		{
 			if (bufptr[1] == '|')
@@ -205,10 +205,10 @@ int inputvalidator(char **buf, int fd)
 int shintmode()
 {
 	char *bufgl = NULL, *pwd;
-	ssize_t lenr = 0;
+	ssize_t lenr = 0, eofflag = 0, ret = 0;
 	int istty = isatty(0) && isatty(1);
 
-	while (1)
+	while (!eofflag)
 	{
 #ifdef DEBUGMODE
 		printf("At terminal prompt\n");
@@ -227,18 +227,22 @@ int shintmode()
 			}
 		}
 		lenr = _getline(&bufgl, STDIN_FILENO);
-		if ((lenr == 0 && !istty) || lenr == -1)
+		if (lenr == 0 || lenr == -1)
 		{
 			free(bufgl);
 			break;
 		}
+		if (bufgl[lenr - 1] != '\n')
+			eofflag = 1;
 #ifdef DEBUGMODE
 		printf("calling parseargs %s\n", bufgl);
 #endif
-		inputvalidator(&bufgl, STDIN_FILENO);
+		ret = inputvalidator(&bufgl, STDIN_FILENO);
 		bufgl = NULL;
+		if (eofflag)
+			break;
 	}
-	return (0);
+	return (ret);
 }
 /**
  * scriptmode - shell script mode

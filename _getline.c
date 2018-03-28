@@ -8,9 +8,10 @@
 int _getline(char **lineptr, __attribute__((unused)) int fd)
 {
 	int size = 1024;
-	int old_size;
-	int r = 0;
-	static char buffer[1024];
+	int old_size = 0;
+	int r = 1;
+	int sum = 0;
+	static char buffer[1025];
 	static int begin;
 	static int end;
 	int c = 0;
@@ -21,7 +22,7 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 	}
 	if (*lineptr == NULL)
 	{
-		*lineptr = malloc(sizeof(char) * size);
+		*lineptr = malloc(sizeof(char) * size + 1);
 		if (*lineptr == NULL)
 			return (-1);
 	}
@@ -30,25 +31,35 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 	{
 		if (begin == end)
 		{
-			/*printf("reading\n");*/
-			r = read(0, buffer, 1024);
-			if (r == 0)
-				return (c);
-			end = r;
-			begin = 0;
-			/*printf("r : %d\n", r);*/
+			while (sum < 1024 && r != 0)
+			{
+				/*printf("reading\n");*/
+				r = read(0, buffer + sum, 1024);
+				begin = 0;
+				sum += r;
+				end = sum;
+				/*printf("r : %d\n", r);*/
+				for (c = 0; r != 0 && c < end; c++)
+					if (buffer[c] == '\n')
+						r = 0;
+			}
+			if (sum == 0)
+			{
+				buffer[0] = 0;
+				return(sum);
+			}
+			buffer[sum] = 0;
 		}
-
-		for (; buffer[begin] && c < size; begin++)
+		for (c = 0; buffer[begin] && c < size; begin++)
 		{
 			if (begin == 1024)
 			{
-			/*free(buffer);*/
+				/*free(buffer);*/
 				/*(*lineptr)[c] = EOF;*/
 				/*return (c);*/
 				break;
 			}
-		/*printf("beginning for\n");//debug check*/
+			/*printf("beginning for\n");//debug check*/
 			if (buffer[begin] == '\n')
 			{
 				(*lineptr)[c] = '\n';
@@ -74,7 +85,10 @@ int _getline(char **lineptr, __attribute__((unused)) int fd)
 			}
 		}
 		else
+		{
+			(*lineptr)[old_size + begin] = 0;
 			return (c);
+		}
 		/*printf("j: %d, i:%d, r:%d\n", j, i ,r);*/
 	}
 }
