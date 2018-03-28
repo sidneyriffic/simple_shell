@@ -24,30 +24,45 @@ int inputvalidator(char **buf, int fd)
 			break;
 		if (start)
 		{
+			if (*bufptr == ';' && *(bufptr + 1) == ';')
+			{
+				free(*buf);
+				printerr(": Syntax error \";;\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
 			if (*bufptr == ';')
 			{
-				if (bufptr == *buf)
-					printerr(": syntax error near unexpected token `;'\n");
-				else
-					if (*(bufptr - 1) == ';')
-						printerr(": syntax error near unexpected token `;;'\n");
-					else
-						printerr(": syntax error near unexpected token `;\n");
 				free(*buf);
+				printerr(": Syntax error \";\" unexpected\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '&' && *(bufptr + 1) == '&')
 			{
 				free(*buf);
-				printerr(": syntax error near unexpected token `&&'\n");
+				printerr(": Syntax error \"&&\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
+			if (*bufptr == '&')
+			{
+				free(*buf);
+				printerr(": Syntax error \"&\" unexpected\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '|' && *(bufptr + 1) == '|')
 			{
 				free(*buf);
-				printerr(": syntax error near unexpected token `||'\n");
+				printerr(": syntax error \"||\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
+			if (*bufptr == '|')
+			{
+				free(*buf);
+				printerr(": syntax error \"|\" unexpected\n");
 				setsvar("0", "2");
 				return (2);
 			}
@@ -80,32 +95,63 @@ int inputvalidator(char **buf, int fd)
 		}
 		if (*bufptr == '\'' && complete & 1)
 			complete &= ~1;
-		if (((bufptr[0] == '&' && bufptr[1] == '&') && !(complete & 3)))
+		if (bufptr[0] == '&' && !(complete & 3))
 		{
-			if (bufptr[2] == '&')
+			if (bufptr[1] == '&')
+			{
+				complete |= 4;
+				start = 1;
+				bufptr++;
+			}
+			else if (bufptr[1] == '|')
 			{
 				free(*buf);
-				printerr(": syntax error near unexpected token `&'");
+				printerr(": syntax error \"|\" unexpected\n");
 				setsvar("0", "2");
 				return (2);
 			}
-			complete |= 4;
-			bufptr++;
+			else if (bufptr[1] == ';')
+			{
+				free(*buf);
+				printerr(": syntax error \";\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
 		}	
-		if (((bufptr[0] == '|' && bufptr[1] == '|')) && !(complete & 3))
+		if ((bufptr[0] == '|') && !(complete & 3))
 		{
-			if (bufptr[2] == '|')
+			if (bufptr[1] == '|')
+			{
+				complete |= 4;
+				start = 1;
+				bufptr++;
+			}
+			else if (bufptr[1] == ';')
 			{
 				free(*buf);
-				printerr(": syntax error near unexpected token `|'\n");
+				printerr(": syntax error \";\" unexpected\n");
 				setsvar("0", "2");
 				return (2);
 			}
-			complete |= 4;
-			bufptr++;
+			else if (bufptr[1] == '&')
+			{
+				free(*buf);
+				printerr(": syntax error \"&\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
 		}
 		if (*bufptr == ';')
+		{
+			if (*(bufptr + 1) == ';')
+			{
+				free(*buf);
+				printerr(": Syntax error \";;\" unexpected\n");
+				setsvar("0", "2");
+				return (2);
+			}
 			start = 1;
+		}
 		bufptr++;
 	}
 #ifdef DEBUGVALID
