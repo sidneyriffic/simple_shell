@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include "history.h"
 /*#include <string.h>*/
 
 /* from in.c */
@@ -79,8 +80,8 @@ int _printenv();
 int _putchar(char c);
 
 /*from history.c*/
-void history (char *cmd);
-void print_hist();
+int sethist (char *cmd);
+int print_hist();
 int exit_hist();
 
 /*from help.c*/

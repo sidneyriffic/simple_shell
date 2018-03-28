@@ -224,7 +224,7 @@ int shintmode()
 		}
 		lenr = _getline(&bufgl, STDIN_FILENO);
 		/*history begin*/
-		history(bufgl);
+		sethist(bufgl);
 		/*end history*/
 		if ((lenr == 0 && !istty) || lenr == -1)
 		{

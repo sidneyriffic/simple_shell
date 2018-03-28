@@ -1,81 +1,87 @@
 #include "shell.h"
-/*
-char ***gethistory()
+#include "history.h"
+/**
+ * gethistory - gets the history list
+ * Return: 0 uposon success
+ */
+HistList **gethistory()
 {
-	static char *buffer[4096];
-	return(&buffer);
+	static HistList *hlist;
+	return (&hlist);
 }
-*/      static int count;
-	static char *buffer[4096];
+/**
+ * sethist - set hist and value
+ * @cmd: command
+ * Return: 0 upon success
+ */
+int sethist(char *cmd)
+{
+	HistList **hlistroot = gethistory();
+	HistList *hlist = *hlistroot;
+	HistList *ptr = hlist, *new;
 
-void history(char *cmd)
-{
-	//struct **historyroot = gethistory();
-	//sturct *history = *historyroot;
-	int i;
-	int count = 0;
-	while (buffer[count] != '\0')
+	if (hlist == NULL)
 	{
-		count++;
+		new = malloc(sizeof(HistList));
+		if (new == NULL)
+			return (-1);
+
+		new->cmd = _strdup(cmd);
+		new->next = NULL;
+		*hlistroot = new;
+		free(cmd);
+		return (0);
 	}
-	if (count < 4096)
-	{
-		buffer[count] = _strdup(cmd);
-		count++;
-	}
-	else
-	{
-		free(buffer[0]);
-		i = 1;
-		while (i < 4096)
-		{
-			buffer[i - 1] = buffer[i];
-			i++;
-		}
-		buffer[4096 - 1] = _strdup(cmd);
-	}
+	while (ptr->next != NULL)
+		ptr = ptr->next;
+
+	new = malloc(sizeof(HistList));
+	if (new == NULL)
+		return (-1);
+	new->cmd = _strdup(cmd);
+	new->next = NULL;
+	ptr->next = new;
+	return (0);
 }
-void print_hist()
+/**
+ * print_listint - prints all elements of listint
+ * @h: pointer to first node of list
+ * Return: num of elements
+ */
+int print_hist()
 {
-	int i, j;
-	int c;
-	int len;
-	char *s;
-	char *num;
+	HistList **hlistroot = gethistory();
+	HistList *h = *hlistroot;
+	int i;
+	int len, numlen;
+	char *s, *num;
+	int count;
 
 	i = 0;
-	while (buffer[i])
+	while (h != NULL)
 	{
-		s = buffer[i];
-		len = _strlen(s);
+		len = _strlen(h->cmd);
+		s = h->cmd;
 		num = itos(i);
-		j = 0;
-		while (num[j] != '\0')
-		{
-			_putchar(num[j]);
-			j++;
-		}
+		numlen = _strlen(num);
+		write(1, num, numlen);
 		_putchar(' ');
-		j = 0;
-		while (s[j] != '\0')
-		{
-			_putchar(s[j]);
-			j++;
-		}
+		write(1, s, len);
+		h = h->next;
 		i++;
 	}
+	return (i);
 }
-//int write_history()
-//{
-	
-/*int cleanup ()
+/*
+ *
+ *
+int cleanup ()
 {
 	int fd;
 	char *file = ".simple_shell_history";
 	int i, len, w;
 	char *s;
-	//tilde expansion (~ & str)
-	//will result in path
+	s = tildeexpand(char *buf);
 	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
 	if (fd == -1)
 		return (-1);
