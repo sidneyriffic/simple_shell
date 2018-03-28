@@ -5,17 +5,15 @@
  * @fd: file descriptor
  * Return: num of characters
  */
-int _getline(char **lineptr, int fd)
+int _getline(char **lineptr, __attribute__((unused)) int fd)
 {
 	int size = 1024;
 	int old_size;
-	char *line;
 	int r = 0;
 	static char buffer[1024];
 	static int begin;
 	static int end;
 	int c = 0;
-	int retval;
 
 	if (lineptr == NULL)
 	{
@@ -41,7 +39,7 @@ int _getline(char **lineptr, int fd)
 			/*printf("r : %d\n", r);*/
 		}
 
-		for (c; buffer[begin] && c < size; begin++)
+		for (; buffer[begin] && c < size; begin++)
 		{
 			if (begin == 1024)
 			{

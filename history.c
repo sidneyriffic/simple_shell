@@ -29,7 +29,6 @@ int sethist(char *cmd)
 		new->cmd = _strdup(cmd);
 		new->next = NULL;
 		*hlistroot = new;
-		free(cmd);
 		return (0);
 	}
 	while (ptr->next != NULL)
@@ -55,7 +54,6 @@ int print_hist()
 	int i;
 	int len, numlen;
 	char *s, *num;
-	int count;
 
 	i = 0;
 	while (h != NULL)
@@ -81,28 +79,25 @@ int cleanup ()
 	char *file = ".simple_shell_history";
 	int i, len, w;
 	char *s;
-	s = tildeexpand(char *buf);
+
+	HistList **hlistroot = gethistory();
+	HistList *hlist = *hlistroot;
+	HistList *ptr = hlist;
+
+	file = tildeexpand(file);
 	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
 	if (fd == -1)
 		return (-1);
 
-	i = 0;
-	while (buffer[i])
-	{
-		s = buffer[i];
-		len = _strlen(s);
-		w = write(fd, s, len);
-		if (w == -1)
-			return (-1);
-		i++;
-	}
+	
 
-	while (buffer[i])
+	while (hlist != NULL)
 	{
-		free(buffer[i]);
-		i--;
+		ptr = hlist->next;
+		free(hlist->cmd);
+		free(hlist);
+		ptr = tmp;
 	}
-	/*free(buffer);
 
 	close(fd);
 

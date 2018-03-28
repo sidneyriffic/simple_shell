@@ -174,7 +174,9 @@ int inputvalidator(char **buf, int fd)
 			return (-1);
 		}
 		if (lenr == -1)
-			;/* do something here if getline fails */
+		{
+			; /* do something here if getline fails */
+		}
 		lenbuf = _strlen(*buf);
 		newbuf = malloc(lenbuf + lenr + 1);
 		/* check malloc fail here */
@@ -200,7 +202,6 @@ int inputvalidator(char **buf, int fd)
 int shintmode()
 {
 	char *bufgl = NULL, *pwd;
-	char *s;
 	ssize_t lenr = 0;
 	int istty = isatty(0) && isatty(1);
 

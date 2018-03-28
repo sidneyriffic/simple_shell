@@ -15,7 +15,7 @@ ShellVar **getvars()
 	return (&vars);
 }
 
-int initsvars(int ac, char **av)
+int initsvars(__attribute__((unused)) int ac, char **av)
 {
 	ShellVar **specialroot = getspecial();
 	ShellVar *special;

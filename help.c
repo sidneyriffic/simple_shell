@@ -7,8 +7,6 @@
 int help(char *cmd)
 {
 	char *file;
-	int total = 0;
-	int w = 0;
 	int fd, r;
 	char *s;
 
@@ -187,7 +185,7 @@ int help(char *cmd)
 	{
 		s = "help: no help topics match.\n";
 		r = _strlen(s);
-		w = write(1, s, r);
+		r = write(1, s, r);
 		return (0);
 	}
 }
