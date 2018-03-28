@@ -1,9 +1,23 @@
 #include "shell.h"
-	static int count = 0;
+/*
+char ***gethistory()
+{
 	static char *buffer[4096];
+	return(&buffer);
+}
+*/      static int count;
+	static char *buffer[4096];
+
 void history(char *cmd)
 {
+	//struct **historyroot = gethistory();
+	//sturct *history = *historyroot;
 	int i;
+	int count = 0;
+	while (buffer[count] != '\0')
+	{
+		count++;
+	}
 	if (count < 4096)
 	{
 		buffer[count] = _strdup(cmd);
@@ -51,13 +65,18 @@ void print_hist()
 		i++;
 	}
 }
-int exit_hist()
+//int write_history()
+//{
+	
+/*int cleanup ()
 {
 	int fd;
+	char *file = ".simple_shell_history";
 	int i, len, w;
 	char *s;
-
-	fd = open(.simple_shell_history, O_CREAT | O_RDWR | O_TRUNC);
+	//tilde expansion (~ & str)
+	//will result in path
+	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
 	if (fd == -1)
 		return (-1);
 
@@ -77,9 +96,10 @@ int exit_hist()
 		free(buffer[i]);
 		i--;
 	}
-	free(buffer);
+	/*free(buffer);
 
 	close(fd);
 
 	return(1);
 }
+*/
