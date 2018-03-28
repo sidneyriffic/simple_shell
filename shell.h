@@ -80,11 +80,9 @@ int _putchar(char c);
 /*from history.c*/
 void history (char *cmd);
 void print_hist();
+int exit_hist();
 
 /*from help.c*/
 int help (char *cmd);
-
-/*from helpcd.c*/
-void helpcd();
 
 #endif

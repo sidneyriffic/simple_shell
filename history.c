@@ -1,10 +1,24 @@
 #include "shell.h"
-	static int count = 0;
+/*
+char ***gethistory()
+{
 	static char *buffer[4096];
+	return(&buffer);
+}
+*/      static int count;
+	static char *buffer[4096];
+
 void history(char *cmd)
 {
+	//struct **historyroot = gethistory();
+	//sturct *history = *historyroot;
 	int i;
-	if (count < 1024)
+	int count = 0;
+	while (buffer[count] != '\0')
+	{
+		count++;
+	}
+	if (count < 4096)
 	{
 		buffer[count] = _strdup(cmd);
 		count++;
@@ -13,12 +27,12 @@ void history(char *cmd)
 	{
 		free(buffer[0]);
 		i = 1;
-		while (i < 1024)
+		while (i < 4096)
 		{
 			buffer[i - 1] = buffer[i];
 			i++;
 		}
-		buffer[1024 - 1] = _strdup(cmd);
+		buffer[4096 - 1] = _strdup(cmd);
 	}
 }
 void print_hist()
@@ -51,3 +65,41 @@ void print_hist()
 		i++;
 	}
 }
+//int write_history()
+//{
+	
+/*int cleanup ()
+{
+	int fd;
+	char *file = ".simple_shell_history";
+	int i, len, w;
+	char *s;
+	//tilde expansion (~ & str)
+	//will result in path
+	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
+	if (fd == -1)
+		return (-1);
+
+	i = 0;
+	while (buffer[i])
+	{
+		s = buffer[i];
+		len = _strlen(s);
+		w = write(fd, s, len);
+		if (w == -1)
+			return (-1);
+		i++;
+	}
+
+	while (buffer[i])
+	{
+		free(buffer[i]);
+		i--;
+	}
+	/*free(buffer);
+
+	close(fd);
+
+	return(1);
+}
+*/
