@@ -7,7 +7,7 @@
  */
 int checkpath(char *av[])
 {
-	char *path, *pathptr, *pathvar, *ptr, *pathenv;
+	char *path, *pathptr, *pathvar, *ptr, *pathenv, *linect;
 	int pathlen, cmdlen;
 
 #ifdef DEBUGMODE
@@ -19,6 +19,9 @@ int checkpath(char *av[])
 	pathenv = pathvar;
 	while (*pathvar != 0)
 	{
+#ifdef DEBUGMODE
+		printf("in loop pathvar:%s:*pathvar:%c\n", pathvar, *pathvar);
+#endif
 		for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
 			pathlen++;
 		path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
@@ -30,7 +33,8 @@ int checkpath(char *av[])
 		pathptr = path;
 		while (*pathvar != ':' && *pathvar != 0)
 			*pathptr++ = *pathvar++;
-		*pathptr++ = '/';
+		if (pathptr != path)
+			*pathptr++ = '/';
 		ptr = av[0];
 		while (*ptr != 0)
 			*pathptr++ = *ptr++;
@@ -46,10 +50,14 @@ int checkpath(char *av[])
 			return (pathlen);
 		}
 		free(path);
-		while (*pathvar == ':')
+		if (*pathvar == ':')
 			pathvar++;
 	}
-	printerr(NULL);
+	linect = itos(linecount(0));
+	path = getsvar("0");
+	fprintstrs(2, path, ": ", linect, ": ", av[0], ": not found\n", NULL);
+	free(path);
+	free(linect);
 	free(pathenv);
 	return (1);
 }

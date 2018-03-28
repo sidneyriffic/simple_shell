@@ -1,6 +1,15 @@
 #include "shell.h"
 #include <stdarg.h>
 
+int linecount(int increment)
+{
+	static int count = 0;
+
+	count += increment;
+
+	return count;
+}
+
 /**
  * itos - converts integer to string
  *
@@ -53,23 +62,21 @@ char *itos(int digits)
 /* null prints errno error with perror, otherwise print string as error */
 int printerr(char *str)
 {
-	static unsigned int num = 1;
 	char *pathname, *numstr;
 
 	pathname = getsvar("0");
-	numstr = itos(num);
+	numstr = itos(linecount(0));
 	if (str != NULL)
 	{
 		fprintstrs(2, pathname, ": ", numstr, str, NULL);
 	}
 	else
 	{
-		fprintstrs(2, pathname, ": ", numstr, NULL);
-		perror(pathname);
+		fprintstrs(2, pathname, ": ", numstr, ": ", NULL);
+		perror(NULL);
 	}
 	free(pathname);
 	free(numstr);
-	num++;
 	return (0);
 }
 

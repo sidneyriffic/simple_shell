@@ -46,6 +46,7 @@ char *itos(int digits);
 char *_strchr(char *s, char c);
 int fprintstrs(int fd, char *str, ...);
 int printerr();
+int linecount();
 
 /* from cd.c */
 int _cd(char *av[]);

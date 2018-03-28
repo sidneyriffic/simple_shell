@@ -137,11 +137,13 @@ int inputvalidator(char **buf, int fd)
 #ifdef DEBUGVALID
 		printf("Passing buf:%s\n", newbuf);
 #endif
+		linecount(1);
 		return (inputvalidator(&newbuf, fd));
 	}
 #ifdef DEBUGVALID
 	printf("Final buf:%s\n", *buf);
 #endif
+	linecount(1);
 	return (parseargs(buf));
 }
 
