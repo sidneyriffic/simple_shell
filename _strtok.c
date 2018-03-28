@@ -1,8 +1,8 @@
 #include "shell.h"
 /**
  * strtok - tokenizes a string
- * @str - string to tokenize
- * @delim - delimiters used to create tokens
+ * @str: string to tokenize
+ * @delim: delimiters used to create tokens
  * Return: token
  */
 char *strtok(char *str, char *delim)
@@ -40,7 +40,7 @@ char *strtok(char *str, char *delim)
 	if (*str == 0)
 	{
 		saved_string = str;
-		return(0);
+		return (0);
 	}
 	/*start new token*/
 	tmp_str = tmp_str + i;
@@ -72,11 +72,16 @@ char *strtok(char *str, char *delim)
 	}
 	return (tmp_str);
 }
-
-/* esc flags are bitwise. 
+/**
+ * strtokqe - string token with quotes and escapes
+ * @str: string
+ * @delim: delimiters
+ * @escflags: escape flags
+ * flags are bitwise.
  * 1 = use \ to escape delims
  * 2 = single quote skips
  * 4 = double quote skips
+ * Return: string
  */
 char *strtokqe(char *str, char *delim, int escflags)
 {
@@ -109,7 +114,7 @@ char *strtokqe(char *str, char *delim, int escflags)
 	if (*str == 0)
 	{
 		saved_string = str;
-		return(0);
+		return (0);
 	}
 
 	/*start new token*/
