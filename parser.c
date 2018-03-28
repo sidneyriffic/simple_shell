@@ -368,12 +368,13 @@ int parseargs(char **buf)
 	newchk = _strlen(*buf) - 1;
 	if (ptr[newchk] == '\n')
 		ptr[newchk] = 0;
-	for (ptr = *buf; *ptr != 0; ptr++)
+/*	for (ptr = *buf; *ptr != 0; ptr++)
 		if (*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' '))
 		{
+			printf("ptr:%p:*buf:%p:*(ptr - 1):%c\n", ptr, *buf, *(ptr-1));
 			*ptr = 0;
 			break;
-		}
+			}*/
 	if (*buf[0] == 0)
 	{
 		free (*buf);

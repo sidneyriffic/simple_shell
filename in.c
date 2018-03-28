@@ -10,6 +10,7 @@ int inputvalidator(char **buf, int fd)
 	int start = 1;
 	int complete = 0;
 
+	linecount(1);
 	if (*bufptr == 0)
 		return (0);
 	while (*bufptr)
@@ -32,20 +33,20 @@ int inputvalidator(char **buf, int fd)
 						printerr(": syntax error near unexpected token `;;'\n");
 					else
 						printerr(": syntax error near unexpected token `;\n");
-				free(bufgl);
+				free(*buf);
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '&' && *(bufptr + 1) == '&')
 			{
-				free(bufgl);
+				free(*buf);
 				printerr(": syntax error near unexpected token `&&'\n");
 				setsvar("0", "2");
 				return (2);
 			}
 			if (*bufptr == '|' && *(bufptr + 1) == '|')
 			{
-				free(bufgl);
+				free(*buf);
 				printerr(": syntax error near unexpected token `||'\n");
 				setsvar("0", "2");
 				return (2);
@@ -54,7 +55,7 @@ int inputvalidator(char **buf, int fd)
 		}
 		if (bufptr[0] == '\n' && bufptr[1] == 0)
 			break;
-		if (*bufptr == '#' && !(complete & 3))
+		if (*bufptr == '#' && !(complete & 3) && (bufptr == *buf || *(bufptr - 1) == ' '))
 		{
 			*bufptr = 0;
 			break;
@@ -83,7 +84,7 @@ int inputvalidator(char **buf, int fd)
 		{
 			if (bufptr[2] == '&')
 			{
-				free(bufgl);
+				free(*buf);
 				printerr(": syntax error near unexpected token `&'");
 				setsvar("0", "2");
 				return (2);
@@ -95,7 +96,7 @@ int inputvalidator(char **buf, int fd)
 		{
 			if (bufptr[2] == '|')
 			{
-				free(bufgl);
+				free(*buf);
 				printerr(": syntax error near unexpected token `|'\n");
 				setsvar("0", "2");
 				return (2);
@@ -121,6 +122,7 @@ int inputvalidator(char **buf, int fd)
 		lenr = _getline(&bufgl, fd);
 		if (lenr == 0 && !isatty(fd))
 		{
+			free(buf);
 			free(bufgl);
 			printerr(": Syntax error: unterminated quoted string\n");
 			return (-1);
@@ -137,13 +139,11 @@ int inputvalidator(char **buf, int fd)
 #ifdef DEBUGVALID
 		printf("Passing buf:%s\n", newbuf);
 #endif
-		linecount(1);
 		return (inputvalidator(&newbuf, fd));
 	}
 #ifdef DEBUGVALID
 	printf("Final buf:%s\n", *buf);
 #endif
-	linecount(1);
 	return (parseargs(buf));
 }
 
