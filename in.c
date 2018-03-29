@@ -286,9 +286,9 @@ int main(int ac, char *av[], char **environ)
 	setsvar(_strdup("simplevar"), _strdup("98"));
 	printf("simplevar:%s\n", getsvar("simplevar"));
 #endif
-/*	if (ac > 1)
+	if (ac > 1)
 		ret = scriptmode(ac, av);
-		ret = shintmode();*/
+		ret = shintmode();
 	exitcleanup(NULL);
 	exit_hist();
 	return (ret);

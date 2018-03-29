@@ -1,20 +1,31 @@
 #include "shell.h"
 #include "shellvars.h"
-
+/**
+ * getspecial - wrapper for getspecial static var
+ * Return: address of shellvar special
+ */
 ShellVar **getspecial()
 {
 	static ShellVar *special;
 
 	return (&special);
 }
-
+/**
+ * getsvars - get static vars wrapper
+ * Return: address of var
+ */
 ShellVar **getvars()
 {
 	static ShellVar *vars;
 
 	return (&vars);
 }
-
+/**
+ * initsvars - initialize vars
+ * @ac: arguemnts int
+ * @av: strings
+ * Return: int
+ */
 int initsvars(int ac, char **av)
 {
 	ShellVar **specialroot = getspecial();
@@ -31,68 +42,72 @@ int initsvars(int ac, char **av)
 #ifdef DEBUGMODE
 	printf("special:%p:*getspecial():%p:\n", special, *(getspecial()));
 #endif
-	special -> val = _strdup("0");
-	special -> name = _strdup("?");
+	special->val = _strdup("0");
+	special->name = _strdup("?");
 	ptr = special + 1;
-	special -> next = ptr;
+	special->next = ptr;
 	while (av[i] != NULL)
 	{
 #ifdef DEBUGMODE
 		printf("av[%d]=%s\n", i, av[i]);
 #endif
 		nums[0] = i + '0';
-		ptr -> val = _strdup(av[i]);
-		ptr -> name = _strdup(nums);
-		ptr -> next = ptr + 1;
-		ptr = ptr -> next;
+		ptr->val = _strdup(av[i]);
+		ptr->name = _strdup(nums);
+		ptr->next = ptr + 1;
+		ptr = ptr->next;
 		i++;
 	}
 	while (i < 10)
 	{
 		nums[0] = i + '0';
-		ptr -> val = _strdup("0");
-		ptr -> name = _strdup(nums);
-		ptr -> next = ptr + 1;
-		ptr = ptr -> next;
+		ptr->val = _strdup("0");
+		ptr->name = _strdup(nums);
+		ptr->next = ptr + 1;
+		ptr = ptr->next;
 		i++;
 	}
-	ptr -> name = _strdup("$");
-	ptr -> val = _strdup("0");
-	ptr -> next = ptr + 1;
-	ptr = ptr -> next;
-	ptr -> name = _strdup("#");
-	ptr -> val = itos(ac);
-	ptr -> next = NULL;
+	ptr->name = _strdup("$");
+	ptr->val = _strdup("0");
+	ptr->next = ptr + 1;
+	ptr = ptr->next;
+	ptr->name = _strdup("#");
+	ptr->val = itos(ac);
+	ptr->next = NULL;
 	return (0);
 }
-
-/* returns original argument if not found */
+/**
+ * getsvar - gets shell variable
+ * @name: name of shell var
+ *
+ * Return: original argument if not found
+ */
 char *getsvar(char *name)
 {
 	ShellVar *special = *(getspecial()), *vars = *(getvars());
 	ShellVar *ptr = special;
 
-	while (ptr != NULL && _strcmp(ptr -> name, name))
+	while (ptr != NULL && _strcmp(ptr->name, name))
 	{
 #ifdef DEBUGMODE
-		printf("Checked .%s. against .%s.\n", name, ptr -> name);
+		printf("Checked .%s. against .%s.\n", name, ptr->name);
 #endif
-		ptr = ptr -> next;
+		ptr = ptr->next;
 	}
 	if (ptr != NULL)
 	{
 #ifdef DEBUGMODE
-		printf("Returning special var %s:%s\n", ptr->name, ptr -> val);
+		printf("Returning special var %s:%s\n", ptr->name, ptr->val);
 #endif
-		return (_strdup(ptr -> val));
+		return (_strdup(ptr->val));
 	}
 	ptr = vars;
-	while (ptr != NULL && _strcmp(ptr -> name, name))
+	while (ptr != NULL && _strcmp(ptr->name, name))
 	{
 #ifdef DEBUGMODE
-		printf("Checked .%s. against .%s.\n", name, ptr -> name);
+		printf("Checked .%s. against .%s.\n", name, ptr->name);
 #endif
-		ptr = ptr -> next;
+		ptr = ptr->next;
 	}
 	if (ptr == NULL)
 	{
@@ -102,12 +117,16 @@ char *getsvar(char *name)
 		return (name);
 	}
 #ifdef DEBUGMODE
-	printf("Returning var %s\n", ptr -> val);
+	printf("Returning var %s\n", ptr->val);
 #endif
-	return (_strdup(ptr -> val));
+	return (_strdup(ptr->val));
 }
-
-
+/**
+ * setsvar - sets shell var
+ * @name: name of var
+ * @val: value of var
+ * Return: int
+ */
 int setsvar(char *name, char *val)
 {
 	ShellVar **vars = getvars();
@@ -118,18 +137,18 @@ int setsvar(char *name, char *val)
 	printf("in setsvar, special address: %p\n", special);
 	printf("Got %s %s\n", name, val);
 #endif
-	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
+	while (_strcmp(ptr->name, name) && ptr->next != NULL)
 	{
-		ptr = ptr -> next;
+		ptr = ptr->next;
 	}
-	if (!_strcmp(ptr -> name, name))
+	if (!_strcmp(ptr->name, name))
 	{
 #ifdef DEBUGMODE
-		printf("Setting special %s to %s\n", ptr -> name, val);
+		printf("Setting special %s to %s\n", ptr->name, val);
 		printf("ptr -> val %p\n", ptr->val);
 #endif
-		free(ptr -> val);
-		ptr -> val = _strdup(val);
+		free(ptr->val);
+		ptr->val = _strdup(val);
 		return (0);
 	}
 	ptr = *vars;
@@ -144,21 +163,21 @@ int setsvar(char *name, char *val)
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
-		new -> name = _strdup(name);
-		new -> val = _strdup(val);
-		new -> next = NULL;
+		new->name = _strdup(name);
+		new->val = _strdup(val);
+		new->next = NULL;
 		*vars = new;
 		return (0);
 	}
-	while (_strcmp(ptr -> name, name) && ptr -> next != NULL)
-		ptr = ptr -> next;
-	if (ptr != NULL && !_strcmp(ptr -> name, name))
+	while (_strcmp(ptr->name, name) && ptr->next != NULL)
+		ptr = ptr->next;
+	if (ptr != NULL && !_strcmp(ptr->name, name))
 	{
 #ifdef DEBUGMODE
-		printf("Setting %s to %s\n", ptr -> name, val);
+		printf("Setting %s to %s\n", ptr->name, val);
 #endif
-		free(ptr -> val);
-		ptr -> val = _strdup(val);
+		free(ptr->val);
+		ptr->val = _strdup(val);
 	}
 	else
 	{
@@ -168,14 +187,18 @@ int setsvar(char *name, char *val)
 		new = malloc(sizeof(ShellVar));
 		if (new == NULL)
 			return (-1);
-		new -> name = _strdup(name);
-		new -> val = _strdup(val);
-		new -> next = NULL;
-		ptr -> next = new;
+		new->name = _strdup(name);
+		new->val = _strdup(val);
+		new->next = NULL;
+		ptr->next = new;
 	}
 	return (0);
 }
-
+/**
+ * unsetsvar - unset shell var
+ * @name: name of var to unset
+ * Return: int
+ */
 int unsetsvar(char *name)
 {
 	ShellVar *vars = *getvars();
@@ -189,72 +212,26 @@ int unsetsvar(char *name)
 #ifdef DEBUGMODE
 	printf("ptr->name:%s\n", ptr->name);
 #endif
-	if (!_strcmp(ptr -> name, name))
+	if (!_strcmp(ptr->name, name))
 	{
 #ifdef DEBUGMODE
 		printf("First node match\n");
 #endif
-		*vars = *vars -> next;
-		free(ptr -> name);
-		free(ptr -> val);
+		*vars = *vars->next;
+		free(ptr->name);
+		free(ptr->val);
 		free(ptr);
 		return (0);
 	}
-	while (ptr -> next != NULL && _strcmp(ptr -> next-> name, name))
-		ptr = ptr -> next;
-	if (!_strcmp(ptr -> next -> name, name))
+	while (ptr->next != NULL && _strcmp(ptr->next->name, name))
+		ptr = ptr->next;
+	if (!_strcmp(ptr->next->name, name))
 	{
-		next = ptr -> next -> next;
-		free(ptr -> next -> name);
-		free(ptr -> next -> val);
-		free(ptr -> next);
-		ptr -> next = next;
+		next = ptr->next->next;
+		free(ptr->next->name);
+		free(ptr->next->val);
+		free(ptr->next);
+		ptr->next = next;
 	}
 	return (0);
 }
-
-/*
-int aliascmd(char *av[])
-{
-	AliasData *ptr = alist;
-	int i;
-	char *name, *val;
-
-#ifdef DEBUGMODE
-	printf("av1 %p ptr %p\n", av[1], ptr);
-	printf("av1 %s\n", av[1]);
-#endif
-	if (av[1] == NULL)
-	{
-		while(ptr != NULL)
-		{
-			printf("%s=%s\n", ptr -> name, ptr-> val);
-			ptr = ptr -> next;
-
-		}
-		return (0);
-	}
-#ifdef DEBUGMODE
-	printf("Not blank args\n");
-#endif
-	for (i = 1; av[i] != NULL; i++)
-	{
-#ifdef DEBUGMODE
-		printf("Setting alias %s\n", av[i]);
-#endif
-		name = strtok(av[1], "=");
-		val = strtok(NULL,"=");
-		name = _strdup(name);
-		if (name == NULL)
-			return (-1);
-		val = _strdup(val);
-		if (val == NULL)
-		{
-			free(name);
-			return (-1);
-		}
-		return (setalias(name, val));
-	}
-	return (1);
-}
-*/
