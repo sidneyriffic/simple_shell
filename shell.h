@@ -23,6 +23,7 @@ int cmdcall(char *av[], char *path);
 
 /* from parser.c */
 int parseargs(char **buf);
+char *tildeexpand(char *buf);
 
 /* from errhandl.c */
 int errhandl(int status);

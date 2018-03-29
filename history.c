@@ -63,30 +63,86 @@ int print_hist()
 		num = itos(i);
 		numlen = _strlen(num);
 		write(1, num, numlen);
-		_putchar(' ');
 		write(1, s, len);
 		h = h->next;
 		i++;
 	}
 	return (i);
 }
+/**
+ * init_hist - initialize history
+ * Return
+ */
+int init_hist()
+{
+	HistList **hlistroot = gethistory();
+	HistList *hlist = *hlistroot;
+	HistList *ptr = hlist, *new;
+	char *line;
+	int len;
+	int fd;
+	char *file = "/home/gjdame/.simple_shell_history";
 
+	fd = open(file, O_RDWR);
+		if (fd == -1)
+			return (-1);
+	line = malloc(100);
+	while((len = _getline(&line, fd)) != 0)
+	{
+		if (hlist == NULL)
+		{
+			new = malloc(sizeof(HistList));
+			if (new == NULL)
+				return (-1);
+
+			new->cmd = _strdup(line);
+			new->next = NULL;
+			*hlistroot = new;
+		}
+
+		while (ptr->next != NULL)
+			ptr = ptr->next;
+
+		new = malloc(sizeof(HistList));
+		if (new == NULL)
+			return (-1);
+		new->cmd = _strdup(line);
+		new->next = NULL;
+		ptr->next = new;
+	}
+	return (0);
+}
+
+/**
+ * exit_hist - exit history and write to file
+ * Return: 1 on success
+ */
 int exit_hist()
 {
-/*	int fd;
+	int fd;
 	char *file = ".simple_shell_history";
 	int i, len, w;
-	char *s;
+	char *str;
 
 	HistList **hlistroot = gethistory();
 	HistList *hlist = *hlistroot;
 	HistList *ptr = hlist;
 
-	file = tildeexpand(file);
-	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
+	/*file = tildeexpand(file);*/
+	fd = open(file, O_CREAT | O_RDWR | O_APPEND, 0600);
 	if (fd == -1)
 		return (-1);
-	
+	while (ptr != NULL)
+	{
+		len = _strlen(ptr->cmd);
+		printf("copying\n");
+		str = ptr->cmd;
+		write(fd, str , len);
+		ptr = ptr->next;
+	}
+
+	close(fd);
+	ptr = hlist;
 
 	while (hlist != NULL)
 	{
@@ -95,9 +151,6 @@ int exit_hist()
 		free(hlist);
 		hlist = ptr;
 	}
-*/
-/*	close(fd);*/
 
 	return(1);
 }
-
