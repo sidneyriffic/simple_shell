@@ -1,7 +1,7 @@
 #include "shell.h"
 /**
- * getallenv - copy whole environ
- * Return: environ copy
+ * getenviron - static wrapper copy whole environ
+ * Return: environ address
  */
 char ***getenviron()
 {
@@ -9,9 +9,14 @@ char ***getenviron()
 
 	return (&environ);
 }
+/**
+ * getallenv - get all environment
+ * Return: environment
+ *
+ */
 char **getallenv()
 {
-	char **environ=*(getenviron());
+	char **environ = *(getenviron());
 	char **envcopy;
 	size_t len = 0;
 
@@ -84,7 +89,7 @@ int setallenv(char **envin, char *newval)
  */
 char *_getenv(char *name)
 {
-	char **environ=*(getenviron());
+	char **environ = *(getenviron());
 	int i, j;
 	char *s;
 
@@ -118,7 +123,7 @@ char *_getenv(char *name)
 int _setenv(char *name, char *val)
 {
 	char ***environroot = getenviron();
-	char **environ=*environroot;
+	char **environ = *environroot;
 	int i, j, namel, vall;
 	char *s, *ptr;
 
@@ -165,8 +170,9 @@ int _setenv(char *name, char *val)
  * _unsetenv - unset environment
  * @name: name of variable to unset
  * Return: 0 if sucess
+ *
+ * testing functionality  copy environ, if hits skip over, realloc
  */
-/*testing functionality  copy environ, if hits skip over, realloc*/
 int _unsetenv(char *name)
 {
 	char **environ = *getenviron();

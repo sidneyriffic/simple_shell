@@ -7,6 +7,7 @@
 HistList **gethistory()
 {
 	static HistList *hlist;
+
 	return (&hlist);
 }
 /**
@@ -43,11 +44,11 @@ int sethist(char *cmd)
 	return (0);
 }
 /**
- * print_listint - prints all elements of listint
- * @h: pointer to first node of list
+ * print_hist - prints all elements of listint
+ *
  * Return: num of elements
  */
-int print_hist()
+int print_hist(void)
 {
 	HistList **hlistroot = gethistory();
 	HistList *h = *hlistroot;
@@ -70,34 +71,38 @@ int print_hist()
 	}
 	return (i);
 }
-
-int exit_hist()
+/**
+ * exit_hist - exit history and copy to file
+ *
+ * Return: int
+ */
+int exit_hist(void)
 {
-/*	int fd;
-	char *file = ".simple_shell_history";
-	int i, len, w;
-	char *s;
+/*
+ *	int fd;
+ *	char *file = ".simple_shell_history";
+ *	int i, len, w;
+ *	char *s;
+ *
+ *	HistList **hlistroot = gethistory();
+ *	HistList *hlist = *hlistroot;
+ *	HistList *ptr = hlist;
+ *
+ *	file = tildeexpand(file);
+ *	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
+ *	if (fd == -1)
+ *		return (-1);
+ *
+ *	while (hlist != NULL)
+ *	{
+ *		ptr = hlist->next;
+ *		free(hlist->cmd);
+ *		free(hlist);
+ *		hlist = ptr;
+ *	}
+ *
+ *	close(fd);
+ */
 
-	HistList **hlistroot = gethistory();
-	HistList *hlist = *hlistroot;
-	HistList *ptr = hlist;
-
-	file = tildeexpand(file);
-	fd = open(file, O_CREAT | O_RDWR | O_TRUNC);
-	if (fd == -1)
-		return (-1);
-	
-
-	while (hlist != NULL)
-	{
-		ptr = hlist->next;
-		free(hlist->cmd);
-		free(hlist);
-		hlist = ptr;
-	}
-*/
-/*	close(fd);*/
-
-	return(1);
+	return (1);
 }
-

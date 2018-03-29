@@ -1,7 +1,12 @@
 #include "shell.h"
-
-/* complete is bit flag type to complete. 0 none, 1 single quote, 2 double quote, 4 logic,
- * fd is fd we used to get input the first time */
+/**
+ * inputvalidator - validates input buffer
+ * complete is bit flag type to complete.
+ * 0 none, 1 single quote, 2 double quote, 4 logic,
+ * fd is fd we used to get input the first time
+ * @buf: buffer
+ * @fd: file descriptor
+ */
 int inputvalidator(char **buf, int fd)
 {
 	char *newbuf, *bufgl, *bufptr = *buf;
