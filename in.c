@@ -263,7 +263,11 @@ int scriptmode(char *av[])
 
 	infile = open(av[1], O_RDONLY);
 	if (infile == -1)
+	{
+		fprintstrs(STDERR_FILENO, av[0], ": 0: Can't open ",
+			   av[1], "\n", NULL);
 		return (-1);
+	}
 	while (!eofflag)
 	{
 		lenr = _getline(&bufgl, infile);
