@@ -301,17 +301,15 @@ int scriptmode(char *av[])
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;
-/*
- *	char *pidptr;
- */
+
+	char *pidptr;
 
 	initsvars(ac - 1, av);
-/*
- *	pidptr = _getpid();
- *	setsvar("$", pidptr);
- *	free(pidptr);
- *	_getline(NULL, -2);
- */
+	pidptr = _getpid();
+	setsvar("$", pidptr);
+	free(pidptr);
+	_getline(NULL, -2);
+
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));

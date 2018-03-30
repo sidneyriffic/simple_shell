@@ -115,7 +115,7 @@ char *subsvars(char **buf)
 			return (*buf);
 		varptr++;
 		for (ptr = varptr, varnlen = 0; *ptr != 0 && *ptr != ' '
-			     && *ptr != '\n' && *ptr != '$' && *ptr != '\\'; ptr++)
+			     && *ptr != '\n' && *ptr != '\\'; ptr++)
 			varnlen++;
 #ifdef DEBUGSVARS
 		printf("varnlen:%d varptr:%s\n", varnlen, varptr);
