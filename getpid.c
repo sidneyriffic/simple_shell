@@ -2,9 +2,9 @@
 #include <dirent.h>
 
 /**
- * getpid - gets the pid of the currently running process
+ * _getpid - gets the pid of the currently running process
  *
- * return: string of pid
+ * Return: string of pid
  */
 char *_getpid()
 {
@@ -13,22 +13,23 @@ char *_getpid()
 	int fd;
 	char *name;
 	char *file = "/proc/self/status";
+
 	s = malloc(256);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		return(0);
+		return (0);
 
 	while (_getline(&s, fd))
 	{
 		name = strtok(s, ":");
-		if(!_strcmp(name, "Pid"))
+		if (!_strcmp(name, "Pid"))
 		{
 			pid = _strdup(strtok(NULL, "\n \t"));
 			free(s);
-			return(pid);
+			return (pid);
 		}
 		free(s);
 		s = NULL;
 	}
-	return(NULL);
+	return (NULL);
 }
