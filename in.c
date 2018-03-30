@@ -77,14 +77,16 @@ int inputvalidator(char **buf, int fd)
 		}
 		if (bufptr[0] == '\n' && bufptr[1] == 0)
 			break;
-		if (*bufptr == '#' && !(complete & 3) && (bufptr == *buf || *(bufptr - 1) == ' '))
+		if (*bufptr == '#' &&
+		    !(complete & 3) &&
+		    (bufptr == *buf || *(bufptr - 1) == ' '))
 		{
 			*bufptr = 0;
 			break;
 		}
 		complete &= ~4;
 #ifdef DEBUGVALID
-		printf("!(complete&3):%d\n", !(complete&3));
+		printf("!(complete&3):%d\n", !(complete & 3));
 #endif
 		if (*bufptr == '"' && !(complete & 3))
 		{
@@ -209,7 +211,7 @@ int inputvalidator(char **buf, int fd)
  * shintmode - shell interactive mode
  * Return: 0
  */
-int shintmode()
+int shintmode(void)
 {
 	char *bufgl = NULL, *pwd;
 	ssize_t lenr = 0, eofflag = 0, ret = 0;
@@ -283,7 +285,7 @@ int scriptmode(char *av[])
 		if (eofflag)
 			break;
 	}
-	close (infile);
+	close(infile);
 	return (ret);
 }
 
@@ -299,13 +301,17 @@ int scriptmode(char *av[])
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;
-/*	char *pidptr;*/
+/*
+ *	char *pidptr;
+ */
 
 	initsvars(ac - 1, av);
-/*	pidptr = _getpid();
-	setsvar("$", pidptr);
-	free(pidptr);
-	_getline(NULL, -2);*/
+/*
+ *	pidptr = _getpid();
+ *	setsvar("$", pidptr);
+ *	free(pidptr);
+ *	_getline(NULL, -2);
+ */
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));

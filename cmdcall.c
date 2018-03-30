@@ -80,7 +80,8 @@ int cmdcall(char *av[], char *cmd)
 #ifdef DEBUGMODE
 	printf("In cmdcall av[0]:%s\n", av[0]);
 #endif
-	if ((environ = getallenv()) == NULL)
+	environ = getallenv();
+	if (environ == NULL)
 		return (-1);
 #ifdef DEBUGMODE
 	printf("Forking\n");
@@ -181,7 +182,7 @@ int builtincall(char *av[])
 	else if (!_strcmp(av[0], "help"))
 		retval = help(av[1]);
 	else if (!_strcmp(av[0], "env"))
-		retval = _printenv(av[1]);
+		retval = _printenv();
 	else if (!_strcmp(av[0], "setenv"))
 		retval = _setenv(av[1], av[2]);
 	else if (!_strcmp(av[0], "unsetenv"))

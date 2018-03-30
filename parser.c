@@ -103,7 +103,8 @@ char *subsvars(char **buf)
 					varptr++;
 			}
 			varptr++;
-			if (*varptr == '$' && (varptr[1] == ' ' || varptr[1] == 0 || varptr[1] == '\n'))
+			if (*varptr == '$' &&
+			    (varptr[1] == ' ' || varptr[1] == 0 || varptr[1] == '\n'))
 				varptr++;
 		}
 #ifdef DEBUGSVARS
@@ -329,8 +330,8 @@ char *tildeexpand(char *buf)
 					if (*tildeptr == '\\')
 					{
 						tildeptr++;
-						if (*tildeptr != 0)
-							tildeptr++;
+						inquotes = *tildeptr != 0 && tildeptr++;
+						inquotes = 2;
 						continue;
 					}
 					tildeptr++;
@@ -355,7 +356,8 @@ char *tildeexpand(char *buf)
 #endif
 		if (homepath == NULL)
 			return (NULL);
-		newbuf = malloc(_strlen(buf) - (size_t) endptr + (size_t) tildeptr + _strlen(homepath) + 1);
+		newbuf = malloc(_strlen(buf) - (size_t) endptr +
+				(size_t) tildeptr + _strlen(homepath) + 1);
 		if (newbuf == NULL)
 		{
 			free(homepath);
@@ -399,18 +401,9 @@ int parseargs(char **buf)
 	newchk = _strlen(*buf) - 1;
 	if (ptr[newchk] == '\n')
 		ptr[newchk] = 0;
-/*
- *for (ptr = *buf; *ptr != 0; ptr++)
- *if (*ptr == '#' && (ptr == *buf || *(ptr - 1) == ' '))
- *		{
- *	       	printf("ptr:%p:*buf:%p:*(ptr - 1):%c\n", ptr, *buf, *(ptr-1));
- *			*ptr = 0;
- *			break;
- *			}
- */
 	if (*buf[0] == 0)
 	{
-		free (*buf);
+		free(*buf);
 		return (0);
 	}
 #ifdef DEBUGMODE
@@ -452,24 +445,18 @@ int parseargs(char **buf)
 		free(*buf);
 		if (ret == 0)
 			return (parseargs(&right));
-		else
+		*buf = right;
+		strtokqe(right, "|", 7);
+		right = strtokqe(NULL, "", 7);
+		if (right != NULL)
 		{
-			*buf = right;
-			strtokqe(right, "|", 7);
-			right = strtokqe(NULL, "", 7);
-			if (right != NULL)
-			{
-				right++;
-				right = _strdup(right);
-				free(*buf);
-				return (parseargs(&right));
-			}
-			else
-			{
-				free(*buf);
-				return (ret);
-			}
+			right++;
+			right = _strdup(right);
+			free(*buf);
+			return (parseargs(&right));
 		}
+		free(*buf);
+		return (ret);
 	}
 	else if (right != NULL)
 	{
@@ -498,11 +485,8 @@ int parseargs(char **buf)
 		free(*buf);
 		if (ret != 0)
 			return (parseargs(&right));
-		else
-		{
-			free(right);
-			return (ret);
-		}
+		free(right);
+		return (ret);
 	}
 	else if (right != NULL)
 	{
@@ -553,6 +537,9 @@ int parseargs(char **buf)
 #endif
 		ac++;
 	}
+#ifdef DEBUGMODE
+	printf("After cleaning\n");
+#endif
 	ac--;
 	av[ac] = NULL;
 	free(*buf);

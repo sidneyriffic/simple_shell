@@ -88,7 +88,7 @@ int printerr(char *str)
  * fprintstrs - simple string printer, va args should have a NULL last arg
  * @fd: file descriptor
  * @str: string
- * Return: 0 
+ * Return: 0
  */
 int fprintstrs(int fd, char *str, ...)
 {

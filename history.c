@@ -89,8 +89,8 @@ int exit_hist(void)
 	HistList *ptr = hlist;
 
 /*
-	file = tildeexpand(file);
-*/
+ *	file = tildeexpand(file);
+ */
 	fd = open(file, O_CREAT | O_RDWR, 0600);
 	if (fd == -1)
 		return (-1);

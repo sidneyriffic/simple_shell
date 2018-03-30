@@ -52,7 +52,7 @@ int _getline(char **lineptr, int fd)
 			if (sum == 0)
 			{
 				buffer[0] = 0;
-				return(sum);
+				return (sum);
 			}
 			buffer[sum] = 0;
 			sum = 0;

@@ -1,15 +1,5 @@
 #include "shell.h"
 /**
- * getenviron - static wrapper copy whole environ
- * Return: environ address
- */
-char ***getenviron()
-{
-	static char **environ;
-
-	return (&environ);
-}
-/**
  * getallenv - get all environment
  * Return: environment
  *
