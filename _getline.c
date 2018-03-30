@@ -17,6 +17,12 @@ int _getline(char **lineptr, int fd)
 	int c = 0;
 	int d;
 
+	if (fd == -2)
+	{
+		begin = 0;
+		end = 0;
+	}
+
 	if (lineptr == NULL)
 	{
 		return (0);

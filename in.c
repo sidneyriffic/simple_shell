@@ -295,6 +295,7 @@ int main(int ac, char *av[], char **environ)
 	pidptr = _getpid();
 	setsvar("$", pidptr);
 	free(pidptr);
+	_getline(NULL, -2);
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));

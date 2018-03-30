@@ -38,7 +38,6 @@ char *strtok(char *str, char *delim)
 			break;
 		i++;
 	}
-	printf("%s\n", tmp_str + i);
 	str = str + i;
 	if (*str == 0)
 	{
