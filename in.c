@@ -289,7 +289,12 @@ int scriptmode(char *av[])
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;
+	char *pidptr;
+
 	initsvars(ac - 1, av);
+	pidptr = _getpid();
+	setsvar("$", pidptr);
+	free(pidptr);
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));
