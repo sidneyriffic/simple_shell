@@ -266,7 +266,7 @@ int scriptmode(char *av[])
 	{
 		fprintstrs(STDERR_FILENO, av[0], ": 0: Can't open ",
 			   av[1], "\n", NULL);
-		return (-1);
+		return (127);
 	}
 	while (!eofflag)
 	{
