@@ -7,7 +7,7 @@
  */
 int checkpath(char *av[])
 {
-	char *path, *pathptr, *pathvar, *ptr, *pathenv, *linect;
+	char *path, *pathptr, *pathvar, *ptr, *pathenv = "PATH", *linect;
 	int pathlen, cmdlen;
 
 #ifdef DEBUGMODE
@@ -15,50 +15,54 @@ int checkpath(char *av[])
 #endif
 	for (ptr = av[0], cmdlen = 0; *ptr != 0; ptr++)
 		cmdlen++;
-	pathvar = _getenv("PATH");
-	pathenv = pathvar;
-	while (*pathvar != 0)
+	pathvar = _getenv(pathenv);
+	if (pathvar != pathenv)
 	{
-#ifdef DEBUGMODE
-		printf("in loop pathvar:%s:*pathvar:%c\n", pathvar, *pathvar);
-#endif
-		for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
-			pathlen++;
-		path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
-		if (path == NULL)
-		{
-			free(pathenv);
-			return (-1);
-		}
-		pathptr = path;
-		while (*pathvar != ':' && *pathvar != 0)
-			*pathptr++ = *pathvar++;
-		if (pathptr != path)
-			*pathptr++ = '/';
-		ptr = av[0];
-		while (*ptr != 0)
-			*pathptr++ = *ptr++;
-		*pathptr = 0;
-		if (!access(path, F_OK))
+		pathenv = pathvar;
+		while (*pathvar != 0)
 		{
 #ifdef DEBUGMODE
-			printf("Found path:%s\n", path);
+			printf("in loop pathvar:%s:*pathvar:%c\n", pathvar, *pathvar);
 #endif
-			pathlen = cmdcall(av, path);
+			for (pathlen = 0, ptr = pathvar; *ptr != 0 && *ptr != ':'; ptr++)
+				pathlen++;
+			path = malloc(sizeof(char) * (cmdlen + pathlen + 2));
+			if (path == NULL)
+			{
+				free(pathenv);
+				return (-1);
+			}
+			pathptr = path;
+			while (*pathvar != ':' && *pathvar != 0)
+				*pathptr++ = *pathvar++;
+			if (pathptr != path)
+				*pathptr++ = '/';
+			ptr = av[0];
+			while (*ptr != 0)
+				*pathptr++ = *ptr++;
+			*pathptr = 0;
+			if (!access(path, F_OK))
+			{
+#ifdef DEBUGMODE
+				printf("Found path:%s\n", path);
+#endif
+				pathlen = cmdcall(av, path);
+				free(path);
+				free(pathenv);
+				return (pathlen);
+			}
 			free(path);
-			free(pathenv);
-			return (pathlen);
+			if (*pathvar == ':')
+				pathvar++;
 		}
-		free(path);
-		if (*pathvar == ':')
-			pathvar++;
 	}
 	linect = itos(linecount(0));
 	path = getsvar("0");
 	fprintstrs(2, path, ": ", linect, ": ", av[0], ": not found\n", NULL);
 	free(path);
 	free(linect);
-	free(pathenv);
+	if (pathenv != pathvar)
+		free(pathenv);
 	return (127);
 }
 /**
@@ -142,21 +146,30 @@ int builtincall(char *av[])
 	if (!_strcmp(av[0], "exit"))
 	{
 		if (av[1] != NULL)
+			if (av[1][0] >= '0' && av[1][0] <= '9')
+			{
+				retval = _atoi(av[1]);
+				exitcleanup(av);
+				exit_hist();
+				exit(retval);
+			}
+			else
+			{
+				printerr(": exit: Illegal number: ");
+				fprintstrs(STDERR_FILENO, av[1], "\n", NULL);
+				retval = 2;
+			}
+		else
 		{
-			retval = atoi(av[1]);
-
+			retstr = getsvar("?");
+			retval = _atoi(retstr);
+			free(retstr);
 			exitcleanup(av);
 			exit_hist();
 			exit(retval);
 		}
-		else
-		{
-			exitcleanup(av);
-			exit_hist();
-			exit(0);
-		}
 	}
-	if (!_strcmp(av[0], "cd"))
+	else if (!_strcmp(av[0], "cd"))
 		retval = _cd(av);
 /*
  *

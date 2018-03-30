@@ -37,11 +37,11 @@ char *getalias(char *name)
 		return (name);
 	}
 #ifdef DEBUGMODE
-	printf("Returning alias %s\n", ptr->val);
+	printf("Checking alias %s\n", ptr->val);
 #endif
 
 	free(name);
-	return (_strdup(ptr->val));
+	return (getalias(_strdup(ptr->val)));
 }
 /**
  * setalias - set alias and value
