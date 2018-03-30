@@ -93,4 +93,7 @@ void exitcleanup();
 /* from _atoi*/
 int _atoi(char *s);
 
+char *_getpid();
+
+
 #endif
