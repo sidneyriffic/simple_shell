@@ -1,7 +1,7 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 /**
- * struct listhist - singly linked list
+ * struct HistList - singly linked list
  * @cmd: command
  * @next: points to the next node
  *

@@ -6,6 +6,8 @@
  * fd is fd we used to get input the first time
  * @buf: buffer
  * @fd: file descriptor
+ * Return: return value of command, 2 for syntax errors,
+ * or negative numbers for syscall errors
  */
 int inputvalidator(char **buf, int fd)
 {
@@ -251,7 +253,6 @@ int shintmode()
 }
 /**
  * scriptmode - shell script mode
- * @ac: num of arguments
  * @av: arguments
  * Return: 0 upon success or -1 if failure
  */
@@ -286,6 +287,15 @@ int scriptmode(char *av[])
 	return (ret);
 }
 
+/**
+ * main - runs a shell
+ *
+ * @ac: number of args
+ * @av: command line arg matrix
+ * @environ: environment matrix
+ *
+ * Return: return value of last command
+ */
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;

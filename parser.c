@@ -1,9 +1,8 @@
 #include "shell.h"
 /**
- * parsesetsvar - parse set shell vars
+ * parsesetsvar - parse set shell vars, returns new buf after var setting
  * @buf: buffer
  * Return: string
- * returns new buf after var setting
  */
 char *parsesetsvar(char *buf)
 {
@@ -61,6 +60,13 @@ char *parsesetsvar(char *buf)
 	return (newbuf);
 }
 
+/**
+ * subsvars - substitutes in svars for $names
+ *
+ * @buf: buffer string that was input
+ *
+ * Return: processed buffer string
+ */
 char *subsvars(char **buf)
 {
 	char *varptr = *buf, *ptr, *name, *val, *valptr, *dest, *dolptr;
@@ -173,6 +179,13 @@ char *subsvars(char **buf)
 	return (*buf);
 }
 
+/**
+ * cleanarg - cleans escapes and functional quotes
+ *
+ * @arg: - argument to clean
+ *
+ * Return: cleaned argument
+ */
 char *cleanarg(char *arg)
 {
 	char *newbuf, *ptr, *ptr2;
@@ -280,7 +293,13 @@ char *cleanarg(char *arg)
 	return (newbuf);
 }
 
-/* currently only replaces with env $HOME */
+/**
+ * tildeexpand - handle expanding ~ where appropriate
+ *
+ * @buf: buffer to process
+ *
+ * Return: processed buffer
+ */
 char *tildeexpand(char *buf)
 {
 	char *tildeptr = buf, *endptr, *homepath, *newbuf, *bufptr, *newptr;
@@ -362,12 +381,10 @@ char *tildeexpand(char *buf)
 	return (newbuf);
 }
 /**
- * Parseargs - parse arguments function
+ * parseargs - parse arguments function, frees buf at end
  * @buf: buffer pointer
- * Return: int
- * double pointer buf so we can free after subbing vars easier
- * frees buf at end
-*/
+ * Return: return value of command
+ */
 int parseargs(char **buf)
 {
 	char *av[1024], *ptr, *left, *right;

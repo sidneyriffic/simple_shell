@@ -2,7 +2,7 @@
 #include <dirent.h>
 
 /*
-char *_getpid()
+char *_getpid
 {
 	char *s;
 	char *pid;
