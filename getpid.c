@@ -26,10 +26,3 @@ char *_getpid()
 	}
 	return(NULL);
 }
-
-void main()
-{
-	char *s;
-	s = _getpid();
-	printf("%s\n", s);
-}
