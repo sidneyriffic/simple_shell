@@ -6,6 +6,8 @@
  * fd is fd we used to get input the first time
  * @buf: buffer
  * @fd: file descriptor
+ * Return: return value of command, 2 for syntax errors,
+ * or negative numbers for syscall errors
  */
 int inputvalidator(char **buf, int fd)
 {
@@ -75,14 +77,16 @@ int inputvalidator(char **buf, int fd)
 		}
 		if (bufptr[0] == '\n' && bufptr[1] == 0)
 			break;
-		if (*bufptr == '#' && !(complete & 3) && (bufptr == *buf || *(bufptr - 1) == ' '))
+		if (*bufptr == '#' &&
+		    !(complete & 3) &&
+		    (bufptr == *buf || *(bufptr - 1) == ' '))
 		{
 			*bufptr = 0;
 			break;
 		}
 		complete &= ~4;
 #ifdef DEBUGVALID
-		printf("!(complete&3):%d\n", !(complete&3));
+		printf("!(complete&3):%d\n", !(complete & 3));
 #endif
 		if (*bufptr == '"' && !(complete & 3))
 		{
@@ -207,7 +211,7 @@ int inputvalidator(char **buf, int fd)
  * shintmode - shell interactive mode
  * Return: 0
  */
-int shintmode()
+int shintmode(void)
 {
 	char *bufgl = NULL, *pwd;
 	ssize_t lenr = 0, eofflag = 0, ret = 0;
@@ -251,7 +255,6 @@ int shintmode()
 }
 /**
  * scriptmode - shell script mode
- * @ac: num of arguments
  * @av: arguments
  * Return: 0 upon success or -1 if failure
  */
@@ -286,14 +289,31 @@ int scriptmode(char *av[])
 		if (eofflag)
 			break;
 	}
-	close (infile);
+	close(infile);
 	return (ret);
 }
 
+/**
+ * main - runs a shell
+ *
+ * @ac: number of args
+ * @av: command line arg matrix
+ * @environ: environment matrix
+ *
+ * Return: return value of last command
+ */
 int main(int ac, char *av[], char **environ)
 {
 	int ret = 0;
+
+	char *pidptr;
+
 	initsvars(ac - 1, av);
+	pidptr = _getpid();
+	setsvar("$", pidptr);
+	free(pidptr);
+	_getline(NULL, -2);
+
 	setallenv(environ, NULL);
 #ifdef DEBUGINIT
 	printf("?:%s\n", getsvar("?"));

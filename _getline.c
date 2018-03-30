@@ -17,6 +17,12 @@ int _getline(char **lineptr, int fd)
 	int c = 0;
 	int d;
 
+	if (fd == -2)
+	{
+		begin = 0;
+		end = 0;
+	}
+
 	if (lineptr == NULL)
 	{
 		return (0);
@@ -46,7 +52,7 @@ int _getline(char **lineptr, int fd)
 			if (sum == 0)
 			{
 				buffer[0] = 0;
-				return(sum);
+				return (sum);
 			}
 			buffer[sum] = 0;
 			sum = 0;
