@@ -27,7 +27,7 @@ char *strtok(char *str, char *delim)
 	while (tmp_str[i] != 0)
 	{
 		j = 0;
-		while (delim[j] != 0 && !found)
+		while (delim[j] != 0 && found == 0)
 		{
 			if (tmp_str[i] == tmp_delim[j])
 				found = 1;
@@ -88,7 +88,7 @@ char *strtok(char *str, char *delim)
 char *strtokqe(char *str, char *delim, int escflags)
 {
 	static char *saved_string;
-	int found;
+	int found = 0;
 	int i;
 	int j;
 
@@ -103,7 +103,7 @@ char *strtokqe(char *str, char *delim, int escflags)
 	while (str[i] != 0)
 	{
 		j = 0;
-		while (delim[j] != 0)
+		while (delim[j] != 0 && !found)
 		{
 			if (str[i] == delim[j])
 				found = 1;

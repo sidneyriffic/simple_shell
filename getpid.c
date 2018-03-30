@@ -1,5 +1,7 @@
 #include "shell.h"
 #include <dirent.h>
+
+/*
 char *_getpid()
 {
 	char *s;
@@ -26,3 +28,4 @@ char *_getpid()
 	}
 	return(NULL);
 }
+*/
