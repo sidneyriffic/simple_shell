@@ -70,4 +70,4 @@ There is a repository for the test suite at https://github.com/sidneyriffic/shel
 
 ## Authors
 Sidney Burkett  
-Greg Dame
+Gregory Dame
