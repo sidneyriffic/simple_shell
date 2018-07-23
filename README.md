@@ -69,5 +69,5 @@ Hello simple shell!
 There is a repository for the test suite at https://github.com/sidneyriffic/shelltest.git. Follow the instructions there, and you'll want the shell target to be /bin/sh (the default location for sh).
 
 ## Authors
-Sidney Burkett
+Sidney Burkett  
 Greg Dame
